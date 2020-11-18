@@ -1,0 +1,21 @@
+{
+  "root": true,
+  "env": {
+    "browser": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "spread": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "extends": "htmlacademy/es6",
+  "rules": {
+    "object-curly-spacing": "off",
+    "indent": "off",
+    "no-undefined": "off",
+    "quotes": "off"
+  }
+}
