@@ -1,0 +1,49 @@
+.page-header {
+  display: flex;
+  padding-left: 61px;
+  padding-right: 61px;
+
+  background-color: #f6f7ff;
+}
+
+.page-header__logo {
+  margin-top: 27px;
+  margin-right: 58px;
+}
+
+.page-header__nav {
+  max-width: 739px;
+  margin-top: 37px;
+  margin-right: 20px;
+}
+
+.page-header__enter {
+  margin-top: 34px;
+  margin-left: auto;
+  margin-right: 37px;
+  margin-bottom: 35px;
+}
+
+@media (max-width: $tablet-width) {
+  .page-header {
+    padding-left: 45px;
+    padding-right: 45px;
+  }
+
+  .page-header__logo {
+    margin-top: 23px;
+    margin-right: 66px;
+  }
+
+  .page-header__nav {
+    max-width: 400px;
+    margin-top: 25px;
+    margin-right: 20px;
+  }
+
+  .page-header__enter {
+    margin-top: 23px;
+    margin-right: 0;
+    margin-bottom: 24px;
+  }
+}

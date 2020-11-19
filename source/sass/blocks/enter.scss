@@ -1,0 +1,25 @@
+.enter {
+  display: flex;
+  align-items: center;
+  min-width: 203px;
+
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19px;
+  color: #1f1e25;
+
+  span {
+    padding-left: 10px;
+  }
+}
+
+@media (max-width: $tablet-width) {
+  .enter {
+    align-items: flex-start;
+    min-width: auto;
+
+    span {
+      display: none;
+    }
+  }
+}

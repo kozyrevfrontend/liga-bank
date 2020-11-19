@@ -1,5 +1,10 @@
 @import "normalize.scss";
 @import "fonts.scss";
+@import "variables.scss";
 @import "scaffolding.scss";
 @import "mixins.scss";
 @import "visually-hidden.scss";
+@import "blocks/page-header.scss";
+@import "blocks/logo.scss";
+@import "blocks/site-list.scss";
+@import "blocks/enter.scss";
