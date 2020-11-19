@@ -11,6 +11,15 @@
   span {
     padding-left: 10px;
   }
+
+  &:hover,
+  &:focus {
+    opacity: 0.8;
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
 }
 
 @media (max-width: $tablet-width) {
@@ -20,6 +29,24 @@
 
     span {
       display: none;
+    }
+
+    &:hover,
+    &:focus {
+      opacity: 1;
+    }
+
+    &:active {
+      opacity: 1;
+    }
+  }
+}
+
+@media (max-width: $mobile-width) {
+  .enter {
+    svg {
+      width: 14px;
+      height: 16px;
     }
   }
 }

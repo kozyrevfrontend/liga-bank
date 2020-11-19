@@ -19,6 +19,15 @@
   font-weight: 400;
   line-height: 19px;
   color: #1f1e25;
+
+  &:hover,
+  &:focus {
+    opacity: 0.8;
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
 }
 
 @media (max-width: $tablet-width) {
@@ -30,5 +39,23 @@
   .site-list__link {
     font-size: 14px;
     line-height: 16px;
+
+    &:hover,
+    &:focus {
+      opacity: 1;
+    }
+
+    &:active {
+      opacity: 1;
+    }
+  }
+}
+
+@media (max-width: $mobile-width) {
+  .site-list {
+    @include list-reset;
+
+    display: flex;
+    flex-direction: column;
   }
 }
