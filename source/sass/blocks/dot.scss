@@ -1,0 +1,26 @@
+.dot {
+  display: block;
+  margin: 0;
+  padding: 0;
+
+  border: none;
+  border-radius: 50%;
+
+  cursor: pointer;
+
+  &--promo {
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+
+    background-color: #2028b6;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  &--promo-active {
+    background-color: #f6f7ff;
+  }
+}
