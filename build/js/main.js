@@ -21,7 +21,8 @@
   const menu = new Menu();
 
   class Slider {
-    constructor(domNode) {
+    constructor(domNode, config) {
+      this.config = config;
       this.sliderContainer = domNode.querySelector(`.slider-container`);
       this.sliderNavigation = domNode.querySelector(`.slider-navigation`);
       this.sliderItems = this.sliderContainer.querySelectorAll(`.slider-item`);
@@ -35,8 +36,10 @@
     }
 
     init() {
-      for (let i = 0; i < this.sliderDots.length; i++) {
-        this.dotHandler(this.sliderDots[i], i);
+      if (this.config.navigation) {
+        for (let i = 0; i < this.sliderDots.length; i++) {
+          this.dotHandler(this.sliderDots[i], i);
+        }
       }
 
       window.addEventListener(`resize`, () => {
@@ -194,7 +197,7 @@
     }
   }
 
-  const promoSlider = new Slider(document.querySelector(`.promo`));
+  const promoSlider = new Slider(document.querySelector(`.promo`), {navigation: true});
 
   menu.init();
   promoSlider.init();
