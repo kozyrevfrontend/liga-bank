@@ -1,13 +1,13 @@
 .promo {
   position: relative;
+
+  overflow: hidden;
 }
 
 .promo__list {
   @include list-reset;
 
   display: flex;
-
-  overflow: hidden; // для слайдера
 }
 
 .promo__item {
