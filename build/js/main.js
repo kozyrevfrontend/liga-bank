@@ -49,14 +49,19 @@
 
       // если ширина слайда 100% от ширины окна отслеживаем resize
       if (currentConfig.slideFullScreen) {
-        this.slideWidth = window.innerWidth;
+        this.slideWidth = this.sliderContainer.clientWidth;
 
         window.addEventListener(`resize`, () => {
-          this.slideWidth = window.innerWidth;
+          this.slideWidth = this.sliderContainer.clientWidth;
           this.sliderContainer.style.transform = `translateX(-` + this.slideWidth * this.currentSlide + `px)`;
         });
       } else {
         this.slideWidth = this.sliderItems[0].clientWidth + currentConfig.slideGap;
+
+        window.addEventListener(`resize`, () => {
+          this.slideWidth = this.sliderItems[0].clientWidth + currentConfig.slideGap;
+          this.sliderContainer.style.transform = `translateX(-` + this.slideWidth * this.currentSlide + `px)`;
+        });
       }
 
       // включаем переключение слайдов, если необходимо
@@ -64,7 +69,7 @@
         window.setInterval(this.changeSlide, currentConfig.delay);
       }
 
-      // включаем переключение слайдов по свйпу, если необходимо
+      // включаем переключение слайдов по свайпу, если необходимо
       if (currentConfig.swipe) {
         this.swipe(this.sliderContainer);
 
