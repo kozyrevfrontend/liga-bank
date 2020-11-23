@@ -18,6 +18,34 @@
   flex-shrink: 0;
   width: 100%;
   min-height: 400px;
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0 0;
+
+  &--main {
+    background-image: url("../img/promo-bg-main-desktop@1x.jpg");
+
+    @media (min-resolution: $retina-dppx) {
+      background-image: url("../img/promo-bg-main-desktop@2x.jpg");
+    }
+  }
+
+  &--man {
+    background-image: url("../img/promo-bg-man-desktop@1x.jpg");
+
+    @media (min-resolution: $retina-dppx) {
+      background-image: url("../img/promo-bg-man-desktop@2x.jpg");
+    }
+  }
+
+  &--girl {
+    background-image: url("../img/promo-bg-girl-desktop@1x.jpg");
+
+    @media (min-resolution: $retina-dppx) {
+      background-image: url("../img/promo-bg-girl-desktop@2x.jpg");
+    }
+  }
 }
 
 .promo__wrapper {
@@ -123,6 +151,30 @@
 @media (max-width: $tablet-width) {
   .promo__item {
     min-height: 300px;
+
+    &--main {
+      background-image: url("../img/promo-bg-main-tablet@1x.jpg");
+
+      @media (min-resolution: $retina-dppx) {
+        background-image: url("../img/promo-bg-main-tablet@2x.jpg");
+      }
+    }
+
+    &--man {
+      background-image: url("../img/promo-bg-man-tablet@1x.jpg");
+
+      @media (min-resolution: $retina-dppx) {
+        background-image: url("../img/promo-bg-man-tablet@2x.jpg");
+      }
+    }
+
+    &--girl {
+      background-image: url("../img/promo-bg-girl-tablet@1x.jpg");
+
+      @media (min-resolution: $retina-dppx) {
+        background-image: url("../img/promo-bg-girl-tablet@2x.jpg");
+      }
+    }
   }
 
   .promo__wrapper {
@@ -169,6 +221,30 @@
 @media (max-width: $mobile-width) {
   .promo__item {
     min-height: 226px;
+
+    &--main {
+      background-image: url("../img/promo-bg-main-mobile@1x.jpg");
+
+      @media (min-resolution: $retina-dppx) {
+        background-image: url("../img/promo-bg-main-mobile@2x.jpg");
+      }
+    }
+
+    &--man {
+      background-image: url("../img/promo-bg-man-mobile@1x.jpg");
+
+      @media (min-resolution: $retina-dppx) {
+        background-image: url("../img/promo-bg-man-mobile@2x.jpg");
+      }
+    }
+
+    &--girl {
+      background-image: url("../img/promo-bg-girl-mobile@1x.jpg");
+
+      @media (min-resolution: $retina-dppx) {
+        background-image: url("../img/promo-bg-girl-mobile@2x.jpg");
+      }
+    }
   }
 
   .promo__wrapper {
