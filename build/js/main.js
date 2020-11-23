@@ -30,7 +30,7 @@
       this.sliderNavigationButtons = this.sliderNavigation.querySelectorAll(`.slider-nav-btn`);
 
       this.slideCount = this.sliderItems.length;
-      this.slideWidth = window.innerWidth;
+      this.slideWidth = null;
       this.currentSlide = 0;
 
       this.changeSlide = this.changeSlide.bind(this);
@@ -48,10 +48,16 @@
       }
 
       // если ширина слайда 100% от ширины окна отслеживаем resize
-      window.addEventListener(`resize`, () => {
+      if (currentConfig.slideFullScreen) {
         this.slideWidth = window.innerWidth;
-        this.sliderContainer.style.transform = `translateX(-` + this.slideWidth * this.currentSlide + `px)`;
-      });
+
+        window.addEventListener(`resize`, () => {
+          this.slideWidth = window.innerWidth;
+          this.sliderContainer.style.transform = `translateX(-` + this.slideWidth * this.currentSlide + `px)`;
+        });
+      } else {
+        this.slideWidth = this.sliderItems[0].clientWidth + currentConfig.slideGap;
+      }
 
       // включаем переключение слайдов, если необходимо
       if (currentConfig.slideShow) {
@@ -222,20 +228,47 @@
       slideShow: true,
       delay: 4000,
       swipe: false,
+      slideFullScreen: true,
+      slideGap: 0
     },
     {
       screenWidth: 320,
       navigation: false,
       slideShow: true,
       delay: 4000,
-      swipe: true
+      swipe: true,
+      slideFullScreen: true,
+      slideGap: 0
+    }
+  ];
+
+  const productsConfig = [
+    {
+      screenWidth: 1024,
+      navigation: true,
+      slideShow: false,
+      delay: 4000,
+      swipe: false,
+      slideFullScreen: false,
+      slideGap: 98
+    },
+    {
+      screenWidth: 320,
+      navigation: false,
+      slideShow: false,
+      delay: 4000,
+      swipe: true,
+      slideFullScreen: true,
+      slideGap: 0
     }
   ];
 
   const promoSlider = new Slider(document.querySelector(`.promo`), promoConfig, `promo`);
+  const productsSlider = new Slider(document.querySelector(`.products`), productsConfig, `products`);
 
   menu.init();
   promoSlider.init();
+  productsSlider.init();
 
 }());
 
