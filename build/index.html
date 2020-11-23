@@ -93,6 +93,115 @@
           </button>
         </div>
       </section>
+      <section class="products">
+        <h2 class="visually-hidden">Наши продукты</h2>
+        <div class="products__navigation slider-navigation">
+          <button class="products__nav-btn products__nav-btn--active slider-nav-btn">
+            <svg width="34" height="33">
+              <use class="products__nav-btn-icon" href="img/sprite_auto.svg#icon-vault"></use>
+            </svg>
+            <span>Вклады</span>
+          </button>
+          <button class="products__nav-btn products__nav-btn--active slider-nav-btn">
+            <svg width="34" height="30">
+              <use class="products__nav-btn-icon" href="img/sprite_auto.svg#icon-cards"></use>
+            </svg>
+            <span>Кредиты</span>
+          </button>
+          <button class="products__nav-btn products__nav-btn--active slider-nav-btn">
+            <svg width="28" height="34">
+              <use class="products__nav-btn-icon" href="img/sprite_auto.svg#icon-security"></use>
+            </svg>
+            <span>Страхование</span>
+          </button>
+          <button class="products__nav-btn products__nav-btn--active slider-nav-btn">
+            <svg width="20" height="34">
+              <use class="products__nav-btn-icon" href="img/sprite_auto.svg#icon-phone"></use>
+            </svg>
+            <span>Онлайн-сервисы</span>
+          </button>
+        </div>
+        <ul class="products__list slider-container">
+          <li class="products__item slider-item">
+            <h3 class="visually-hidden">Вклады</h3>
+            <div class="products__wrapper">
+              <p class="products__slogan">Вклады Лига Банка – это выгодная инвестиция в свое будущее</p>
+              <ul class="products__features-list">
+                <li class="products__features-item">Проценты по вкладам до 7%</li>
+                <li class="products__features-item">Разнообразные условия</li>
+                <li class="products__features-item">Возможность ежемесячной капитализации или вывод процентов на банковскую карту</li>
+              </ul>
+              <a class="products__link button" href="#">
+                <span>Узнать подробнее</span>
+              </a>
+            </div>
+            <div class="products__image-container">
+              <picture>
+                <source type="image/webp" srcset="img/products-bg-deposits@1x.webp 1x, img/products-bg-deposits@1x.webp 2x">
+                <img src="img/products-bg-deposits@1x.jpg" srcset="img/products-bg-deposits@2x.jpg 2x" alt="Вклады" width="440" height="290">
+              </picture>
+            </div>
+          </li>
+          <li class="products__item slider-item">
+            <h3 class="visually-hidden">Кредиты</h3>
+            <div class="products__wrapper">
+              <p class="products__slogan">Лига Банк выдает кредиты под любые цели</p>
+              <ul class="products__features-list">
+                <li class="products__features-item">Ипотечный кредит</li>
+                <li class="products__features-item">Автокредит</li>
+                <li class="products__features-item">Потребительский кредит</li>
+              </ul>
+              <p class="products__offer">Рассчитайте ежемесячный платеж
+                и ставку по кредиту воспользовавшись нашим <a href="#">кредитным калькулятором</a></p>
+            </div>
+            <div class="products__image-container">
+              <picture>
+                <source type="image/webp" srcset="img/products-bg-credits@1x.webp 1x, img/products-bg-credits@1x.webp 2x">
+                <img src="img/products-bg-credits@1x.jpg" srcset="img/products-bg-credits@2x.jpg 2x" alt="Вклады" width="440" height="290">
+              </picture>
+            </div>
+          </li>
+          <li class="products__item slider-item">
+            <h3 class="visually-hidden">Страхование</h3>
+            <div class="products__wrapper">
+              <p class="products__slogan">Лига Страхование — застрахуем все что захотите</p>
+              <ul class="products__features-list">
+                <li class="products__features-item">Автомобильное страхование</li>
+                <li class="products__features-item">Страхование жизни и здоровья</li>
+                <li class="products__features-item">Страхование недвижимости</li>
+              </ul>
+              <a class="products__link button" href="#">
+                <span>Узнать подробнее</span>
+              </a>
+            </div>
+            <div class="products__image-container">
+              <picture>
+                <source type="image/webp" srcset="img/products-bg-insurance@1x.webp 1x, img/products-bg-insurance@1x.webp 2x">
+                <img src="img/products-bg-insurance@1x.png" srcset="img/products-bg-insurance@2x.jpg 2x" alt="Вклады" width="440" height="290">
+              </picture>
+            </div>
+          </li>
+          <li class="products__item slider-item">
+            <h3 class="visually-hidden">Онлайн-сервисы</h3>
+            <div class="products__wrapper">
+              <p class="products__slogan">Лига Банк — это огромное количество онлайн-сервисов для вашего удобства</p>
+              <ul class="products__features-list">
+                <li class="products__features-item">Мобильный банк, который всегда под рукой</li>
+                <li class="products__features-item">Приложение Лига-проездной позволит вам оплачивать билеты по всему миру</li>
+              </ul>
+              <a class="products__link button" href="#">
+                <span>Узнать подробнее</span>
+              </a>
+            </div>
+            <div class="products__image-container">
+              <picture>
+                <source type="image/webp" srcset="img/products-bg-online@1x.webp 1x, img/products-bg-online@1x.webp 2x">
+                <img src="img/products-bg-online@1x.png" srcset="img/products-bg-online@2x.jpg 2x" alt="Вклады" width="440" height="290">
+              </picture>
+            </div>
+          </li>
+        </ul>
+      </section>
     </main>
     <script src="js/main.js"></script>
   </body>
