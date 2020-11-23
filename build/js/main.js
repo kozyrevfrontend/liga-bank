@@ -21,12 +21,13 @@
   const menu = new Menu();
 
   class Slider {
-    constructor(domNode, config) {
+    constructor(domNode, config, nameSpace) {
       this.config = config;
+      this.nameSpace = nameSpace;
       this.sliderContainer = domNode.querySelector(`.slider-container`);
       this.sliderNavigation = domNode.querySelector(`.slider-navigation`);
       this.sliderItems = this.sliderContainer.querySelectorAll(`.slider-item`);
-      this.sliderDots = this.sliderNavigation.querySelectorAll(`.slider-dot`);
+      this.sliderNavigationButtons = this.sliderNavigation.querySelectorAll(`.slider-nav-btn`);
 
       this.slideCount = this.sliderItems.length;
       this.slideWidth = window.innerWidth;
@@ -36,28 +37,46 @@
     }
 
     init() {
-      if (this.config.navigation) {
-        for (let i = 0; i < this.sliderDots.length; i++) {
-          this.dotHandler(this.sliderDots[i], i);
+      // находим нужный конфиг в зависимости от ширины экрана
+      const currentConfig = this.findSuitableCfg();
+
+      // если desktop - включаем навигацию
+      if (currentConfig.navigation) {
+        for (let i = 0; i < this.sliderNavigationButtons.length; i++) {
+          this.navigationHandler(this.sliderNavigationButtons[i], i);
         }
       }
 
+      // если ширина слайда 100% от ширины окна отслеживаем resize
       window.addEventListener(`resize`, () => {
         this.slideWidth = window.innerWidth;
         this.sliderContainer.style.transform = `translateX(-` + this.slideWidth * this.currentSlide + `px)`;
       });
 
-      window.setInterval(this.changeSlide, 4000);
+      // включаем переключение слайдов, если необходимо
+      if (currentConfig.slideShow) {
+        window.setInterval(this.changeSlide, currentConfig.delay);
+      }
 
-      this.swipe(this.sliderContainer);
+      // включаем переключение слайдов по свйпу, если необходимо
+      if (currentConfig.swipe) {
+        this.swipe(this.sliderContainer);
 
-      this.sliderContainer.addEventListener('swipe', (evt) => {
-        if (evt.detail.direction === 'left') {
-          this.moveRight();
-        } else if (evt.detail.direction === 'right') {
-          this.moveLeft();
-        }
+        this.sliderContainer.addEventListener('swipe', (evt) => {
+          if (evt.detail.direction === 'left') {
+            this.moveRight();
+          } else if (evt.detail.direction === 'right') {
+            this.moveLeft();
+          }
+        });
+      }
+    }
+
+    findSuitableCfg() {
+      const suitableCfg = this.config.find((cfg) => {
+        return window.matchMedia(`(min-width: ${cfg.screenWidth}px)`).matches;
       });
+      return suitableCfg;
     }
 
     goToSlide(slideNumber) {
@@ -65,7 +84,7 @@
 
       this.currentSlide = slideNumber;
 
-      this.setActiveClass();
+      this.setActiveClass(this.nameSpace);
     }
 
     moveRight() {
@@ -94,6 +113,38 @@
       this.currentSlide--;
 
       this.goToSlide(this.currentSlide);
+    }
+
+    changeSlide() {
+      if (this.currentSlide >= this.slideCount - 1) {
+        this.goToSlide(0);
+
+        this.currentSlide = 0;
+
+        return;
+      }
+
+      this.currentSlide++;
+
+      this.goToSlide(this.currentSlide);
+    }
+
+    setActiveClass(nameSpace) {
+      let currentActive = this.sliderContainer.querySelector(`.slider-item--active`);
+      currentActive.classList.remove(`slider-item--active`);
+
+      this.sliderItems[this.currentSlide].classList.add(`slider-item--active`);
+
+      let currentDot = this.sliderNavigation.querySelector(`.${nameSpace}__nav-btn--active`);
+      currentDot.classList.remove(`${nameSpace}__nav-btn--active`);
+
+      this.sliderNavigationButtons[this.currentSlide].classList.add(`${nameSpace}__nav-btn--active`);
+    }
+
+    navigationHandler(node, int) {
+      node.addEventListener(`click`, () => {
+        this.goToSlide(int);
+      });
     }
 
     swipe(el) {
@@ -162,42 +213,26 @@
       el.addEventListener('touchmove', checkMove);
       el.addEventListener('touchend', checkEnd);
     }
-
-
-    changeSlide() {
-      if (this.currentSlide >= this.slideCount - 1) {
-        this.goToSlide(0);
-
-        this.currentSlide = 0;
-
-        return;
-      }
-
-      this.currentSlide++;
-
-      this.goToSlide(this.currentSlide);
-    }
-
-    setActiveClass() {
-      let currentActive = this.sliderContainer.querySelector(`.slider-item--active`);
-      currentActive.classList.remove(`slider-item--active`);
-
-      this.sliderItems[this.currentSlide].classList.add(`slider-item--active`);
-
-      let currentDot = this.sliderNavigation.querySelector(`.dot--promo-active`);
-      currentDot.classList.remove(`dot--promo-active`);
-
-      this.sliderDots[this.currentSlide].classList.add(`dot--promo-active`);
-    }
-
-    dotHandler(node, int) {
-      node.addEventListener(`click`, () => {
-        this.goToSlide(int);
-      });
-    }
   }
 
-  const promoSlider = new Slider(document.querySelector(`.promo`), {navigation: true});
+  const promoConfig = [
+    {
+      screenWidth: 1024,
+      navigation: true,
+      slideShow: true,
+      delay: 4000,
+      swipe: false,
+    },
+    {
+      screenWidth: 320,
+      navigation: false,
+      slideShow: true,
+      delay: 4000,
+      swipe: true
+    }
+  ];
+
+  const promoSlider = new Slider(document.querySelector(`.promo`), promoConfig, `promo`);
 
   menu.init();
   promoSlider.init();
