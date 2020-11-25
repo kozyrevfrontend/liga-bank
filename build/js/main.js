@@ -23,64 +23,58 @@
   class Slider {
     constructor(domNode, config, nameSpace) {
       this.config = config;
+      this.currentConfig = this.findSuitableCfg();
+
       this.nameSpace = nameSpace;
+
       this.sliderContainer = domNode.querySelector(`.slider-container`);
       this.sliderNavigation = domNode.querySelector(`.slider-navigation`);
       this.sliderItems = this.sliderContainer.querySelectorAll(`.slider-item`);
       this.sliderNavigationButtons = this.sliderNavigation.querySelectorAll(`.slider-nav-btn`);
 
       this.slideCount = this.sliderItems.length;
-      this.slideWidth = null;
+      this.slideWidth = this.setSlideWidth();
       this.currentSlide = 0;
 
       this.changeSlide = this.changeSlide.bind(this);
     }
 
     init() {
-      // находим нужный конфиг в зависимости от ширины экрана
-      const currentConfig = this.findSuitableCfg();
+      this.addNavigationButtonClickListeners();
 
-      // если desktop - включаем навигацию
-      if (currentConfig.navigation) {
-        for (let i = 0; i < this.sliderNavigationButtons.length; i++) {
-          this.navigationHandler(this.sliderNavigationButtons[i], i);
+      this.addSwipeListener();
+
+      if (!this.currentConfig.navigation) {
+        this.disableNavigationButtons();
+      }
+
+      if (this.currentConfig.slideShow) {
+        this.activateSlideShow();
+      }
+
+      if (!this.currentConfig.swipe) {
+        this.disableSwipe();
+      }
+
+      window.addEventListener(`resize`, () => {
+        this.slideWidth = this.setSlideWidth();
+
+        this.setSliderTransition(this.currentSlide);
+
+        this.currentConfig = this.findSuitableCfg();
+
+        this.enableNavigationButtons();
+
+        this.enableSwipe();
+
+        if (!this.currentConfig.navigation) {
+          this.disableNavigationButtons();
         }
-      }
 
-      // если ширина слайда 100% от ширины окна отслеживаем resize
-      if (currentConfig.slideFullScreen) {
-        this.slideWidth = this.sliderContainer.clientWidth;
-
-        window.addEventListener(`resize`, () => {
-          this.slideWidth = this.sliderContainer.clientWidth;
-          this.sliderContainer.style.transform = `translateX(-` + this.slideWidth * this.currentSlide + `px)`;
-        });
-      } else {
-        this.slideWidth = this.sliderItems[0].clientWidth + currentConfig.slideGap;
-
-        window.addEventListener(`resize`, () => {
-          this.slideWidth = this.sliderItems[0].clientWidth + currentConfig.slideGap;
-          this.sliderContainer.style.transform = `translateX(-` + this.slideWidth * this.currentSlide + `px)`;
-        });
-      }
-
-      // включаем переключение слайдов, если необходимо
-      if (currentConfig.slideShow) {
-        window.setInterval(this.changeSlide, currentConfig.delay);
-      }
-
-      // включаем переключение слайдов по свайпу, если необходимо
-      if (currentConfig.swipe) {
-        this.swipe(this.sliderContainer);
-
-        this.sliderContainer.addEventListener('swipe', (evt) => {
-          if (evt.detail.direction === 'left') {
-            this.moveRight();
-          } else if (evt.detail.direction === 'right') {
-            this.moveLeft();
-          }
-        });
-      }
+        if (!this.currentConfig.swipe) {
+          this.disableSwipe();
+        }
+      });
     }
 
     findSuitableCfg() {
@@ -90,8 +84,16 @@
       return suitableCfg;
     }
 
-    goToSlide(slideNumber) {
+    setSlideWidth() {
+      return this.sliderContainer.clientWidth + this.currentConfig.slideGap;
+    }
+
+    setSliderTransition(slideNumber) {
       this.sliderContainer.style.transform = `translateX(-` + this.slideWidth * slideNumber + `px)`;
+    }
+
+    goToSlide(slideNumber) {
+      this.setSliderTransition(slideNumber);
 
       this.currentSlide = slideNumber;
 
@@ -156,6 +158,47 @@
       node.addEventListener(`click`, () => {
         this.goToSlide(int);
       });
+    }
+
+    addNavigationButtonClickListeners() {
+      this.sliderNavigationButtons.forEach((button, index) => {
+        this.navigationHandler(button, index);
+      });
+    }
+
+    disableNavigationButtons() {
+      this.sliderNavigationButtons.forEach((button) => {
+        button.style.pointerEvents = `none`;
+      });
+    }
+
+    enableNavigationButtons() {
+      this.sliderNavigationButtons.forEach((button) => {
+        button.style.pointerEvents = `auto`;
+      });
+    }
+
+    activateSlideShow() {
+      window.setInterval(this.changeSlide, this.currentConfig.delay);
+    }
+
+    addSwipeListener() {
+      this.swipe(this.sliderContainer);
+      this.sliderContainer.addEventListener('swipe', (evt) => {
+        if (evt.detail.direction === 'left') {
+          this.moveRight();
+        } else if (evt.detail.direction === 'right') {
+          this.moveLeft();
+        }
+      });
+    }
+
+    disableSwipe() {
+      this.sliderContainer.style.pointerEvents = `none`;
+    }
+
+    enableSwipe() {
+      this.sliderContainer.style.pointerEvents = `auto`;
     }
 
     swipe(el) {
