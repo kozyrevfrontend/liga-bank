@@ -331,6 +331,44 @@
         special: 8.5
       },
       maternityCapital: 470000
+    },
+    auto: {
+      creditSumm: {
+        min: 500000,
+        max: 5000000
+      },
+      creditPeriod: {
+        min: 1,
+        max: 5
+      },
+      minimumDownPaymentPersentage: 20,
+      basicCreditSumm: 2000000,
+      creditPersentage: {
+        basic: 16,
+        special: 15,
+        insurance: 8.5,
+        fullInsurance: 3.5
+      }
+    },
+    credit: {
+      creditSumm: {
+        min: 50000,
+        max: 3000000
+      },
+      creditPeriod: {
+        min: 1,
+        max: 7
+      },
+      basicCreditSumm: {
+        min: 750000,
+        max: 2000000
+      },
+      creditPersentage: {
+        basic: 15,
+        middle: 12.5,
+        special: 9.5,
+        salaryProject: 0.5
+      }
     }
   };
 
@@ -353,6 +391,11 @@
       this.annuityPayment = null;
       this.creditPersentage = null;
       this.totalCreditSumm = null;
+
+      this.minimumDownPaymentPersentage = null;
+      this.minimumDownPayment = null;
+      this.downPaymentPersentage = null;
+      this.downPayment = null;
     }
 
     setCurrentData(id) {
@@ -383,6 +426,22 @@
       this.maximumCreditPeriod = this.currentData.creditPeriod.max;
     }
 
+    setMinimumDownPaymentPersentage() {
+      this.minimumDownPaymentPersentage = this.currentData.minimumDownPaymentPersentage;
+    }
+
+    setMinimumDownPayment() {
+      this.minimumDownPayment = this.creditSumm * this.minimumDownPaymentPersentage / 100;
+    }
+
+    calculateDownPayment(persent) {
+      this.downPayment = this.creditSumm * persent / 100;
+    }
+
+    calculateDownPaymentPersentage() {
+      this.downPaymentPersentage = Math.floor((this.downPayment / this.creditSumm) * 100);
+    }
+
     calculateAnnuityPayment() {
       const creditPeriodInMonth = this.creditPeriod * 12;
       const monthlyCreditPersentage = this.creditPersentage / 100 / 12;
@@ -400,27 +459,6 @@
       super(data);
 
       this.maternityCapital = false;
-
-      this.minimumDownPaymentPersentage = null;
-      this.minimumDownPayment = null;
-      this.downPaymentPersentage = null;
-      this.downPayment = null;
-    }
-
-    setMinimumDownPaymentPersentage() {
-      this.minimumDownPaymentPersentage = this.currentData.minimumDownPaymentPersentage;
-    }
-
-    setMinimumDownPayment() {
-      this.minimumDownPayment = this.creditSumm * this.minimumDownPaymentPersentage / 100;
-    }
-
-    calculateDownPayment(persent) {
-      this.downPayment = this.creditSumm * persent / 100;
-    }
-
-    calculateDownPaymentPersentage() {
-      this.downPaymentPersentage = Math.floor((this.downPayment / this.creditSumm) * 100);
     }
 
     calculateCreditPersentage() {
@@ -436,7 +474,66 @@
     }
   }
 
+  class AutoCalculator extends Calculator {
+    constructor(data) {
+      super(data);
+
+      this.autoInsurance = false;
+      this.lifeInsurance = false;
+    }
+
+    calculateCreditPersentage() {
+      this.creditPersentage = this.currentData.creditPersentage.basic;
+
+      if (this.creditSumm >= this.currentData.basicCreditSumm) {
+        this.creditPersentage = this.currentData.creditPersentage.special;
+      }
+
+      if (this.autoInsurance || this.lifeInsurance) {
+        this.creditPersentage = this.currentData.creditPersentage.insurance;
+      }
+
+      if (this.autoInsurance && this.lifeInsurance) {
+        this.creditPersentage = this.currentData.creditPersentage.fullInsurance;
+      }
+    }
+
+    calculateTotalCreditSumm() {
+      this.totalCreditSumm = this.creditSumm - this.downPayment;
+    }
+  }
+
+  class CreditCalculator extends Calculator {
+    constructor(data) {
+      super(data);
+
+      this.salaryProject = false;
+    }
+
+    calculateCreditPersentage() {
+      this.creditPersentage = this.currentData.creditPersentage.basic;
+
+      if (this.creditSumm >= this.currentData.basicCreditSumm.min && this.creditSumm < this.currentData.basicCreditSumm.max) {
+        this.creditPersentage = this.currentData.creditPersentage.middle;
+      }
+
+      if (this.creditSumm >= this.currentData.basicCreditSumm.max) {
+        this.creditPersentage = this.currentData.creditPersentage.special;
+      }
+
+      if (this.salaryProject) {
+        this.creditPersentage -= this.currentData.creditPersentage.salaryProject;
+      }
+    }
+
+    calculateTotalCreditSumm() {
+      this.totalCreditSumm = this.creditSumm;
+    }
+  }
+
   const mortgageCalculator = new MortgageCalculator(creditProgramsData);
+  const autoCalculator = new AutoCalculator(creditProgramsData);
+  const creditCalculator = new CreditCalculator(creditProgramsData);
 
   menu.init();
   promoSlider.init();
@@ -459,6 +556,40 @@
   mortgageCalculator.calculateAnnuityPayment();
   mortgageCalculator.calculateMinimumIncome();
   console.dir(mortgageCalculator);
+
+  autoCalculator.setCurrentData(`auto`);
+  autoCalculator.setCreditSumm(2000000);
+  autoCalculator.autoInsurance = true;
+  autoCalculator.lifeInsurance = true;
+  autoCalculator.setMinimumCreditSumm();
+  autoCalculator.setMaximumCreditSumm();
+  autoCalculator.setMinimumCreditPeriod();
+  autoCalculator.setMaximumCreditPeriod();
+  autoCalculator.setMinimumDownPaymentPersentage();
+  autoCalculator.setMinimumDownPayment();
+  autoCalculator.setCreditPeriod(autoCalculator.maximumCreditPeriod);
+  autoCalculator.setMinimumDownPaymentPersentage();
+  autoCalculator.calculateDownPayment(30);
+  autoCalculator.calculateDownPaymentPersentage();
+  autoCalculator.calculateCreditPersentage();
+  autoCalculator.calculateTotalCreditSumm();
+  autoCalculator.calculateAnnuityPayment();
+  autoCalculator.calculateMinimumIncome();
+  console.dir(autoCalculator);
+
+  creditCalculator.setCurrentData(`credit`);
+  creditCalculator.setCreditSumm(2000000);
+  creditCalculator.salaryProject = true;
+  creditCalculator.setMinimumCreditSumm();
+  creditCalculator.setMaximumCreditSumm();
+  creditCalculator.setMinimumCreditPeriod();
+  creditCalculator.setMaximumCreditPeriod();
+  creditCalculator.setCreditPeriod(creditCalculator.maximumCreditPeriod);
+  creditCalculator.calculateCreditPersentage();
+  creditCalculator.calculateTotalCreditSumm();
+  creditCalculator.calculateAnnuityPayment();
+  creditCalculator.calculateMinimumIncome();
+  console.dir(creditCalculator);
 
 }());
 

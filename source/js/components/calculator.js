@@ -19,6 +19,11 @@ class Calculator {
     this.annuityPayment = null;
     this.creditPersentage = null;
     this.totalCreditSumm = null;
+
+    this.minimumDownPaymentPersentage = null;
+    this.minimumDownPayment = null;
+    this.downPaymentPersentage = null;
+    this.downPayment = null;
   }
 
   setCurrentData(id) {
@@ -49,6 +54,22 @@ class Calculator {
     this.maximumCreditPeriod = this.currentData.creditPeriod.max;
   }
 
+  setMinimumDownPaymentPersentage() {
+    this.minimumDownPaymentPersentage = this.currentData.minimumDownPaymentPersentage;
+  }
+
+  setMinimumDownPayment() {
+    this.minimumDownPayment = this.creditSumm * this.minimumDownPaymentPersentage / 100;
+  }
+
+  calculateDownPayment(persent) {
+    this.downPayment = this.creditSumm * persent / 100;
+  }
+
+  calculateDownPaymentPersentage() {
+    this.downPaymentPersentage = Math.floor((this.downPayment / this.creditSumm) * 100);
+  }
+
   calculateAnnuityPayment() {
     const creditPeriodInMonth = this.creditPeriod * 12;
     const monthlyCreditPersentage = this.creditPersentage / 100 / 12;
@@ -66,27 +87,6 @@ class MortgageCalculator extends Calculator {
     super(data);
 
     this.maternityCapital = false;
-
-    this.minimumDownPaymentPersentage = null;
-    this.minimumDownPayment = null;
-    this.downPaymentPersentage = null;
-    this.downPayment = null;
-  }
-
-  setMinimumDownPaymentPersentage() {
-    this.minimumDownPaymentPersentage = this.currentData.minimumDownPaymentPersentage;
-  }
-
-  setMinimumDownPayment() {
-    this.minimumDownPayment = this.creditSumm * this.minimumDownPaymentPersentage / 100;
-  }
-
-  calculateDownPayment(persent) {
-    this.downPayment = this.creditSumm * persent / 100;
-  }
-
-  calculateDownPaymentPersentage() {
-    this.downPaymentPersentage = Math.floor((this.downPayment / this.creditSumm) * 100);
   }
 
   calculateCreditPersentage() {
@@ -102,4 +102,63 @@ class MortgageCalculator extends Calculator {
   }
 }
 
+class AutoCalculator extends Calculator {
+  constructor(data) {
+    super(data);
+
+    this.autoInsurance = false;
+    this.lifeInsurance = false;
+  }
+
+  calculateCreditPersentage() {
+    this.creditPersentage = this.currentData.creditPersentage.basic;
+
+    if (this.creditSumm >= this.currentData.basicCreditSumm) {
+      this.creditPersentage = this.currentData.creditPersentage.special;
+    }
+
+    if (this.autoInsurance || this.lifeInsurance) {
+      this.creditPersentage = this.currentData.creditPersentage.insurance;
+    }
+
+    if (this.autoInsurance && this.lifeInsurance) {
+      this.creditPersentage = this.currentData.creditPersentage.fullInsurance;
+    }
+  }
+
+  calculateTotalCreditSumm() {
+    this.totalCreditSumm = this.creditSumm - this.downPayment;
+  }
+}
+
+class CreditCalculator extends Calculator {
+  constructor(data) {
+    super(data);
+
+    this.salaryProject = false;
+  }
+
+  calculateCreditPersentage() {
+    this.creditPersentage = this.currentData.creditPersentage.basic;
+
+    if (this.creditSumm >= this.currentData.basicCreditSumm.min && this.creditSumm < this.currentData.basicCreditSumm.max) {
+      this.creditPersentage = this.currentData.creditPersentage.middle;
+    }
+
+    if (this.creditSumm >= this.currentData.basicCreditSumm.max) {
+      this.creditPersentage = this.currentData.creditPersentage.special;
+    }
+
+    if (this.salaryProject) {
+      this.creditPersentage -= this.currentData.creditPersentage.salaryProject;
+    }
+  }
+
+  calculateTotalCreditSumm() {
+    this.totalCreditSumm = this.creditSumm;
+  }
+}
+
 export const mortgageCalculator = new MortgageCalculator(creditProgramsData);
+export const autoCalculator = new AutoCalculator(creditProgramsData);
+export const creditCalculator = new CreditCalculator(creditProgramsData);
