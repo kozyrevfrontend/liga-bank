@@ -398,6 +398,28 @@
       this.downPayment = null;
     }
 
+    init(id) {
+      this.setCurrentData(id);
+      this.setMinimumCreditSumm();
+      this.setMaximumCreditSumm();
+      this.setCreditSumm(this.minimumCreditSumm);
+      this.setMinimumCreditPeriod();
+      this.setMaximumCreditPeriod();
+      this.setCreditPeriod(this.minimumCreditPeriod);
+
+      if (this.currentData.minimumDownPaymentPersentage) {
+        this.setMinimumDownPaymentPersentage();
+        this.setMinimumDownPayment();
+        this.calculateDownPayment(this.minimumDownPaymentPersentage);
+        this.calculateDownPaymentPersentage();
+      }
+
+      this.calculateCreditPersentage();
+      this.calculateTotalCreditSumm();
+      this.calculateAnnuityPayment();
+      this.calculateMinimumIncome();
+    }
+
     setCurrentData(id) {
       this.currentData = this.data[id];
     }
@@ -539,56 +561,16 @@
   promoSlider.init();
   productsSlider.init();
 
-  mortgageCalculator.setCurrentData(`mortgage`);
-  mortgageCalculator.setCreditSumm(mortgageCalculator.currentData.creditSumm.min);
-  mortgageCalculator.setMinimumCreditSumm();
-  mortgageCalculator.setMaximumCreditSumm();
-  mortgageCalculator.setMinimumCreditPeriod();
-  mortgageCalculator.setMaximumCreditPeriod();
-  mortgageCalculator.setMinimumDownPaymentPersentage();
-  mortgageCalculator.setMinimumDownPayment();
-  mortgageCalculator.setCreditPeriod(mortgageCalculator.minimumCreditPeriod);
-  mortgageCalculator.setMinimumDownPaymentPersentage();
-  mortgageCalculator.calculateDownPayment(16);
-  mortgageCalculator.calculateDownPaymentPersentage();
-  mortgageCalculator.calculateCreditPersentage();
-  mortgageCalculator.calculateTotalCreditSumm();
-  mortgageCalculator.calculateAnnuityPayment();
-  mortgageCalculator.calculateMinimumIncome();
+  mortgageCalculator.init(`mortgage`);
+
   console.dir(mortgageCalculator);
 
-  autoCalculator.setCurrentData(`auto`);
-  autoCalculator.setCreditSumm(2000000);
-  autoCalculator.autoInsurance = true;
-  autoCalculator.lifeInsurance = true;
-  autoCalculator.setMinimumCreditSumm();
-  autoCalculator.setMaximumCreditSumm();
-  autoCalculator.setMinimumCreditPeriod();
-  autoCalculator.setMaximumCreditPeriod();
-  autoCalculator.setMinimumDownPaymentPersentage();
-  autoCalculator.setMinimumDownPayment();
-  autoCalculator.setCreditPeriod(autoCalculator.maximumCreditPeriod);
-  autoCalculator.setMinimumDownPaymentPersentage();
-  autoCalculator.calculateDownPayment(30);
-  autoCalculator.calculateDownPaymentPersentage();
-  autoCalculator.calculateCreditPersentage();
-  autoCalculator.calculateTotalCreditSumm();
-  autoCalculator.calculateAnnuityPayment();
-  autoCalculator.calculateMinimumIncome();
+  autoCalculator.init(`auto`);
+
   console.dir(autoCalculator);
 
-  creditCalculator.setCurrentData(`credit`);
-  creditCalculator.setCreditSumm(2000000);
-  creditCalculator.salaryProject = true;
-  creditCalculator.setMinimumCreditSumm();
-  creditCalculator.setMaximumCreditSumm();
-  creditCalculator.setMinimumCreditPeriod();
-  creditCalculator.setMaximumCreditPeriod();
-  creditCalculator.setCreditPeriod(creditCalculator.maximumCreditPeriod);
-  creditCalculator.calculateCreditPersentage();
-  creditCalculator.calculateTotalCreditSumm();
-  creditCalculator.calculateAnnuityPayment();
-  creditCalculator.calculateMinimumIncome();
+  creditCalculator.init(`credit`);
+
   console.dir(creditCalculator);
 
 }());

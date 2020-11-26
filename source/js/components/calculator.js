@@ -26,6 +26,28 @@ class Calculator {
     this.downPayment = null;
   }
 
+  init(id) {
+    this.setCurrentData(id);
+    this.setMinimumCreditSumm();
+    this.setMaximumCreditSumm();
+    this.setCreditSumm(this.minimumCreditSumm);
+    this.setMinimumCreditPeriod();
+    this.setMaximumCreditPeriod();
+    this.setCreditPeriod(this.minimumCreditPeriod);
+
+    if (this.currentData.minimumDownPaymentPersentage) {
+      this.setMinimumDownPaymentPersentage();
+      this.setMinimumDownPayment();
+      this.calculateDownPayment(this.minimumDownPaymentPersentage);
+      this.calculateDownPaymentPersentage();
+    }
+
+    this.calculateCreditPersentage();
+    this.calculateTotalCreditSumm();
+    this.calculateAnnuityPayment();
+    this.calculateMinimumIncome();
+  }
+
   setCurrentData(id) {
     this.currentData = this.data[id];
   }
