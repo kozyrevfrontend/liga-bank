@@ -1,6 +1,6 @@
 import { creditProgramsData } from '../data/CreditProgramsData';
 
-class Calculator {
+export default class Calculator {
   constructor(data) {
     this.data = data;
     this.currentData = null;
