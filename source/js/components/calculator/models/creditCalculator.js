@@ -1,6 +1,7 @@
 import { Calculator } from './calculator';
+import { creditProgramsData } from '../data/CreditProgramsData';
 
-export default class CreditCalculator extends Calculator {
+class CreditCalculator extends Calculator {
   constructor(data) {
     super(data);
 
@@ -27,3 +28,6 @@ export default class CreditCalculator extends Calculator {
     this.totalCreditSumm = this.creditSumm;
   }
 }
+
+export const creditCalculator = new CreditCalculator(creditProgramsData);
+

@@ -1,6 +1,7 @@
 import { Calculator } from './calculator';
+import { creditProgramsData } from '../data/CreditProgramsData';
 
-export default class MortgageCalculator extends Calculator {
+class MortgageCalculator extends Calculator {
   constructor(data) {
     super(data);
 
@@ -19,3 +20,5 @@ export default class MortgageCalculator extends Calculator {
     }
   }
 }
+
+export const mortgageCalculator = new MortgageCalculator(creditProgramsData);
