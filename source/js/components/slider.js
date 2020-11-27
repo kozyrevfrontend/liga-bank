@@ -30,10 +30,6 @@ class Slider {
       this.activateSlideShow();
     }
 
-    if (!this.currentConfig.swipe) {
-      this.disableSwipe();
-    }
-
     window.addEventListener(`resize`, () => {
       this.slideWidth = this.setSlideWidth();
 
@@ -43,14 +39,8 @@ class Slider {
 
       this.enableNavigationButtons();
 
-      this.enableSwipe();
-
       if (!this.currentConfig.navigation) {
         this.disableNavigationButtons();
-      }
-
-      if (!this.currentConfig.swipe) {
-        this.disableSwipe();
       }
     });
   }
@@ -169,14 +159,6 @@ class Slider {
         this.moveLeft();
       }
     });
-  }
-
-  disableSwipe() {
-    this.sliderContainer.style.pointerEvents = `none`;
-  }
-
-  enableSwipe() {
-    this.sliderContainer.style.pointerEvents = `auto`;
   }
 
   swipe(el) {
