@@ -1,7 +1,7 @@
+import { basicCalculatorView } from '../views/basicCalculatorView';
 import { mortgagePresenter } from './mortgagePresenter';
 import { autoPresenter } from './autoPresenter';
 import { creditPresenter } from './creditPresenter';
-import { calculatorBasicView } from '../views/calculatorBasicView';
 
 class StaringPresenter {
   constructor(presenters, basicView) {
@@ -19,31 +19,17 @@ class StaringPresenter {
   }
 
   creditOptionsClickHandler(id) {
-    let model = null;
-
     switch (id) {
       case `mortgage`:
-        model = this.mortgagePresenter.calculator;
-        model.init(id);
-        console.dir(model);
+        this.mortgagePresenter.init(id);
         break;
       case `auto`:
-        model = this.autoPresenter.calculator;
-        model.init(id);
-        console.dir(model);
+        this.autoPresenter.init(id);
         break;
       case `credit`:
-        model = this.creditPresenter.calculator;
-        model.init(id);
-        console.dir(model);
+        this.creditPresenter.init(id);
         break;
     }
-
-    this.basicView.renderCalculatorResults(
-      model.totalCreditSumm.toLocaleString('ru-RU'),
-      model.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-      model.annuityPayment.toLocaleString('ru-RU'),
-      model.minimumIncome.toLocaleString('ru-RU'));
   }
 }
 
@@ -53,5 +39,5 @@ export const startingPresenter = new StaringPresenter(
     autoPresenter,
     creditPresenter
   },
-  calculatorBasicView
+  basicCalculatorView
 );

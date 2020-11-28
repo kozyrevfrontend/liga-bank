@@ -296,10 +296,77 @@
   const promoSlider = new Slider(document.querySelector(`.promo`), promoConfig, `promo`);
   const productsSlider = new Slider(document.querySelector(`.products`), productsConfig, `products`);
 
+  function renderElement(parentElement, template, place = `beforeend`) {
+    parentElement.insertAdjacentHTML(place, template);
+  }
+
+  function deleteChildrenElements(list) {
+    while (list.firstChild) {
+      list.removeChild(list.firstChild);
+    }
+  }
+
+  class BasicCalculatorView {
+    constructor(utils) {
+      this.creditPurposeField = document.querySelector(`#creditPurpose`);
+      this.creditOptionsList = document.querySelector(`.calculator__options-list`);
+
+      this.renderElement = utils.renderElement;
+      this.deleteChildrenElements = utils.deleteChildrenElements;
+    }
+
+    addCreditPurposeClickListener() {
+      this.creditPurposeField.addEventListener(`click`, () => {
+        this.creditOptionsList.classList.toggle(`calculator__options-list--expanded`);
+        this.creditPurposeField.classList.toggle(`calculator__field--expanded`);
+      });
+    }
+
+    addCreditOptionsClickListeners(handler) {
+      const creditPurposeFieldValue = this.creditPurposeField.querySelector(`span`);
+
+      const creditOptionsItems = this.creditOptionsList.querySelectorAll(`.calculator__options-item button`);
+
+      const creditOptionsItemsClickHandler = (item) => {
+        item.addEventListener(`click`, (evt) => {
+          creditPurposeFieldValue.textContent = evt.currentTarget.innerText;
+          this.creditOptionsList.classList.toggle(`calculator__options-list--expanded`);
+          this.creditPurposeField.classList.toggle(`calculator__field--expanded`);
+
+          handler(evt.currentTarget.id);
+        });
+      };
+
+      creditOptionsItems.forEach((item) => {
+        creditOptionsItemsClickHandler(item);
+      });
+    }
+  }
+
+  const basicCalculatorView = new BasicCalculatorView(
+    {
+      renderElement,
+      deleteChildrenElements
+    }
+  );
+
   class BasicPresenter {
-    constructor(model, basicView) {
+    constructor(model, view) {
       this.calculator = model;
-      this.basicView = basicView;
+      this.view = view;
+    }
+
+    init(id) {
+      this.calculator.init(id);
+
+      console.dir(this.calculator);
+
+      this.view.renderCalculatorResults(
+        this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
+        this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
+        this.calculator.annuityPayment.toLocaleString('ru-RU'),
+        this.calculator.minimumIncome.toLocaleString('ru-RU')
+      );
     }
   }
 
@@ -487,7 +554,7 @@
 
   const mortgageCalculator = new MortgageCalculator(creditProgramsData);
 
-  function createCalculatorResultsTemplate(creditSumm, creditPersentage, annuityPayment, minimumIncome) {
+  function createMortgageCalculatorResultsTemplate(creditSumm, creditPersentage, annuityPayment, minimumIncome) {
     return (
       `<div class="calculator__results results">
       <h3 class="results__title">Наше предложение</h3>
@@ -514,76 +581,13 @@
     );
   }
 
-  function renderElement(parentElement, template, place = `beforeend`) {
-    parentElement.insertAdjacentHTML(place, template);
-  }
-
-  function deleteChildrenElements(list) {
-    while (list.firstChild) {
-      list.removeChild(list.firstChild);
-    }
-  }
-
-  class CalculatorBasicView {
+  class MortgageCalculatorView {
     constructor(markups, utils) {
-      this.creditPurposeField = document.querySelector(`#creditPurpose`);
-      this.creditOptionsList = document.querySelector(`.calculator__options-list`);
-
-      this.createCalculatorResultsTemplate = markups.createCalculatorResultsTemplate;
+      this.createMortgageCalculatorResultsTemplate = markups.createMortgageCalculatorResultsTemplate;
 
       this.renderElement = utils.renderElement;
       this.deleteChildrenElements = utils.deleteChildrenElements;
     }
-
-    addCreditPurposeClickListener() {
-      this.creditPurposeField.addEventListener(`click`, () => {
-        this.creditOptionsList.classList.toggle(`calculator__options-list--expanded`);
-        this.creditPurposeField.classList.toggle(`calculator__field--expanded`);
-      });
-    }
-
-    addCreditOptionsClickListeners(handler) {
-      const creditPurposeFieldValue = this.creditPurposeField.querySelector(`span`);
-
-      const creditOptionsItems = this.creditOptionsList.querySelectorAll(`.calculator__options-item button`);
-
-      const creditOptionsItemsClickHandler = (item) => {
-        item.addEventListener(`click`, (evt) => {
-          creditPurposeFieldValue.textContent = evt.currentTarget.innerText;
-          this.creditOptionsList.classList.toggle(`calculator__options-list--expanded`);
-          this.creditPurposeField.classList.toggle(`calculator__field--expanded`);
-
-          handler(evt.currentTarget.id);
-        });
-      };
-
-      creditOptionsItems.forEach((item) => {
-        creditOptionsItemsClickHandler(item);
-      });
-    }
-
-    // const creditPurposeField = document.querySelector(`#creditPurpose`);
-    // const creditPurposeFieldValue = creditPurposeField.querySelector(`span`);
-    // const creditOptionsList = document.querySelector(`.calculator__options-list`);
-    // const creditOptionsItems = creditOptionsList.querySelectorAll(`.calculator__options-item button`);
-
-    // creditPurposeField.addEventListener(`click`, () => {
-    //   creditOptionsList.classList.toggle(`calculator__options-list--expanded`);
-    //   creditPurposeField.classList.toggle(`calculator__field--expanded`);
-    // });
-
-    // const creditOptionsItemsClickHandler = (item) => {
-    //   item.addEventListener(`click`, (evt) => {
-    //     creditPurposeFieldValue.textContent = evt.currentTarget.innerText;
-    //     creditOptionsList.classList.toggle(`calculator__options-list--expanded`);
-    //     creditPurposeField.classList.toggle(`calculator__field--expanded`);
-    //     initCalculator(evt.currentTarget.id);
-    //   });
-    // };
-
-    // creditOptionsItems.forEach((item) => {
-    //   creditOptionsItemsClickHandler(item);
-    // });
 
     renderCalculatorResults(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome) {
       const calculatorContainer = document.querySelector(`.calculator__container`);
@@ -593,13 +597,13 @@
         calculatorContainer.removeChild(calculatorResults);
       }
 
-      this.renderElement(calculatorContainer, this.createCalculatorResultsTemplate(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome));
+      this.renderElement(calculatorContainer, this.createMortgageCalculatorResultsTemplate(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome));
     }
   }
 
-  const calculatorBasicView = new CalculatorBasicView(
+  const mortgageCalculatorView = new MortgageCalculatorView(
     {
-      createCalculatorResultsTemplate
+      createMortgageCalculatorResultsTemplate
     },
     {
       renderElement,
@@ -608,12 +612,12 @@
   );
 
   class MortgagePresenter extends BasicPresenter {
-    constructor(model, basicView) {
-      super(model, basicView);
+    constructor(model, view) {
+      super(model, view);
     }
   }
 
-  const mortgagePresenter = new MortgagePresenter(mortgageCalculator, calculatorBasicView);
+  const mortgagePresenter = new MortgagePresenter(mortgageCalculator, mortgageCalculatorView);
 
   class AutoCalculator extends Calculator {
     constructor(data) {
@@ -646,13 +650,70 @@
 
   const autoCalculator = new AutoCalculator(creditProgramsData);
 
-  class AutoPresenter extends BasicPresenter {
-    constructor(model, basicView) {
-      super(model, basicView);
+  function createAutoCalculatorResultsTemplate(creditSumm, creditPersentage, annuityPayment, minimumIncome) {
+    return (
+      `<div class="calculator__results results">
+      <h3 class="results__title">Наше предложение</h3>
+      <dl class="results__board">
+        <div class="results__wrapper">
+          <dt class="results__value">${creditSumm} рублей </dt>
+          <dd class="results__description">Сумма автокредита</dd>
+        </div>
+        <div class="results__wrapper results__wrapper--fix">
+          <dt class="results__value">${creditPersentage}%</dt>
+          <dd class="results__description">Процентная ставка</dd>
+        </div>
+        <div class="results__wrapper">
+          <dt class="results__value">${annuityPayment} рублей</dt>
+          <dd class="results__description">Ежемесячный платеж</dd>
+        </div>
+        <div class="results__wrapper results__wrapper--fix">
+          <dt class="results__value">${minimumIncome} рублей</dt>
+          <dd class="results__description">Необходимый доход</dd>
+        </div>
+      </dl>
+      <button class="results__apply button"><span>Оформить заявку</span></button>
+    </div>`
+    );
+  }
+
+  class AutoCalculatorView {
+    constructor(markups, utils) {
+      this.createAutoCalculatorResultsTemplate = markups.createAutoCalculatorResultsTemplate;
+
+      this.renderElement = utils.renderElement;
+      this.deleteChildrenElements = utils.deleteChildrenElements;
+    }
+
+    renderCalculatorResults(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome) {
+      const calculatorContainer = document.querySelector(`.calculator__container`);
+      const calculatorResults = calculatorContainer.querySelector(`.calculator__results`);
+
+      if (calculatorResults) {
+        calculatorContainer.removeChild(calculatorResults);
+      }
+
+      this.renderElement(calculatorContainer, this.createAutoCalculatorResultsTemplate(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome));
     }
   }
 
-  const autoPresenter = new AutoPresenter(autoCalculator, calculatorBasicView);
+  const autoCalculatorView = new AutoCalculatorView(
+    {
+      createAutoCalculatorResultsTemplate
+    },
+    {
+      renderElement,
+      deleteChildrenElements
+    }
+  );
+
+  class AutoPresenter extends BasicPresenter {
+    constructor(model, view) {
+      super(model, view);
+    }
+  }
+
+  const autoPresenter = new AutoPresenter(autoCalculator, autoCalculatorView);
 
   class CreditCalculator extends Calculator {
     constructor(data) {
@@ -684,13 +745,70 @@
 
   const creditCalculator = new CreditCalculator(creditProgramsData);
 
-  class CreditPresenter extends BasicPresenter {
-    constructor(model, basicView) {
-      super(model, basicView);
+  function createCreditCalculatorResultsTemplate(creditSumm, creditPersentage, annuityPayment, minimumIncome) {
+    return (
+      `<div class="calculator__results results">
+      <h3 class="results__title">Наше предложение</h3>
+      <dl class="results__board">
+        <div class="results__wrapper">
+          <dt class="results__value">${creditSumm} рублей </dt>
+          <dd class="results__description">Сумма кредита</dd>
+        </div>
+        <div class="results__wrapper results__wrapper--fix">
+          <dt class="results__value">${creditPersentage}%</dt>
+          <dd class="results__description">Процентная ставка</dd>
+        </div>
+        <div class="results__wrapper">
+          <dt class="results__value">${annuityPayment} рублей</dt>
+          <dd class="results__description">Ежемесячный платеж</dd>
+        </div>
+        <div class="results__wrapper results__wrapper--fix">
+          <dt class="results__value">${minimumIncome} рублей</dt>
+          <dd class="results__description">Необходимый доход</dd>
+        </div>
+      </dl>
+      <button class="results__apply button"><span>Оформить заявку</span></button>
+    </div>`
+    );
+  }
+
+  class CreditCalculatorView {
+    constructor(markups, utils) {
+      this.createCreditCalculatorResultsTemplate = markups.createCreditCalculatorResultsTemplate;
+
+      this.renderElement = utils.renderElement;
+      this.deleteChildrenElements = utils.deleteChildrenElements;
+    }
+
+    renderCalculatorResults(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome) {
+      const calculatorContainer = document.querySelector(`.calculator__container`);
+      const calculatorResults = calculatorContainer.querySelector(`.calculator__results`);
+
+      if (calculatorResults) {
+        calculatorContainer.removeChild(calculatorResults);
+      }
+
+      this.renderElement(calculatorContainer, this.createCreditCalculatorResultsTemplate(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome));
     }
   }
 
-  const creditPresenter = new CreditPresenter(creditCalculator, calculatorBasicView);
+  const creditCalculatorView = new CreditCalculatorView(
+    {
+      createCreditCalculatorResultsTemplate
+    },
+    {
+      renderElement,
+      deleteChildrenElements
+    }
+  );
+
+  class CreditPresenter extends BasicPresenter {
+    constructor(model, view) {
+      super(model, view);
+    }
+  }
+
+  const creditPresenter = new CreditPresenter(creditCalculator, creditCalculatorView);
 
   class StaringPresenter {
     constructor(presenters, basicView) {
@@ -708,31 +826,17 @@
     }
 
     creditOptionsClickHandler(id) {
-      let model = null;
-
       switch (id) {
         case `mortgage`:
-          model = this.mortgagePresenter.calculator;
-          model.init(id);
-          console.dir(model);
+          this.mortgagePresenter.init(id);
           break;
         case `auto`:
-          model = this.autoPresenter.calculator;
-          model.init(id);
-          console.dir(model);
+          this.autoPresenter.init(id);
           break;
         case `credit`:
-          model = this.creditPresenter.calculator;
-          model.init(id);
-          console.dir(model);
+          this.creditPresenter.init(id);
           break;
       }
-
-      this.basicView.renderCalculatorResults(
-        model.totalCreditSumm.toLocaleString('ru-RU'),
-        model.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-        model.annuityPayment.toLocaleString('ru-RU'),
-        model.minimumIncome.toLocaleString('ru-RU'));
     }
   }
 
@@ -742,53 +846,13 @@
       autoPresenter,
       creditPresenter
     },
-    calculatorBasicView
+    basicCalculatorView
   );
 
   menu.init();
   promoSlider.init();
   productsSlider.init();
   startingPresenter.init();
-
-  // const initCalculator = (id) => {
-  //   switch (id) {
-  //     case `mortgage`:
-  //       mortgageCalculator.init(id);
-  //       console.dir(mortgageCalculator);
-  //       break;
-  //     case `auto`:
-  //       autoCalculator.init(id);
-  //       console.dir(autoCalculator);
-  //       break;
-  //     case `credit`:
-  //       creditCalculator.init(id);
-  //       console.dir(creditCalculator);
-  //       break;
-  //   }
-  // };
-
-  // const creditPurposeField = document.querySelector(`#creditPurpose`);
-  // const creditPurposeFieldValue = creditPurposeField.querySelector(`span`);
-  // const creditOptionsList = document.querySelector(`.calculator__options-list`);
-  // const creditOptionsItems = creditOptionsList.querySelectorAll(`.calculator__options-item button`);
-
-  // creditPurposeField.addEventListener(`click`, () => {
-  //   creditOptionsList.classList.toggle(`calculator__options-list--expanded`);
-  //   creditPurposeField.classList.toggle(`calculator__field--expanded`);
-  // });
-
-  // const creditOptionsItemsClickHandler = (item) => {
-  //   item.addEventListener(`click`, (evt) => {
-  //     creditPurposeFieldValue.textContent = evt.currentTarget.innerText;
-  //     creditOptionsList.classList.toggle(`calculator__options-list--expanded`);
-  //     creditPurposeField.classList.toggle(`calculator__field--expanded`);
-  //     initCalculator(evt.currentTarget.id);
-  //   });
-  // };
-
-  // creditOptionsItems.forEach((item) => {
-  //   creditOptionsItemsClickHandler(item);
-  // });
 
 }());
 

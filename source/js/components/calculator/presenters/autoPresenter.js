@@ -1,11 +1,11 @@
 import { BasicPresenter } from './basicPresenter';
 import { autoCalculator } from '../models/autoCalculator';
-import { calculatorBasicView } from '../views/calculatorBasicView';
+import { autoCalculatorView } from '../views/autoCalculatorView';
 
 class AutoPresenter extends BasicPresenter {
-  constructor(model, basicView) {
-    super(model, basicView);
+  constructor(model, view) {
+    super(model, view);
   }
 }
 
-export const autoPresenter = new AutoPresenter(autoCalculator, calculatorBasicView);
+export const autoPresenter = new AutoPresenter(autoCalculator, autoCalculatorView);

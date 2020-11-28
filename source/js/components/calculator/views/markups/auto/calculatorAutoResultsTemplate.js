@@ -1,11 +1,11 @@
-export function createCalculatorResultsTemplate(creditSumm, creditPersentage, annuityPayment, minimumIncome) {
+export function createAutoCalculatorResultsTemplate(creditSumm, creditPersentage, annuityPayment, minimumIncome) {
   return (
     `<div class="calculator__results results">
       <h3 class="results__title">Наше предложение</h3>
       <dl class="results__board">
         <div class="results__wrapper">
           <dt class="results__value">${creditSumm} рублей </dt>
-          <dd class="results__description">Сумма ипотеки</dd>
+          <dd class="results__description">Сумма автокредита</dd>
         </div>
         <div class="results__wrapper results__wrapper--fix">
           <dt class="results__value">${creditPersentage}%</dt>

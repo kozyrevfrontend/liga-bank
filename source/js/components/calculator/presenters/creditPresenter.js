@@ -1,11 +1,11 @@
 import { BasicPresenter } from './basicPresenter';
 import { creditCalculator } from '../models/creditCalculator';
-import { calculatorBasicView } from '../views/calculatorBasicView';
+import { creditCalculatorView } from '../views/creditCalculatorView';
 
 class CreditPresenter extends BasicPresenter {
-  constructor(model, basicView) {
-    super(model, basicView);
+  constructor(model, view) {
+    super(model, view);
   }
 }
 
-export const creditPresenter = new CreditPresenter(creditCalculator, calculatorBasicView);
+export const creditPresenter = new CreditPresenter(creditCalculator, creditCalculatorView);
