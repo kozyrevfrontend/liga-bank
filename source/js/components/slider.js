@@ -18,6 +18,8 @@ class Slider {
   }
 
   init() {
+    this.initActiveClasses(this.nameSpace);
+
     this.addNavigationButtonClickListeners();
 
     this.addSwipeListener();
@@ -110,16 +112,64 @@ class Slider {
     this.goToSlide(this.currentSlide);
   }
 
+  initActiveClasses(nameSpace) {
+    const slides = this.sliderContainer.querySelectorAll(`.slider-item`);
+    slides[0].classList.add(`slider-item--active`);
+
+    for (let i = 1; i < slides.length; i++) {
+      this.disableTab(slides[i]);
+    }
+
+    const firstDot = this.sliderNavigation.querySelector(`.${nameSpace}__nav-btn:first-child`);
+    firstDot.classList.add(`${nameSpace}__nav-btn--active`)
+  }
+
   setActiveClass(nameSpace) {
     let currentActive = this.sliderContainer.querySelector(`.slider-item--active`);
+    this.disableTab(currentActive);
     currentActive.classList.remove(`slider-item--active`);
 
     this.sliderItems[this.currentSlide].classList.add(`slider-item--active`);
+    this.enableTab(this.sliderItems[this.currentSlide]);
 
     let currentDot = this.sliderNavigation.querySelector(`.${nameSpace}__nav-btn--active`);
     currentDot.classList.remove(`${nameSpace}__nav-btn--active`);
 
     this.sliderNavigationButtons[this.currentSlide].classList.add(`${nameSpace}__nav-btn--active`);
+  }
+
+  disableTab(domNode) {
+    const links = domNode.querySelectorAll(`a`);
+    const buttons = domNode.querySelectorAll(`button`);
+
+    if (links) {
+      links.forEach((link) => {
+        link.tabIndex = -1;
+      });
+    }
+
+    if (buttons) {
+      buttons.forEach((button) => {
+        button.tabIndex = -1;
+      });
+    }
+  }
+
+  enableTab(domNode) {
+    const links = domNode.querySelectorAll(`a`);
+    const buttons = domNode.querySelectorAll(`button`);
+
+    if (links) {
+      links.forEach((link) => {
+        link.tabIndex = 0;
+      });
+    }
+
+    if (buttons) {
+      buttons.forEach((button) => {
+        button.tabIndex = 0;
+      });
+    }
   }
 
   navigationHandler(node, int) {
