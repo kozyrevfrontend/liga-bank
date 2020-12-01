@@ -834,7 +834,7 @@
 
       const downPaymentRange = stepTwoWrapper.querySelector(`#downPaymentRange`);
 
-      downPaymentRange.addEventListener(`change`, (evt) => {
+      downPaymentRange.addEventListener(`input`, (evt) => {
         rangeHandler(parseInt(evt.currentTarget.value, 10));
       });
     }
@@ -971,10 +971,30 @@
     );
   }
 
+  function createAutoCalculatorDownPaymentTemplate(minimumDownPaymentPersentage) {
+    return (
+      `<div class="calculator__section" id="downPaymentSection">
+      <h4 class="calculator__title-inner">Первоначальный взнос</h4>
+      <p class="calculator__section-inner">
+        <input class="calculator__range" id="downPaymentRange" type="range" min="${minimumDownPaymentPersentage}" max="100" step="5" value="${minimumDownPaymentPersentage}">
+      </p>
+      <p class="calculator__legend">${minimumDownPaymentPersentage}%</p>
+    </div>`
+    );
+  }
+
+  function createAutoCalculatorPaymentValueTemplate(minimumDownPayment, downPayment) {
+    return (
+      `<input class="calculator__field" id="downPayment" type="number" value="${downPayment}" min="${minimumDownPayment}">`
+    );
+  }
+
   class AutoCalculatorView {
     constructor(markups, utils) {
       this.createAutoCalculatorResultsTemplate = markups.createAutoCalculatorResultsTemplate;
       this.createAutoCalculatorCreditSummTemplate = markups.createAutoCalculatorCreditSummTemplate;
+      this.createAutoCalculatorDownPaymentTemplate = markups.createAutoCalculatorDownPaymentTemplate;
+      this.createAutoCalculatorPaymentValueTemplate = markups.createAutoCalculatorPaymentValueTemplate;
 
       this.renderElement = utils.renderElement;
       this.deleteChildrenElements = utils.deleteChildrenElements;
@@ -1026,12 +1046,60 @@
         }
       });
     }
+
+    renderCalculatorDownPayment(minimumDownPaymentPersentage, minimumDownPayment, downPayment, inputHandler, rangeHandler) {
+      const stepTwoWrapper = document.querySelector(`#stepTwoWrapper`);
+      const downPaymentSection = stepTwoWrapper.querySelector(`#downPaymentSection`);
+
+      if (downPaymentSection) {
+        stepTwoWrapper.removeChild(downPaymentSection);
+      }
+
+      this.renderElement(stepTwoWrapper, this.createAutoCalculatorDownPaymentTemplate(minimumDownPaymentPersentage));
+
+      this.renderCalculatorPaymentValue(minimumDownPayment, downPayment, inputHandler);
+
+      const downPaymentRange = stepTwoWrapper.querySelector(`#downPaymentRange`);
+
+      downPaymentRange.addEventListener(`input`, (evt) => {
+        rangeHandler(parseInt(evt.currentTarget.value, 10));
+      });
+    }
+
+    renderCalculatorPaymentValue(minimumDownPayment, downPayment, inputHandler) {
+      this.removeCalculatorPaymentValue();
+
+      const downPaymentSection = document.querySelector(`#downPaymentSection`);
+
+      this.renderElement(downPaymentSection, this.createAutoCalculatorPaymentValueTemplate(minimumDownPayment, downPayment), `afterbegin`);
+
+      const downPaymentInput = downPaymentSection.querySelector(`#downPayment`);
+
+      downPaymentInput.addEventListener(`change`, (evt) => {
+        if (parseInt(evt.currentTarget.value, 10) < parseInt(evt.currentTarget.min, 10)) {
+          evt.currentTarget.value = evt.currentTarget.min;
+        }
+
+        inputHandler(parseInt(evt.currentTarget.value, 10));
+      });
+    }
+
+    removeCalculatorPaymentValue() {
+      const downPaymentSection = document.querySelector(`#downPaymentSection`);
+      const downPaymentInput = downPaymentSection.querySelector(`#downPayment`);
+
+      if (downPaymentSection.querySelector(`#downPayment`)) {
+        downPaymentSection.removeChild(downPaymentInput);
+      }
+    }
   }
 
   const autoCalculatorView = new AutoCalculatorView(
     {
       createAutoCalculatorResultsTemplate,
-      createAutoCalculatorCreditSummTemplate
+      createAutoCalculatorCreditSummTemplate,
+      createAutoCalculatorDownPaymentTemplate,
+      createAutoCalculatorPaymentValueTemplate
     },
     {
       renderElement,

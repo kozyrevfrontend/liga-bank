@@ -78,7 +78,7 @@ class MortgageCalculatorView {
 
     const downPaymentRange = stepTwoWrapper.querySelector(`#downPaymentRange`);
 
-    downPaymentRange.addEventListener(`change`, (evt) => {
+    downPaymentRange.addEventListener(`input`, (evt) => {
       rangeHandler(parseInt(evt.currentTarget.value, 10));
     });
   }
