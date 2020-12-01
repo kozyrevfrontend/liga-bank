@@ -64,6 +64,10 @@
   svg {
     fill: none;
   }
+
+  &:invalid {
+    border-color: red;
+  }
 }
 
 .calculator__options-list {

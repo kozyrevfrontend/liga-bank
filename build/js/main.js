@@ -404,12 +404,43 @@
     constructor(model, view) {
       this.calculator = model;
       this.view = view;
+
+      this.creditSummInputHandler = this.creditSummInputHandler.bind(this);
     }
 
     init(id) {
       this.calculator.init(id);
 
       console.dir(this.calculator);
+
+      this.view.renderCalculatorResults(
+        this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
+        this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
+        this.calculator.annuityPayment.toLocaleString('ru-RU'),
+        this.calculator.minimumIncome.toLocaleString('ru-RU')
+      );
+
+      this.view.renderCalculatorCreditSumm(
+        this.calculator.minimumCreditSumm,
+        this.calculator.maximumCreditSumm,
+        this.calculator.creditSumm,
+        this.creditSummInputHandler
+      );
+    }
+
+    creditSummInputHandler(value) {
+      this.calculator.setCreditSumm(value);
+
+      if (this.calculator.minimumDownPaymentPersentage) {
+        this.calculator.setMinimumDownPayment();
+        this.calculator.calculateDownPayment(this.calculator.minimumDownPaymentPersentage);
+        this.calculator.calculateDownPaymentPersentage();
+      }
+
+      this.calculator.calculateCreditPersentage();
+      this.calculator.calculateTotalCreditSumm();
+      this.calculator.calculateAnnuityPayment();
+      this.calculator.calculateMinimumIncome();
 
       this.view.renderCalculatorResults(
         this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
@@ -594,7 +625,7 @@
     }
 
     calculateTotalCreditSumm() {
-      if (this.currentData.maternityCapital) {
+      if (this.maternityCapital) {
         this.totalCreditSumm = this.creditSumm - this.downPayment - this.currentData.maternityCapital;
       } else {
         this.totalCreditSumm = this.creditSumm - this.downPayment;
@@ -631,9 +662,36 @@
     );
   }
 
+  function createMortgageCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm) {
+    return (
+      `<div class="calculator__wrapper-inner" id="creditSummWrapper">
+      <h3 class="calculator__title">Шаг 2. Введите параметры кредита</h3>
+      <div class="calculator__section">
+        <h4 class="calculator__title-inner">Стоимость недвижимости</h4>
+        <p class="calculator__section-inner" id="section-summ">
+          <input class="calculator__field" id="creditSumm" type="number" value="${creditSumm}" min="${minimumCreditSumm}" max="${maximumCreditSumm}">
+          <button class="calculator__button calculator__button--decrease" aria-label="Уменьшить стоимость автомобиля">
+            <svg width="16" height="2">
+              <use href="img/sprite_auto.svg#icon-minus"></use>
+            </svg>
+          </button>
+          <button class="calculator__button calculator__button--increase" aria-label="Увеличить стоимость автомобиля">
+            <svg width="16" height="16">
+              <use href="img/sprite_auto.svg#icon-plus"></use>
+            </svg>
+          </button>
+        </p>
+        <p class="calculator__legend">От ${minimumCreditSumm}  до ${maximumCreditSumm} рублей</p>
+      </div>
+    </div>`
+    );
+  }
+
   class MortgageCalculatorView {
     constructor(markups, utils) {
       this.createMortgageCalculatorResultsTemplate = markups.createMortgageCalculatorResultsTemplate;
+      this.createMortgageCalculatorCreditSummTemplate = markups.createMortgageCalculatorCreditSummTemplate;
+      this.createCalculatorCreditSummInputTemplate = markups.createCalculatorCreditSummInputTemplate;
 
       this.renderElement = utils.renderElement;
       this.deleteChildrenElements = utils.deleteChildrenElements;
@@ -649,11 +707,48 @@
 
       this.renderElement(calculatorContainer, this.createMortgageCalculatorResultsTemplate(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome));
     }
+
+    renderCalculatorCreditSumm(minimumCreditSumm, maximumCreditSumm, creditSumm, handler) {
+      const calculatorWrapper = document.querySelector(`.calculator__wrapper`);
+      const creditSummWrapper = calculatorWrapper.querySelector(`#creditSummWrapper`);
+
+      if (creditSummWrapper) {
+        calculatorWrapper.removeChild(creditSummWrapper);
+      }
+
+      this.renderElement(calculatorWrapper, this.createMortgageCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm));
+
+      const creditSummInput = calculatorWrapper.querySelector(`#creditSumm`);
+      const decreaseButton = calculatorWrapper.querySelector(`.calculator__button--decrease`);
+      const increaseButton = calculatorWrapper.querySelector(`.calculator__button--increase`);
+      const creditSummStep = 100000;
+
+      creditSummInput.addEventListener(`change`, (evt) => {
+        if (evt.currentTarget.validity.valid) {
+          handler(parseInt(evt.currentTarget.value, 10));
+        }
+      });
+
+      decreaseButton.addEventListener(`click`, () => {
+        if (parseInt(creditSummInput.value, 10) > parseInt(creditSummInput.min, 10)) {
+          creditSummInput.value = parseInt(creditSummInput.value, 10) - creditSummStep;
+          handler(parseInt(creditSummInput.value, 10));
+        }
+      });
+
+      increaseButton.addEventListener(`click`, () => {
+        if (parseInt(creditSummInput.value, 10) < parseInt(creditSummInput.max, 10)) {
+          creditSummInput.value = parseInt(creditSummInput.value, 10) + creditSummStep;
+          handler(parseInt(creditSummInput.value, 10));
+        }
+      });
+    }
   }
 
   const mortgageCalculatorView = new MortgageCalculatorView(
     {
-      createMortgageCalculatorResultsTemplate
+      createMortgageCalculatorResultsTemplate,
+      createMortgageCalculatorCreditSummTemplate
     },
     {
       renderElement,
@@ -727,9 +822,35 @@
     );
   }
 
+  function createAutoCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm) {
+    return (
+      `<div class="calculator__wrapper-inner" id="creditSummWrapper">
+      <h3 class="calculator__title">Шаг 2. Введите параметры кредита</h3>
+      <div class="calculator__section">
+        <h4 class="calculator__title-inner">Стоимость автомобиля</h4>
+        <p class="calculator__section-inner" id="section-summ">
+          <input class="calculator__field" id="creditSumm" type="number" value="${creditSumm}" min="${minimumCreditSumm}" max="${maximumCreditSumm}">
+          <button class="calculator__button calculator__button--decrease" aria-label="Уменьшить стоимость автомобиля">
+            <svg width="16" height="2">
+              <use href="img/sprite_auto.svg#icon-minus"></use>
+            </svg>
+          </button>
+          <button class="calculator__button calculator__button--increase" aria-label="Увеличить стоимость автомобиля">
+            <svg width="16" height="16">
+              <use href="img/sprite_auto.svg#icon-plus"></use>
+            </svg>
+          </button>
+        </p>
+        <p class="calculator__legend">От ${minimumCreditSumm}  до ${maximumCreditSumm} рублей</p>
+      </div>
+    </div>`
+    );
+  }
+
   class AutoCalculatorView {
     constructor(markups, utils) {
       this.createAutoCalculatorResultsTemplate = markups.createAutoCalculatorResultsTemplate;
+      this.createAutoCalculatorCreditSummTemplate = markups.createAutoCalculatorCreditSummTemplate;
 
       this.renderElement = utils.renderElement;
       this.deleteChildrenElements = utils.deleteChildrenElements;
@@ -745,11 +866,48 @@
 
       this.renderElement(calculatorContainer, this.createAutoCalculatorResultsTemplate(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome));
     }
+
+    renderCalculatorCreditSumm(minimumCreditSumm, maximumCreditSumm, creditSumm, handler) {
+      const calculatorWrapper = document.querySelector(`.calculator__wrapper`);
+      const creditSummWrapper = calculatorWrapper.querySelector(`#creditSummWrapper`);
+
+      if (creditSummWrapper) {
+        calculatorWrapper.removeChild(creditSummWrapper);
+      }
+
+      this.renderElement(calculatorWrapper, this.createAutoCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm));
+
+      const creditSummInput = calculatorWrapper.querySelector(`#creditSumm`);
+      const decreaseButton = calculatorWrapper.querySelector(`.calculator__button--decrease`);
+      const increaseButton = calculatorWrapper.querySelector(`.calculator__button--increase`);
+      const creditSummStep = 50000;
+
+      creditSummInput.addEventListener(`change`, (evt) => {
+        if (evt.currentTarget.validity.valid) {
+          handler(parseInt(evt.currentTarget.value, 10));
+        }
+      });
+
+      decreaseButton.addEventListener(`click`, () => {
+        if (parseInt(creditSummInput.value, 10) > parseInt(creditSummInput.min, 10)) {
+          creditSummInput.value = parseInt(creditSummInput.value, 10) - creditSummStep;
+          handler(parseInt(creditSummInput.value, 10));
+        }
+      });
+
+      increaseButton.addEventListener(`click`, () => {
+        if (parseInt(creditSummInput.value, 10) < parseInt(creditSummInput.max, 10)) {
+          creditSummInput.value = parseInt(creditSummInput.value, 10) + creditSummStep;
+          handler(parseInt(creditSummInput.value, 10));
+        }
+      });
+    }
   }
 
   const autoCalculatorView = new AutoCalculatorView(
     {
-      createAutoCalculatorResultsTemplate
+      createAutoCalculatorResultsTemplate,
+      createAutoCalculatorCreditSummTemplate
     },
     {
       renderElement,
@@ -822,9 +980,35 @@
     );
   }
 
+  function createCreditCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm) {
+    return (
+      `<div class="calculator__wrapper-inner" id="creditSummWrapper">
+      <h3 class="calculator__title">Шаг 2. Введите параметры кредита</h3>
+      <div class="calculator__section">
+        <h4 class="calculator__title-inner">Сумма потребительского кредита</h4>
+        <p class="calculator__section-inner" id="section-summ">
+          <input class="calculator__field" id="creditSumm" type="number" value="${creditSumm}" min="${minimumCreditSumm}" max="${maximumCreditSumm}">
+          <button class="calculator__button calculator__button--decrease" aria-label="Уменьшить стоимость автомобиля">
+            <svg width="16" height="2">
+              <use href="img/sprite_auto.svg#icon-minus"></use>
+            </svg>
+          </button>
+          <button class="calculator__button calculator__button--increase" aria-label="Увеличить стоимость автомобиля">
+            <svg width="16" height="16">
+              <use href="img/sprite_auto.svg#icon-plus"></use>
+            </svg>
+          </button>
+        </p>
+        <p class="calculator__legend">От ${minimumCreditSumm}  до ${maximumCreditSumm} рублей</p>
+      </div>
+    </div>`
+    );
+  }
+
   class CreditCalculatorView {
     constructor(markups, utils) {
       this.createCreditCalculatorResultsTemplate = markups.createCreditCalculatorResultsTemplate;
+      this.createCreditCalculatorCreditSummTemplate = markups.createCreditCalculatorCreditSummTemplate;
 
       this.renderElement = utils.renderElement;
       this.deleteChildrenElements = utils.deleteChildrenElements;
@@ -840,11 +1024,48 @@
 
       this.renderElement(calculatorContainer, this.createCreditCalculatorResultsTemplate(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome));
     }
+
+    renderCalculatorCreditSumm(minimumCreditSumm, maximumCreditSumm, creditSumm, handler) {
+      const calculatorWrapper = document.querySelector(`.calculator__wrapper`);
+      const creditSummWrapper = calculatorWrapper.querySelector(`#creditSummWrapper`);
+
+      if (creditSummWrapper) {
+        calculatorWrapper.removeChild(creditSummWrapper);
+      }
+
+      this.renderElement(calculatorWrapper, this.createCreditCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm));
+
+      const creditSummInput = calculatorWrapper.querySelector(`#creditSumm`);
+      const decreaseButton = calculatorWrapper.querySelector(`.calculator__button--decrease`);
+      const increaseButton = calculatorWrapper.querySelector(`.calculator__button--increase`);
+      const creditSummStep = 50000;
+
+      creditSummInput.addEventListener(`change`, (evt) => {
+        if (evt.currentTarget.validity.valid) {
+          handler(parseInt(evt.currentTarget.value, 10));
+        }
+      });
+
+      decreaseButton.addEventListener(`click`, () => {
+        if (parseInt(creditSummInput.value, 10) > parseInt(creditSummInput.min, 10)) {
+          creditSummInput.value = parseInt(creditSummInput.value, 10) - creditSummStep;
+          handler(parseInt(creditSummInput.value, 10));
+        }
+      });
+
+      increaseButton.addEventListener(`click`, () => {
+        if (parseInt(creditSummInput.value, 10) < parseInt(creditSummInput.max, 10)) {
+          creditSummInput.value = parseInt(creditSummInput.value, 10) + creditSummStep;
+          handler(parseInt(creditSummInput.value, 10));
+        }
+      });
+    }
   }
 
   const creditCalculatorView = new CreditCalculatorView(
     {
-      createCreditCalculatorResultsTemplate
+      createCreditCalculatorResultsTemplate,
+      createCreditCalculatorCreditSummTemplate
     },
     {
       renderElement,

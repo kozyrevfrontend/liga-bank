@@ -13,7 +13,7 @@ class MortgageCalculator extends Calculator {
   }
 
   calculateTotalCreditSumm() {
-    if (this.currentData.maternityCapital) {
+    if (this.maternityCapital) {
       this.totalCreditSumm = this.creditSumm - this.downPayment - this.currentData.maternityCapital;
     } else {
       this.totalCreditSumm = this.creditSumm - this.downPayment;
