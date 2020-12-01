@@ -721,7 +721,7 @@
   function createMortgageCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm) {
     return (
       `<div class="calculator__wrapper-inner" id="stepTwoWrapper">
-      <h3 class="calculator__title">Шаг 2. Введите параметры кредита</h3>
+      <h3 class="calculator__title calculator__title--step-two">Шаг 2. Введите параметры кредита</h3>
       <div class="calculator__section">
         <h4 class="calculator__title-inner">Стоимость недвижимости</h4>
         <p class="calculator__section-inner" id="section-summ">
@@ -748,7 +748,7 @@
       `<div class="calculator__section" id="downPaymentSection">
       <h4 class="calculator__title-inner">Первоначальный взнос</h4>
       <p class="calculator__section-inner">
-        <input class="calculator__range" id="downPaymentRange" type="range" min="${minimumDownPaymentPersentage}" max="100" step="10" value="${minimumDownPaymentPersentage}">
+        <input class="calculator__range range" id="downPaymentRange" type="range" min="${minimumDownPaymentPersentage}" max="100" step="10" value="${minimumDownPaymentPersentage}">
       </p>
       <p class="calculator__legend">${minimumDownPaymentPersentage}%</p>
     </div>`
@@ -843,8 +843,9 @@
       this.removeCalculatorPaymentValue();
 
       const downPaymentSection = document.querySelector(`#downPaymentSection`);
+      const downPaymentSectionInner = downPaymentSection.querySelector(`.calculator__section-inner`);
 
-      this.renderElement(downPaymentSection, this.createMortgageCalculatorPaymentValueTemplate(minimumDownPayment, downPayment), `afterbegin`);
+      this.renderElement(downPaymentSectionInner, this.createMortgageCalculatorPaymentValueTemplate(minimumDownPayment, downPayment), `afterbegin`);
 
       const downPaymentInput = downPaymentSection.querySelector(`#downPayment`);
 
@@ -859,10 +860,11 @@
 
     removeCalculatorPaymentValue() {
       const downPaymentSection = document.querySelector(`#downPaymentSection`);
+      const downPaymentSectionInner = downPaymentSection.querySelector(`.calculator__section-inner`);
       const downPaymentInput = downPaymentSection.querySelector(`#downPayment`);
 
       if (downPaymentSection.querySelector(`#downPayment`)) {
-        downPaymentSection.removeChild(downPaymentInput);
+        downPaymentSectionInner.removeChild(downPaymentInput);
       }
     }
   }
@@ -949,7 +951,7 @@
   function createAutoCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm) {
     return (
       `<div class="calculator__wrapper-inner" id="stepTwoWrapper">
-      <h3 class="calculator__title">Шаг 2. Введите параметры кредита</h3>
+      <h3 class="calculator__title calculator__title--step-two">Шаг 2. Введите параметры кредита</h3>
       <div class="calculator__section">
         <h4 class="calculator__title-inner">Стоимость автомобиля</h4>
         <p class="calculator__section-inner" id="section-summ">
@@ -976,7 +978,7 @@
       `<div class="calculator__section" id="downPaymentSection">
       <h4 class="calculator__title-inner">Первоначальный взнос</h4>
       <p class="calculator__section-inner">
-        <input class="calculator__range" id="downPaymentRange" type="range" min="${minimumDownPaymentPersentage}" max="100" step="5" value="${minimumDownPaymentPersentage}">
+        <input class="calculator__range range" id="downPaymentRange" type="range" min="${minimumDownPaymentPersentage}" max="100" step="5" value="${minimumDownPaymentPersentage}">
       </p>
       <p class="calculator__legend">${minimumDownPaymentPersentage}%</p>
     </div>`
@@ -1070,8 +1072,9 @@
       this.removeCalculatorPaymentValue();
 
       const downPaymentSection = document.querySelector(`#downPaymentSection`);
+      const downPaymentSectionInner = downPaymentSection.querySelector(`.calculator__section-inner`);
 
-      this.renderElement(downPaymentSection, this.createAutoCalculatorPaymentValueTemplate(minimumDownPayment, downPayment), `afterbegin`);
+      this.renderElement(downPaymentSectionInner, this.createAutoCalculatorPaymentValueTemplate(minimumDownPayment, downPayment), `afterbegin`);
 
       const downPaymentInput = downPaymentSection.querySelector(`#downPayment`);
 
@@ -1086,10 +1089,11 @@
 
     removeCalculatorPaymentValue() {
       const downPaymentSection = document.querySelector(`#downPaymentSection`);
+      const downPaymentSectionInner = downPaymentSection.querySelector(`.calculator__section-inner`);
       const downPaymentInput = downPaymentSection.querySelector(`#downPayment`);
 
       if (downPaymentSection.querySelector(`#downPayment`)) {
-        downPaymentSection.removeChild(downPaymentInput);
+        downPaymentSectionInner.removeChild(downPaymentInput);
       }
     }
   }
@@ -1175,7 +1179,7 @@
   function createCreditCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm) {
     return (
       `<div class="calculator__wrapper-inner" id="stepTwoWrapper">
-      <h3 class="calculator__title">Шаг 2. Введите параметры кредита</h3>
+      <h3 class="calculator__title calculator__title--step-two">Шаг 2. Введите параметры кредита</h3>
       <div class="calculator__section">
         <h4 class="calculator__title-inner">Сумма потребительского кредита</h4>
         <p class="calculator__section-inner" id="section-summ">

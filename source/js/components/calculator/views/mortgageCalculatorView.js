@@ -87,8 +87,9 @@ class MortgageCalculatorView {
     this.removeCalculatorPaymentValue();
 
     const downPaymentSection = document.querySelector(`#downPaymentSection`);
+    const downPaymentSectionInner = downPaymentSection.querySelector(`.calculator__section-inner`);
 
-    this.renderElement(downPaymentSection, this.createMortgageCalculatorPaymentValueTemplate(minimumDownPayment, downPayment), `afterbegin`);
+    this.renderElement(downPaymentSectionInner, this.createMortgageCalculatorPaymentValueTemplate(minimumDownPayment, downPayment), `afterbegin`);
 
     const downPaymentInput = downPaymentSection.querySelector(`#downPayment`);
 
@@ -103,10 +104,11 @@ class MortgageCalculatorView {
 
   removeCalculatorPaymentValue() {
     const downPaymentSection = document.querySelector(`#downPaymentSection`);
+    const downPaymentSectionInner = downPaymentSection.querySelector(`.calculator__section-inner`);
     const downPaymentInput = downPaymentSection.querySelector(`#downPayment`);
 
     if (downPaymentSection.querySelector(`#downPayment`)) {
-      downPaymentSection.removeChild(downPaymentInput);
+      downPaymentSectionInner.removeChild(downPaymentInput);
     }
   }
 }

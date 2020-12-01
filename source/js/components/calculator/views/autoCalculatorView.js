@@ -86,8 +86,9 @@ class AutoCalculatorView {
     this.removeCalculatorPaymentValue();
 
     const downPaymentSection = document.querySelector(`#downPaymentSection`);
+    const downPaymentSectionInner = downPaymentSection.querySelector(`.calculator__section-inner`);
 
-    this.renderElement(downPaymentSection, this.createAutoCalculatorPaymentValueTemplate(minimumDownPayment, downPayment), `afterbegin`);
+    this.renderElement(downPaymentSectionInner, this.createAutoCalculatorPaymentValueTemplate(minimumDownPayment, downPayment), `afterbegin`);
 
     const downPaymentInput = downPaymentSection.querySelector(`#downPayment`);
 
@@ -102,10 +103,11 @@ class AutoCalculatorView {
 
   removeCalculatorPaymentValue() {
     const downPaymentSection = document.querySelector(`#downPaymentSection`);
+    const downPaymentSectionInner = downPaymentSection.querySelector(`.calculator__section-inner`);
     const downPaymentInput = downPaymentSection.querySelector(`#downPayment`);
 
     if (downPaymentSection.querySelector(`#downPayment`)) {
-      downPaymentSection.removeChild(downPaymentInput);
+      downPaymentSectionInner.removeChild(downPaymentInput);
     }
   }
 }
