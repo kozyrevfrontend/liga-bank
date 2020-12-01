@@ -406,6 +406,8 @@
       this.view = view;
 
       this.creditSummInputHandler = this.creditSummInputHandler.bind(this);
+      this.downPaymentInputHandler = this.downPaymentInputHandler.bind(this);
+      this.downPaymentRangeHandler = this.downPaymentRangeHandler.bind(this);
     }
 
     init(id) {
@@ -426,6 +428,16 @@
         this.calculator.creditSumm,
         this.creditSummInputHandler
       );
+
+      if (this.calculator.minimumDownPaymentPersentage) {
+        this.view.renderCalculatorDownPayment(
+          this.calculator.minimumDownPaymentPersentage,
+          this.calculator.minimumDownPayment,
+          this.calculator.downPayment,
+          this.downPaymentInputHandler,
+          this.downPaymentRangeHandler
+        );
+      }
     }
 
     creditSummInputHandler(value) {
@@ -435,7 +447,51 @@
         this.calculator.setMinimumDownPayment();
         this.calculator.calculateDownPayment(this.calculator.minimumDownPaymentPersentage);
         this.calculator.calculateDownPaymentPersentage();
+
+        this.view.renderCalculatorDownPayment(
+          this.calculator.minimumDownPaymentPersentage,
+          this.calculator.minimumDownPayment,
+          this.calculator.downPayment,
+          this.downPaymentInputHandler,
+          this.downPaymentRangeHandler
+        );
       }
+
+      this.calculator.calculateCreditPersentage();
+      this.calculator.calculateTotalCreditSumm();
+      this.calculator.calculateAnnuityPayment();
+      this.calculator.calculateMinimumIncome();
+
+      this.view.renderCalculatorResults(
+        this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
+        this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
+        this.calculator.annuityPayment.toLocaleString('ru-RU'),
+        this.calculator.minimumIncome.toLocaleString('ru-RU')
+      );
+    }
+
+    downPaymentInputHandler(value) {
+      this.calculator.downPayment = value;
+      this.calculator.calculateDownPaymentPersentage();
+
+      this.calculator.calculateCreditPersentage();
+      this.calculator.calculateTotalCreditSumm();
+      this.calculator.calculateAnnuityPayment();
+      this.calculator.calculateMinimumIncome();
+
+      this.view.renderCalculatorResults(
+        this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
+        this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
+        this.calculator.annuityPayment.toLocaleString('ru-RU'),
+        this.calculator.minimumIncome.toLocaleString('ru-RU')
+      );
+    }
+
+    downPaymentRangeHandler(value) {
+      this.calculator.downPaymentPersentage = value;
+      this.calculator.calculateDownPayment(value);
+
+      this.view.renderCalculatorPaymentValue(this.calculator.minimumDownPayment, this.calculator.downPayment, this.downPaymentInputHandler);
 
       this.calculator.calculateCreditPersentage();
       this.calculator.calculateTotalCreditSumm();
@@ -664,7 +720,7 @@
 
   function createMortgageCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm) {
     return (
-      `<div class="calculator__wrapper-inner" id="creditSummWrapper">
+      `<div class="calculator__wrapper-inner" id="stepTwoWrapper">
       <h3 class="calculator__title">Шаг 2. Введите параметры кредита</h3>
       <div class="calculator__section">
         <h4 class="calculator__title-inner">Стоимость недвижимости</h4>
@@ -687,11 +743,31 @@
     );
   }
 
+  function createMortgageCalculatorDownPaymentTemplate(minimumDownPaymentPersentage) {
+    return (
+      `<div class="calculator__section" id="downPaymentSection">
+      <h4 class="calculator__title-inner">Первоначальный взнос</h4>
+      <p class="calculator__section-inner">
+        <input class="calculator__range" id="downPaymentRange" type="range" min="${minimumDownPaymentPersentage}" max="100" step="10" value="${minimumDownPaymentPersentage}">
+      </p>
+      <p class="calculator__legend">${minimumDownPaymentPersentage}%</p>
+    </div>`
+    );
+  }
+
+  function createMortgageCalculatorPaymentValueTemplate(minimumDownPayment, downPayment) {
+    return (
+      `<input class="calculator__field" id="downPayment" type="number" value="${downPayment}" min="${minimumDownPayment}">`
+    );
+  }
+
   class MortgageCalculatorView {
     constructor(markups, utils) {
       this.createMortgageCalculatorResultsTemplate = markups.createMortgageCalculatorResultsTemplate;
       this.createMortgageCalculatorCreditSummTemplate = markups.createMortgageCalculatorCreditSummTemplate;
       this.createCalculatorCreditSummInputTemplate = markups.createCalculatorCreditSummInputTemplate;
+      this.createMortgageCalculatorDownPaymentTemplate = markups.createMortgageCalculatorDownPaymentTemplate;
+      this.createMortgageCalculatorPaymentValueTemplate = markups.createMortgageCalculatorPaymentValueTemplate;
 
       this.renderElement = utils.renderElement;
       this.deleteChildrenElements = utils.deleteChildrenElements;
@@ -710,10 +786,10 @@
 
     renderCalculatorCreditSumm(minimumCreditSumm, maximumCreditSumm, creditSumm, handler) {
       const calculatorWrapper = document.querySelector(`.calculator__wrapper`);
-      const creditSummWrapper = calculatorWrapper.querySelector(`#creditSummWrapper`);
+      const stepTwoWrapper = calculatorWrapper.querySelector(`#stepTwoWrapper`);
 
-      if (creditSummWrapper) {
-        calculatorWrapper.removeChild(creditSummWrapper);
+      if (stepTwoWrapper) {
+        calculatorWrapper.removeChild(stepTwoWrapper);
       }
 
       this.renderElement(calculatorWrapper, this.createMortgageCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm));
@@ -743,12 +819,60 @@
         }
       });
     }
+
+    renderCalculatorDownPayment(minimumDownPaymentPersentage, minimumDownPayment, downPayment, inputHandler, rangeHandler) {
+      const stepTwoWrapper = document.querySelector(`#stepTwoWrapper`);
+      const downPaymentSection = stepTwoWrapper.querySelector(`#downPaymentSection`);
+
+      if (downPaymentSection) {
+        stepTwoWrapper.removeChild(downPaymentSection);
+      }
+
+      this.renderElement(stepTwoWrapper, this.createMortgageCalculatorDownPaymentTemplate(minimumDownPaymentPersentage));
+
+      this.renderCalculatorPaymentValue(minimumDownPayment, downPayment, inputHandler);
+
+      const downPaymentRange = stepTwoWrapper.querySelector(`#downPaymentRange`);
+
+      downPaymentRange.addEventListener(`change`, (evt) => {
+        rangeHandler(parseInt(evt.currentTarget.value, 10));
+      });
+    }
+
+    renderCalculatorPaymentValue(minimumDownPayment, downPayment, inputHandler) {
+      this.removeCalculatorPaymentValue();
+
+      const downPaymentSection = document.querySelector(`#downPaymentSection`);
+
+      this.renderElement(downPaymentSection, this.createMortgageCalculatorPaymentValueTemplate(minimumDownPayment, downPayment), `afterbegin`);
+
+      const downPaymentInput = downPaymentSection.querySelector(`#downPayment`);
+
+      downPaymentInput.addEventListener(`change`, (evt) => {
+        if (parseInt(evt.currentTarget.value, 10) < parseInt(evt.currentTarget.min, 10)) {
+          evt.currentTarget.value = evt.currentTarget.min;
+        }
+
+        inputHandler(parseInt(evt.currentTarget.value, 10));
+      });
+    }
+
+    removeCalculatorPaymentValue() {
+      const downPaymentSection = document.querySelector(`#downPaymentSection`);
+      const downPaymentInput = downPaymentSection.querySelector(`#downPayment`);
+
+      if (downPaymentSection.querySelector(`#downPayment`)) {
+        downPaymentSection.removeChild(downPaymentInput);
+      }
+    }
   }
 
   const mortgageCalculatorView = new MortgageCalculatorView(
     {
       createMortgageCalculatorResultsTemplate,
-      createMortgageCalculatorCreditSummTemplate
+      createMortgageCalculatorCreditSummTemplate,
+      createMortgageCalculatorDownPaymentTemplate,
+      createMortgageCalculatorPaymentValueTemplate
     },
     {
       renderElement,
@@ -824,7 +948,7 @@
 
   function createAutoCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm) {
     return (
-      `<div class="calculator__wrapper-inner" id="creditSummWrapper">
+      `<div class="calculator__wrapper-inner" id="stepTwoWrapper">
       <h3 class="calculator__title">Шаг 2. Введите параметры кредита</h3>
       <div class="calculator__section">
         <h4 class="calculator__title-inner">Стоимость автомобиля</h4>
@@ -869,10 +993,10 @@
 
     renderCalculatorCreditSumm(minimumCreditSumm, maximumCreditSumm, creditSumm, handler) {
       const calculatorWrapper = document.querySelector(`.calculator__wrapper`);
-      const creditSummWrapper = calculatorWrapper.querySelector(`#creditSummWrapper`);
+      const stepTwoWrapper = calculatorWrapper.querySelector(`#stepTwoWrapper`);
 
-      if (creditSummWrapper) {
-        calculatorWrapper.removeChild(creditSummWrapper);
+      if (stepTwoWrapper) {
+        calculatorWrapper.removeChild(stepTwoWrapper);
       }
 
       this.renderElement(calculatorWrapper, this.createAutoCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm));
@@ -982,7 +1106,7 @@
 
   function createCreditCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm) {
     return (
-      `<div class="calculator__wrapper-inner" id="creditSummWrapper">
+      `<div class="calculator__wrapper-inner" id="stepTwoWrapper">
       <h3 class="calculator__title">Шаг 2. Введите параметры кредита</h3>
       <div class="calculator__section">
         <h4 class="calculator__title-inner">Сумма потребительского кредита</h4>
@@ -1027,10 +1151,10 @@
 
     renderCalculatorCreditSumm(minimumCreditSumm, maximumCreditSumm, creditSumm, handler) {
       const calculatorWrapper = document.querySelector(`.calculator__wrapper`);
-      const creditSummWrapper = calculatorWrapper.querySelector(`#creditSummWrapper`);
+      const stepTwoWrapper = calculatorWrapper.querySelector(`#stepTwoWrapper`);
 
-      if (creditSummWrapper) {
-        calculatorWrapper.removeChild(creditSummWrapper);
+      if (stepTwoWrapper) {
+        calculatorWrapper.removeChild(stepTwoWrapper);
       }
 
       this.renderElement(calculatorWrapper, this.createCreditCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm));

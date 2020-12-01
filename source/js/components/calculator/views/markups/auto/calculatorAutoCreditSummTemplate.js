@@ -1,6 +1,6 @@
 export function createAutoCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm) {
   return (
-    `<div class="calculator__wrapper-inner" id="creditSummWrapper">
+    `<div class="calculator__wrapper-inner" id="stepTwoWrapper">
       <h3 class="calculator__title">Шаг 2. Введите параметры кредита</h3>
       <div class="calculator__section">
         <h4 class="calculator__title-inner">Стоимость автомобиля</h4>

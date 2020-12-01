@@ -25,10 +25,10 @@ class AutoCalculatorView {
 
   renderCalculatorCreditSumm(minimumCreditSumm, maximumCreditSumm, creditSumm, handler) {
     const calculatorWrapper = document.querySelector(`.calculator__wrapper`);
-    const creditSummWrapper = calculatorWrapper.querySelector(`#creditSummWrapper`);
+    const stepTwoWrapper = calculatorWrapper.querySelector(`#stepTwoWrapper`);
 
-    if (creditSummWrapper) {
-      calculatorWrapper.removeChild(creditSummWrapper);
+    if (stepTwoWrapper) {
+      calculatorWrapper.removeChild(stepTwoWrapper);
     }
 
     this.renderElement(calculatorWrapper, this.createAutoCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm));

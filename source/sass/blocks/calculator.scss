@@ -12,6 +12,10 @@
   width: 51.28%;
 }
 
+.calculator__wrapper-inner {
+  position: relative;
+}
+
 .calculator__main-title {
   margin: 0;
   margin-bottom: 49px;
@@ -73,6 +77,11 @@
 .calculator__options-list {
   @include list-reset;
 
+  position: absolute;
+  bottom: -180px;
+  left: 0;
+  z-index: 10;
+
   display: none;
   width: 100%;
 
@@ -82,6 +91,8 @@
 }
 
 .calculator__options-item {
+  background-color: #ffffff;
+
   border-bottom: 1px solid #c1c2ca;
   border-left: 1px solid #1f1e25;
   border-right: 1px solid #1f1e25;
