@@ -22,12 +22,15 @@ class StaringPresenter {
     switch (id) {
       case `mortgage`:
         this.mortgagePresenter.init(id);
+        this.mortgagePresenter.initSpecials();
         break;
       case `auto`:
         this.autoPresenter.init(id);
+        this.autoPresenter.initSpecials();
         break;
       case `credit`:
         this.creditPresenter.init(id);
+        this.creditPresenter.initSpecials();
         break;
     }
   }

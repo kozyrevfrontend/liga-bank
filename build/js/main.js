@@ -824,6 +824,20 @@
     );
   }
 
+  function createMortgageCalculatorSpecialsTemplate() {
+    return (
+      `<div class="calculator__section" id="specials">
+      <h4 class="calculator__title-inner visually-hidden">Специальные условия</h4>
+      <ul class="calculator__specials-list">
+        <li class="calculator__specials-item">
+          <input class="calculator__checkbox" id="maternityCapital" type="checkbox" name="maternityCapital">
+          <label class="calculator__label" for="maternityCapital">Использовать материнский капитал</label>
+        </li>
+      </ul>
+    </div>`
+    );
+  }
+
   class MortgageCalculatorView {
     constructor(markups, utils) {
       this.createMortgageCalculatorResultsTemplate = markups.createMortgageCalculatorResultsTemplate;
@@ -833,6 +847,7 @@
       this.createMortgageCalculatorPaymentValueTemplate = markups.createMortgageCalculatorPaymentValueTemplate;
       this.createCalculatorPeriodTemplate = markups.createCalculatorPeriodTemplate;
       this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
+      this.createMortgageCalculatorSpecialsTemplate = markups.createMortgageCalculatorSpecialsTemplate;
 
 
       this.renderElement = utils.renderElement;
@@ -985,6 +1000,23 @@
         periodSectionInner.removeChild(periodInput);
       }
     }
+
+    renderCalculatorSpecials(handler) {
+      const stepTwoWrapper = document.querySelector(`#stepTwoWrapper`);
+      const specials = stepTwoWrapper.querySelector(`#specials`);
+
+      if (specials) {
+        stepTwoWrapper.removeChild(specials);
+      }
+
+      this.renderElement(stepTwoWrapper, this.createMortgageCalculatorSpecialsTemplate());
+
+      const maternityCapitalCheckbox = stepTwoWrapper.querySelector(`#maternityCapital`);
+
+      maternityCapitalCheckbox.addEventListener(`change`, (evt) => {
+        handler(evt.currentTarget);
+      });
+    }
   }
 
   const mortgageCalculatorView = new MortgageCalculatorView(
@@ -994,7 +1026,8 @@
       createMortgageCalculatorDownPaymentTemplate,
       createMortgageCalculatorPaymentValueTemplate,
       createCalculatorPeriodTemplate,
-      createCalculatorPeriodValueTemplate
+      createCalculatorPeriodValueTemplate,
+      createMortgageCalculatorSpecialsTemplate
     },
     {
       renderElement,
@@ -1005,6 +1038,32 @@
   class MortgagePresenter extends BasicPresenter {
     constructor(model, view) {
       super(model, view);
+
+      this.maternityCapitalCheckboxHandler = this.maternityCapitalCheckboxHandler.bind(this);
+    }
+
+    initSpecials() {
+      this.view.renderCalculatorSpecials(this.maternityCapitalCheckboxHandler);
+    }
+
+    maternityCapitalCheckboxHandler(node) {
+      if (node.checked) {
+        this.calculator.maternityCapital = true;
+      } else {
+        this.calculator.maternityCapital = false;
+      }
+
+      this.calculator.calculateCreditPersentage();
+      this.calculator.calculateTotalCreditSumm();
+      this.calculator.calculateAnnuityPayment();
+      this.calculator.calculateMinimumIncome();
+
+      this.view.renderCalculatorResults(
+        this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
+        this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
+        this.calculator.annuityPayment.toLocaleString('ru-RU'),
+        this.calculator.minimumIncome.toLocaleString('ru-RU')
+      );
     }
   }
 
@@ -1111,6 +1170,24 @@
     );
   }
 
+  function createAutoCalculatorSpecialsTemplate() {
+    return (
+      `<div class="calculator__section" id="specials">
+      <h4 class="calculator__title-inner visually-hidden">Специальные условия</h4>
+      <ul class="calculator__specials-list">
+        <li class="calculator__specials-item">
+          <input class="calculator__checkbox" id="autoInsurance" type="checkbox" name="autoInsurance">
+          <label class="calculator__label" for="autoInsurance">Оформить КАСКО в нашем банке</label>
+        </li>
+        <li class="calculator__specials-item">
+          <input class="calculator__checkbox" id="lifeInsurance" type="checkbox" name="lifeInsurance">
+          <label class="calculator__label" for="lifeInsurance">Оформить Страхование жизни в нашем банке</label>
+        </li>
+      </ul>
+    </div>`
+    );
+  }
+
   class AutoCalculatorView {
     constructor(markups, utils) {
       this.createAutoCalculatorResultsTemplate = markups.createAutoCalculatorResultsTemplate;
@@ -1119,6 +1196,7 @@
       this.createAutoCalculatorPaymentValueTemplate = markups.createAutoCalculatorPaymentValueTemplate;
       this.createCalculatorPeriodTemplate = markups.createCalculatorPeriodTemplate;
       this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
+      this.createAutoCalculatorSpecialsTemplate = markups.createAutoCalculatorSpecialsTemplate;
 
       this.renderElement = utils.renderElement;
       this.deleteChildrenElements = utils.deleteChildrenElements;
@@ -1270,6 +1348,29 @@
         periodSectionInner.removeChild(periodInput);
       }
     }
+
+    renderCalculatorSpecials(autoInsuranceCheckboxHandler, lifeInsuranceCheckboxHandler) {
+      const stepTwoWrapper = document.querySelector(`#stepTwoWrapper`);
+      const specials = stepTwoWrapper.querySelector(`#specials`);
+
+      if (specials) {
+        stepTwoWrapper.removeChild(specials);
+      }
+
+      this.renderElement(stepTwoWrapper, this.createAutoCalculatorSpecialsTemplate());
+
+      const autoInsuranceCheckbox = stepTwoWrapper.querySelector(`#autoInsurance`);
+
+      autoInsuranceCheckbox.addEventListener(`change`, (evt) => {
+        autoInsuranceCheckboxHandler(evt.currentTarget);
+      });
+
+      const lifeInsuranceCheckbox = stepTwoWrapper.querySelector(`#lifeInsurance`);
+
+      lifeInsuranceCheckbox.addEventListener(`change`, (evt) => {
+        lifeInsuranceCheckboxHandler(evt.currentTarget);
+      });
+    }
   }
 
   const autoCalculatorView = new AutoCalculatorView(
@@ -1279,7 +1380,8 @@
       createAutoCalculatorDownPaymentTemplate,
       createAutoCalculatorPaymentValueTemplate,
       createCalculatorPeriodTemplate,
-      createCalculatorPeriodValueTemplate
+      createCalculatorPeriodValueTemplate,
+      createAutoCalculatorSpecialsTemplate
     },
     {
       renderElement,
@@ -1290,6 +1392,53 @@
   class AutoPresenter extends BasicPresenter {
     constructor(model, view) {
       super(model, view);
+
+      this.autoInsuranceCheckboxHandler = this.autoInsuranceCheckboxHandler.bind(this);
+      this.lifeInsuranceCheckboxHandler = this.lifeInsuranceCheckboxHandler.bind(this);
+    }
+
+    initSpecials() {
+      this.view.renderCalculatorSpecials(this.autoInsuranceCheckboxHandler, this.lifeInsuranceCheckboxHandler);
+    }
+
+    autoInsuranceCheckboxHandler(node) {
+      if (node.checked) {
+        this.calculator.autoInsurance = true;
+      } else {
+        this.calculator.autoInsurance = false;
+      }
+
+      this.calculator.calculateCreditPersentage();
+      this.calculator.calculateTotalCreditSumm();
+      this.calculator.calculateAnnuityPayment();
+      this.calculator.calculateMinimumIncome();
+
+      this.view.renderCalculatorResults(
+        this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
+        this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
+        this.calculator.annuityPayment.toLocaleString('ru-RU'),
+        this.calculator.minimumIncome.toLocaleString('ru-RU')
+      );
+    }
+
+    lifeInsuranceCheckboxHandler(node) {
+      if (node.checked) {
+        this.calculator.lifeInsurance = true;
+      } else {
+        this.calculator.lifeInsurance = false;
+      }
+
+      this.calculator.calculateCreditPersentage();
+      this.calculator.calculateTotalCreditSumm();
+      this.calculator.calculateAnnuityPayment();
+      this.calculator.calculateMinimumIncome();
+
+      this.view.renderCalculatorResults(
+        this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
+        this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
+        this.calculator.annuityPayment.toLocaleString('ru-RU'),
+        this.calculator.minimumIncome.toLocaleString('ru-RU')
+      );
     }
   }
 
@@ -1377,12 +1526,27 @@
     );
   }
 
+  function createCreditCalculatorSpecialsTemplate() {
+    return (
+      `<div class="calculator__section" id="specials">
+      <h4 class="calculator__title-inner visually-hidden">Специальные условия</h4>
+      <ul class="calculator__specials-list">
+        <li class="calculator__specials-item">
+          <input class="calculator__checkbox" id="salaryProject" type="checkbox" name="salaryProject">
+          <label class="calculator__label" for="salaryProject">Участник зарплатного проекта нашего банка</label>
+        </li>
+      </ul>
+    </div>`
+    );
+  }
+
   class CreditCalculatorView {
     constructor(markups, utils) {
       this.createCreditCalculatorResultsTemplate = markups.createCreditCalculatorResultsTemplate;
       this.createCreditCalculatorCreditSummTemplate = markups.createCreditCalculatorCreditSummTemplate;
       this.createCalculatorPeriodTemplate = markups.createCalculatorPeriodTemplate;
       this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
+      this.createCreditCalculatorSpecialsTemplate = markups.createCreditCalculatorSpecialsTemplate;
 
       this.renderElement = utils.renderElement;
       this.deleteChildrenElements = utils.deleteChildrenElements;
@@ -1486,6 +1650,23 @@
         periodSectionInner.removeChild(periodInput);
       }
     }
+
+    renderCalculatorSpecials(handler) {
+      const stepTwoWrapper = document.querySelector(`#stepTwoWrapper`);
+      const specials = stepTwoWrapper.querySelector(`#specials`);
+
+      if (specials) {
+        stepTwoWrapper.removeChild(specials);
+      }
+
+      this.renderElement(stepTwoWrapper, this.createCreditCalculatorSpecialsTemplate());
+
+      const salaryProjectCheckbox = stepTwoWrapper.querySelector(`#salaryProject`);
+
+      salaryProjectCheckbox.addEventListener(`change`, (evt) => {
+        handler(evt.currentTarget);
+      });
+    }
   }
 
   const creditCalculatorView = new CreditCalculatorView(
@@ -1493,7 +1674,8 @@
       createCreditCalculatorResultsTemplate,
       createCreditCalculatorCreditSummTemplate,
       createCalculatorPeriodTemplate,
-      createCalculatorPeriodValueTemplate
+      createCalculatorPeriodValueTemplate,
+      createCreditCalculatorSpecialsTemplate
     },
     {
       renderElement,
@@ -1504,6 +1686,32 @@
   class CreditPresenter extends BasicPresenter {
     constructor(model, view) {
       super(model, view);
+
+      this.salaryProjectCheckboxHandler = this.salaryProjectCheckboxHandler.bind(this);
+    }
+
+    initSpecials() {
+      this.view.renderCalculatorSpecials(this.salaryProjectCheckboxHandler);
+    }
+
+    salaryProjectCheckboxHandler(node) {
+      if (node.checked) {
+        this.calculator.salaryProject = true;
+      } else {
+        this.calculator.salaryProject = false;
+      }
+
+      this.calculator.calculateCreditPersentage();
+      this.calculator.calculateTotalCreditSumm();
+      this.calculator.calculateAnnuityPayment();
+      this.calculator.calculateMinimumIncome();
+
+      this.view.renderCalculatorResults(
+        this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
+        this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
+        this.calculator.annuityPayment.toLocaleString('ru-RU'),
+        this.calculator.minimumIncome.toLocaleString('ru-RU')
+      );
     }
   }
 
@@ -1528,12 +1736,15 @@
       switch (id) {
         case `mortgage`:
           this.mortgagePresenter.init(id);
+          this.mortgagePresenter.initSpecials();
           break;
         case `auto`:
           this.autoPresenter.init(id);
+          this.autoPresenter.initSpecials();
           break;
         case `credit`:
           this.creditPresenter.init(id);
+          this.creditPresenter.initSpecials();
           break;
       }
     }

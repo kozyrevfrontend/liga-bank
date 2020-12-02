@@ -4,6 +4,7 @@ import { createAutoCalculatorDownPaymentTemplate } from './markups/auto/calculat
 import { createAutoCalculatorPaymentValueTemplate } from './markups/auto/calculatorAutoPaymentValueTemplate';
 import { createCalculatorPeriodTemplate } from './markups/creditCalculatorPeriodTemplate';
 import { createCalculatorPeriodValueTemplate } from './markups/creditCalculatorPeriodValueTemplate';
+import { createAutoCalculatorSpecialsTemplate } from './markups/auto/calculatorAutoSpecialsTemplate';
 import { renderElement } from './utils';
 import { deleteChildrenElements } from './utils';
 
@@ -15,6 +16,7 @@ class AutoCalculatorView {
     this.createAutoCalculatorPaymentValueTemplate = markups.createAutoCalculatorPaymentValueTemplate;
     this.createCalculatorPeriodTemplate = markups.createCalculatorPeriodTemplate;
     this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
+    this.createAutoCalculatorSpecialsTemplate = markups.createAutoCalculatorSpecialsTemplate;
 
     this.renderElement = utils.renderElement;
     this.deleteChildrenElements = utils.deleteChildrenElements;
@@ -166,6 +168,29 @@ class AutoCalculatorView {
       periodSectionInner.removeChild(periodInput);
     }
   }
+
+  renderCalculatorSpecials(autoInsuranceCheckboxHandler, lifeInsuranceCheckboxHandler) {
+    const stepTwoWrapper = document.querySelector(`#stepTwoWrapper`);
+    const specials = stepTwoWrapper.querySelector(`#specials`);
+
+    if (specials) {
+      stepTwoWrapper.removeChild(specials);
+    }
+
+    this.renderElement(stepTwoWrapper, this.createAutoCalculatorSpecialsTemplate());
+
+    const autoInsuranceCheckbox = stepTwoWrapper.querySelector(`#autoInsurance`);
+
+    autoInsuranceCheckbox.addEventListener(`change`, (evt) => {
+      autoInsuranceCheckboxHandler(evt.currentTarget);
+    });
+
+    const lifeInsuranceCheckbox = stepTwoWrapper.querySelector(`#lifeInsurance`);
+
+    lifeInsuranceCheckbox.addEventListener(`change`, (evt) => {
+      lifeInsuranceCheckboxHandler(evt.currentTarget);
+    });
+  }
 }
 
 export const autoCalculatorView = new AutoCalculatorView(
@@ -175,7 +200,8 @@ export const autoCalculatorView = new AutoCalculatorView(
     createAutoCalculatorDownPaymentTemplate,
     createAutoCalculatorPaymentValueTemplate,
     createCalculatorPeriodTemplate,
-    createCalculatorPeriodValueTemplate
+    createCalculatorPeriodValueTemplate,
+    createAutoCalculatorSpecialsTemplate
   },
   {
     renderElement,

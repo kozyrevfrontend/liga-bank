@@ -4,6 +4,7 @@ import { createMortgageCalculatorDownPaymentTemplate } from './markups/mortgage/
 import { createMortgageCalculatorPaymentValueTemplate } from './markups/mortgage/calculatorMortgagePaymentValueTemplate';
 import { createCalculatorPeriodTemplate } from './markups/creditCalculatorPeriodTemplate';
 import { createCalculatorPeriodValueTemplate } from './markups/creditCalculatorPeriodValueTemplate';
+import { createMortgageCalculatorSpecialsTemplate } from './markups/mortgage/calculatorMortgageSpecialsTemplate';
 import { renderElement } from './utils';
 import { deleteChildrenElements } from './utils';
 
@@ -16,6 +17,7 @@ class MortgageCalculatorView {
     this.createMortgageCalculatorPaymentValueTemplate = markups.createMortgageCalculatorPaymentValueTemplate;
     this.createCalculatorPeriodTemplate = markups.createCalculatorPeriodTemplate;
     this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
+    this.createMortgageCalculatorSpecialsTemplate = markups.createMortgageCalculatorSpecialsTemplate;
 
 
     this.renderElement = utils.renderElement;
@@ -168,6 +170,23 @@ class MortgageCalculatorView {
       periodSectionInner.removeChild(periodInput);
     }
   }
+
+  renderCalculatorSpecials(handler) {
+    const stepTwoWrapper = document.querySelector(`#stepTwoWrapper`);
+    const specials = stepTwoWrapper.querySelector(`#specials`);
+
+    if (specials) {
+      stepTwoWrapper.removeChild(specials);
+    }
+
+    this.renderElement(stepTwoWrapper, this.createMortgageCalculatorSpecialsTemplate());
+
+    const maternityCapitalCheckbox = stepTwoWrapper.querySelector(`#maternityCapital`);
+
+    maternityCapitalCheckbox.addEventListener(`change`, (evt) => {
+      handler(evt.currentTarget);
+    });
+  }
 }
 
 export const mortgageCalculatorView = new MortgageCalculatorView(
@@ -177,7 +196,8 @@ export const mortgageCalculatorView = new MortgageCalculatorView(
     createMortgageCalculatorDownPaymentTemplate,
     createMortgageCalculatorPaymentValueTemplate,
     createCalculatorPeriodTemplate,
-    createCalculatorPeriodValueTemplate
+    createCalculatorPeriodValueTemplate,
+    createMortgageCalculatorSpecialsTemplate
   },
   {
     renderElement,

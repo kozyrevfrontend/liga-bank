@@ -2,6 +2,7 @@ import { createCreditCalculatorResultsTemplate } from './markups/credit/calculat
 import { createCreditCalculatorCreditSummTemplate } from './markups/credit/calculatorCreditCreditSummTemplate';
 import { createCalculatorPeriodTemplate } from './markups/creditCalculatorPeriodTemplate';
 import { createCalculatorPeriodValueTemplate } from './markups/creditCalculatorPeriodValueTemplate';
+import { createCreditCalculatorSpecialsTemplate } from './markups/credit/calculatorCreditSpecialsTemplate';
 import { renderElement } from './utils';
 import { deleteChildrenElements } from './utils';
 
@@ -11,6 +12,7 @@ class CreditCalculatorView {
     this.createCreditCalculatorCreditSummTemplate = markups.createCreditCalculatorCreditSummTemplate;
     this.createCalculatorPeriodTemplate = markups.createCalculatorPeriodTemplate;
     this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
+    this.createCreditCalculatorSpecialsTemplate = markups.createCreditCalculatorSpecialsTemplate;
 
     this.renderElement = utils.renderElement;
     this.deleteChildrenElements = utils.deleteChildrenElements;
@@ -114,6 +116,23 @@ class CreditCalculatorView {
       periodSectionInner.removeChild(periodInput);
     }
   }
+
+  renderCalculatorSpecials(handler) {
+    const stepTwoWrapper = document.querySelector(`#stepTwoWrapper`);
+    const specials = stepTwoWrapper.querySelector(`#specials`);
+
+    if (specials) {
+      stepTwoWrapper.removeChild(specials);
+    }
+
+    this.renderElement(stepTwoWrapper, this.createCreditCalculatorSpecialsTemplate());
+
+    const salaryProjectCheckbox = stepTwoWrapper.querySelector(`#salaryProject`);
+
+    salaryProjectCheckbox.addEventListener(`change`, (evt) => {
+      handler(evt.currentTarget);
+    });
+  }
 }
 
 export const creditCalculatorView = new CreditCalculatorView(
@@ -121,7 +140,8 @@ export const creditCalculatorView = new CreditCalculatorView(
     createCreditCalculatorResultsTemplate,
     createCreditCalculatorCreditSummTemplate,
     createCalculatorPeriodTemplate,
-    createCalculatorPeriodValueTemplate
+    createCalculatorPeriodValueTemplate,
+    createCreditCalculatorSpecialsTemplate
   },
   {
     renderElement,
