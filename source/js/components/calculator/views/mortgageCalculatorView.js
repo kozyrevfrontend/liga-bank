@@ -2,6 +2,8 @@ import { createMortgageCalculatorResultsTemplate } from './markups/mortgage/calc
 import { createMortgageCalculatorCreditSummTemplate } from './markups/mortgage/calculatorMortgageCreditSummTemplate';
 import { createMortgageCalculatorDownPaymentTemplate } from './markups/mortgage/calculatorMortgageDownPaymentTemplate';
 import { createMortgageCalculatorPaymentValueTemplate } from './markups/mortgage/calculatorMortgagePaymentValueTemplate';
+import { createCalculatorPeriodTemplate } from './markups/creditCalculatorPeriodTemplate';
+import { createCalculatorPeriodValueTemplate } from './markups/creditCalculatorPeriodValueTemplate';
 import { renderElement } from './utils';
 import { deleteChildrenElements } from './utils';
 
@@ -12,6 +14,9 @@ class MortgageCalculatorView {
     this.createCalculatorCreditSummInputTemplate = markups.createCalculatorCreditSummInputTemplate;
     this.createMortgageCalculatorDownPaymentTemplate = markups.createMortgageCalculatorDownPaymentTemplate;
     this.createMortgageCalculatorPaymentValueTemplate = markups.createMortgageCalculatorPaymentValueTemplate;
+    this.createCalculatorPeriodTemplate = markups.createCalculatorPeriodTemplate;
+    this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
+
 
     this.renderElement = utils.renderElement;
     this.deleteChildrenElements = utils.deleteChildrenElements;
@@ -111,6 +116,58 @@ class MortgageCalculatorView {
       downPaymentSectionInner.removeChild(downPaymentInput);
     }
   }
+
+  renderCalculatorPeriod(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, inputHandler, rangeHandler) {
+    const stepTwoWrapper = document.querySelector(`#stepTwoWrapper`);
+    const periodSection = stepTwoWrapper.querySelector(`#periodSection`);
+
+    if (periodSection) {
+      stepTwoWrapper.removeChild(periodSection);
+    }
+
+    this.renderElement(stepTwoWrapper, this.createCalculatorPeriodTemplate(minimumCreditPeriod, maximumCreditPeriod));
+
+    this.renderCalculatorPeriodValue(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, inputHandler);
+
+    const periodRange = stepTwoWrapper.querySelector(`#periodRange`);
+
+    periodRange.addEventListener(`input`, (evt) => {
+      rangeHandler(parseInt(evt.currentTarget.value, 10));
+    });
+  }
+
+  renderCalculatorPeriodValue(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, inputHandler) {
+    this.removeCalculatorPeriodValue();
+
+    const periodSection = document.querySelector(`#periodSection`);
+    const periodSectionInner = periodSection.querySelector(`.calculator__section-inner`);
+
+    this.renderElement(periodSectionInner, this.createCalculatorPeriodValueTemplate(minimumCreditPeriod, maximumCreditPeriod, creditPeriod), `afterbegin`);
+
+    const periodInput = periodSection.querySelector(`#period`);
+
+    periodInput.addEventListener(`change`, (evt) => {
+      if (parseInt(evt.currentTarget.value, 10) < parseInt(evt.currentTarget.min, 10)) {
+        evt.currentTarget.value = evt.currentTarget.min;
+      }
+
+      if (parseInt(evt.currentTarget.value, 10) > parseInt(evt.currentTarget.max, 10)) {
+        evt.currentTarget.value = evt.currentTarget.max;
+      }
+
+      inputHandler(parseInt(evt.currentTarget.value, 10));
+    });
+  }
+
+  removeCalculatorPeriodValue() {
+    const periodSection = document.querySelector(`#periodSection`);
+    const periodSectionInner = periodSection.querySelector(`.calculator__section-inner`);
+    const periodInput = periodSection.querySelector(`#period`);
+
+    if (periodSection.querySelector(`#period`)) {
+      periodSectionInner.removeChild(periodInput);
+    }
+  }
 }
 
 export const mortgageCalculatorView = new MortgageCalculatorView(
@@ -118,7 +175,9 @@ export const mortgageCalculatorView = new MortgageCalculatorView(
     createMortgageCalculatorResultsTemplate,
     createMortgageCalculatorCreditSummTemplate,
     createMortgageCalculatorDownPaymentTemplate,
-    createMortgageCalculatorPaymentValueTemplate
+    createMortgageCalculatorPaymentValueTemplate,
+    createCalculatorPeriodTemplate,
+    createCalculatorPeriodValueTemplate
   },
   {
     renderElement,

@@ -6,6 +6,8 @@ export class BasicPresenter {
     this.creditSummInputHandler = this.creditSummInputHandler.bind(this);
     this.downPaymentInputHandler = this.downPaymentInputHandler.bind(this);
     this.downPaymentRangeHandler = this.downPaymentRangeHandler.bind(this);
+    this.periodInputHandler = this.periodInputHandler.bind(this);
+    this.periodRangeHandler = this.periodRangeHandler.bind(this);
   }
 
   init(id) {
@@ -36,6 +38,14 @@ export class BasicPresenter {
         this.downPaymentRangeHandler
       );
     }
+
+    this.view.renderCalculatorPeriod(
+      this.calculator.minimumCreditPeriod,
+      this.calculator.maximumCreditPeriod,
+      this.calculator.creditPeriod,
+      this.periodInputHandler,
+      this.periodRangeHandler
+    );
   }
 
   creditSummInputHandler(value) {
@@ -43,15 +53,13 @@ export class BasicPresenter {
 
     if (this.calculator.minimumDownPaymentPersentage) {
       this.calculator.setMinimumDownPayment();
-      this.calculator.calculateDownPayment(this.calculator.minimumDownPaymentPersentage);
+      this.calculator.calculateDownPayment(this.calculator.downPaymentPersentage);
       this.calculator.calculateDownPaymentPersentage();
 
-      this.view.renderCalculatorDownPayment(
-        this.calculator.minimumDownPaymentPersentage,
+      this.view.renderCalculatorPaymentValue(
         this.calculator.minimumDownPayment,
         this.calculator.downPayment,
-        this.downPaymentInputHandler,
-        this.downPaymentRangeHandler
+        this.downPaymentInputHandler
       );
     }
 
@@ -90,6 +98,40 @@ export class BasicPresenter {
     this.calculator.calculateDownPayment(value);
 
     this.view.renderCalculatorPaymentValue(this.calculator.minimumDownPayment, this.calculator.downPayment, this.downPaymentInputHandler);
+
+    this.calculator.calculateCreditPersentage();
+    this.calculator.calculateTotalCreditSumm();
+    this.calculator.calculateAnnuityPayment();
+    this.calculator.calculateMinimumIncome();
+
+    this.view.renderCalculatorResults(
+      this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
+      this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
+      this.calculator.annuityPayment.toLocaleString('ru-RU'),
+      this.calculator.minimumIncome.toLocaleString('ru-RU')
+    );
+  }
+
+  periodInputHandler(value) {
+    this.calculator.creditPeriod = value;
+
+    this.calculator.calculateCreditPersentage();
+    this.calculator.calculateTotalCreditSumm();
+    this.calculator.calculateAnnuityPayment();
+    this.calculator.calculateMinimumIncome();
+
+    this.view.renderCalculatorResults(
+      this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
+      this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
+      this.calculator.annuityPayment.toLocaleString('ru-RU'),
+      this.calculator.minimumIncome.toLocaleString('ru-RU')
+    );
+  }
+
+  periodRangeHandler(value) {
+    this.calculator.creditPeriod = value;
+
+    this.view.renderCalculatorPeriodValue(this.calculator.minimumCreditPeriod, this.calculator.maximumCreditPeriod, this.calculator.creditPeriod, this.downPaymentInputHandler);
 
     this.calculator.calculateCreditPersentage();
     this.calculator.calculateTotalCreditSumm();

@@ -17,7 +17,7 @@ export function createMortgageCalculatorCreditSummTemplate(minimumCreditSumm, ma
             </svg>
           </button>
         </p>
-        <p class="calculator__legend">От ${minimumCreditSumm}  до ${maximumCreditSumm} рублей</p>
+        <p class="calculator__legend">От ${minimumCreditSumm.toLocaleString('ru-RU')}  до ${maximumCreditSumm.toLocaleString('ru-RU')} рублей</p>
       </div>
     </div>`
   );
