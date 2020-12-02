@@ -1,5 +1,6 @@
 export const creditProgramsData = {
   mortgage: {
+    minimumTotalCreditSumm: 500000,
     creditSumm: {
       min: 1200000,
       max: 25000000
@@ -17,6 +18,7 @@ export const creditProgramsData = {
     maternityCapital: 470000
   },
   auto: {
+    minimumTotalCreditSumm: 200000,
     creditSumm: {
       min: 500000,
       max: 5000000

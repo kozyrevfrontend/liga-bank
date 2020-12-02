@@ -487,12 +487,18 @@
       this.calculator.calculateAnnuityPayment();
       this.calculator.calculateMinimumIncome();
 
-      this.view.renderCalculatorResults(
-        this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
-        this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-        this.calculator.annuityPayment.toLocaleString('ru-RU'),
-        this.calculator.minimumIncome.toLocaleString('ru-RU')
-      );
+      if (this.calculator.minimumTotalCreditSumm) {
+        if (this.calculator.totalCreditSumm < this.calculator.minimumTotalCreditSumm) {
+          this.view.renderCalculatorUserMessage(this.calculator.minimumTotalCreditSumm);
+        } else {
+          this.view.renderCalculatorResults(
+            this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
+            this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
+            this.calculator.annuityPayment.toLocaleString('ru-RU'),
+            this.calculator.minimumIncome.toLocaleString('ru-RU')
+          );
+        }
+      }
     }
 
     downPaymentRangeHandler(value) {
@@ -506,12 +512,18 @@
       this.calculator.calculateAnnuityPayment();
       this.calculator.calculateMinimumIncome();
 
-      this.view.renderCalculatorResults(
-        this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
-        this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-        this.calculator.annuityPayment.toLocaleString('ru-RU'),
-        this.calculator.minimumIncome.toLocaleString('ru-RU')
-      );
+      if (this.calculator.minimumTotalCreditSumm) {
+        if (this.calculator.totalCreditSumm < this.calculator.minimumTotalCreditSumm) {
+          this.view.renderCalculatorUserMessage(this.calculator.minimumTotalCreditSumm);
+        } else {
+          this.view.renderCalculatorResults(
+            this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
+            this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
+            this.calculator.annuityPayment.toLocaleString('ru-RU'),
+            this.calculator.minimumIncome.toLocaleString('ru-RU')
+          );
+        }
+      }
     }
 
     periodInputHandler(value) {
@@ -560,6 +572,7 @@
       this.creditSumm = null;
       this.minimumCreditSumm = null;
       this.maximumCreditSumm = null;
+      this.minimumTotalCreditSumm = null;
 
       this.creditPeriod = null;
       this.minimumCreditPeriod = null;
@@ -577,6 +590,7 @@
 
     init(id) {
       this.setCurrentData(id);
+      this.setMinimunTotalCreditSumm();
       this.setMinimumCreditSumm();
       this.setMaximumCreditSumm();
       this.setCreditSumm(this.minimumCreditSumm);
@@ -599,6 +613,12 @@
 
     setCurrentData(id) {
       this.currentData = this.data[id];
+    }
+
+    setMinimunTotalCreditSumm() {
+      if (this.currentData.minimumTotalCreditSumm) {
+        this.minimumTotalCreditSumm = this.currentData.minimumTotalCreditSumm;
+      }
     }
 
     setCreditSumm(summ) {
@@ -655,6 +675,7 @@
 
   const creditProgramsData = {
     mortgage: {
+      minimumTotalCreditSumm: 500000,
       creditSumm: {
         min: 1200000,
         max: 25000000
@@ -672,6 +693,7 @@
       maternityCapital: 470000
     },
     auto: {
+      minimumTotalCreditSumm: 200000,
       creditSumm: {
         min: 500000,
         max: 5000000
@@ -838,6 +860,16 @@
     );
   }
 
+  function createCalculatorUserMessageTemplate(minimumTotalCreditSumm) {
+    return (
+      `<div class="calculator__results user-message">
+      <p class="user-message__message">Наш банк не выдаёт ипотечные
+      кредиты меньше ${minimumTotalCreditSumm.toLocaleString('ru-RU')} рублей.</p>
+      <p class="user-message__proposal">Попробуйте использовать другие параметры для расчёта.</p>
+    </div>`
+    );
+  }
+
   class MortgageCalculatorView {
     constructor(markups, utils) {
       this.createMortgageCalculatorResultsTemplate = markups.createMortgageCalculatorResultsTemplate;
@@ -848,6 +880,7 @@
       this.createCalculatorPeriodTemplate = markups.createCalculatorPeriodTemplate;
       this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
       this.createMortgageCalculatorSpecialsTemplate = markups.createMortgageCalculatorSpecialsTemplate;
+      this.createCalculatorUserMessageTemplate = markups.createCalculatorUserMessageTemplate;
 
 
       this.renderElement = utils.renderElement;
@@ -1017,6 +1050,17 @@
         handler(evt.currentTarget);
       });
     }
+
+    renderCalculatorUserMessage(minimumTotalCreditSumm) {
+      const calculatorContainer = document.querySelector(`.calculator__container`);
+      const calculatorResults = calculatorContainer.querySelector(`.calculator__results`);
+
+      if (calculatorResults) {
+        calculatorContainer.removeChild(calculatorResults);
+      }
+
+      this.renderElement(calculatorContainer, this.createCalculatorUserMessageTemplate(minimumTotalCreditSumm));
+    }
   }
 
   const mortgageCalculatorView = new MortgageCalculatorView(
@@ -1027,7 +1071,8 @@
       createMortgageCalculatorPaymentValueTemplate,
       createCalculatorPeriodTemplate,
       createCalculatorPeriodValueTemplate,
-      createMortgageCalculatorSpecialsTemplate
+      createMortgageCalculatorSpecialsTemplate,
+      createCalculatorUserMessageTemplate
     },
     {
       renderElement,
@@ -1058,12 +1103,16 @@
       this.calculator.calculateAnnuityPayment();
       this.calculator.calculateMinimumIncome();
 
-      this.view.renderCalculatorResults(
-        this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
-        this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-        this.calculator.annuityPayment.toLocaleString('ru-RU'),
-        this.calculator.minimumIncome.toLocaleString('ru-RU')
-      );
+      if (this.calculator.totalCreditSumm < this.calculator.minimumTotalCreditSumm) {
+        this.view.renderCalculatorUserMessage(this.calculator.minimumTotalCreditSumm);
+      } else {
+        this.view.renderCalculatorResults(
+          this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
+          this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
+          this.calculator.annuityPayment.toLocaleString('ru-RU'),
+          this.calculator.minimumIncome.toLocaleString('ru-RU')
+        );
+      }
     }
   }
 
@@ -1197,6 +1246,7 @@
       this.createCalculatorPeriodTemplate = markups.createCalculatorPeriodTemplate;
       this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
       this.createAutoCalculatorSpecialsTemplate = markups.createAutoCalculatorSpecialsTemplate;
+      this.createCalculatorUserMessageTemplate = markups.createCalculatorUserMessageTemplate;
 
       this.renderElement = utils.renderElement;
       this.deleteChildrenElements = utils.deleteChildrenElements;
@@ -1371,6 +1421,17 @@
         lifeInsuranceCheckboxHandler(evt.currentTarget);
       });
     }
+
+    renderCalculatorUserMessage(minimumTotalCreditSumm) {
+      const calculatorContainer = document.querySelector(`.calculator__container`);
+      const calculatorResults = calculatorContainer.querySelector(`.calculator__results`);
+
+      if (calculatorResults) {
+        calculatorContainer.removeChild(calculatorResults);
+      }
+
+      this.renderElement(calculatorContainer, this.createCalculatorUserMessageTemplate(minimumTotalCreditSumm));
+    }
   }
 
   const autoCalculatorView = new AutoCalculatorView(
@@ -1381,7 +1442,8 @@
       createAutoCalculatorPaymentValueTemplate,
       createCalculatorPeriodTemplate,
       createCalculatorPeriodValueTemplate,
-      createAutoCalculatorSpecialsTemplate
+      createAutoCalculatorSpecialsTemplate,
+      createCalculatorUserMessageTemplate
     },
     {
       renderElement,

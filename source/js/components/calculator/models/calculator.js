@@ -9,6 +9,7 @@ export class Calculator {
     this.creditSumm = null;
     this.minimumCreditSumm = null;
     this.maximumCreditSumm = null;
+    this.minimumTotalCreditSumm = null;
 
     this.creditPeriod = null;
     this.minimumCreditPeriod = null;
@@ -26,6 +27,7 @@ export class Calculator {
 
   init(id) {
     this.setCurrentData(id);
+    this.setMinimunTotalCreditSumm();
     this.setMinimumCreditSumm();
     this.setMaximumCreditSumm();
     this.setCreditSumm(this.minimumCreditSumm);
@@ -48,6 +50,12 @@ export class Calculator {
 
   setCurrentData(id) {
     this.currentData = this.data[id];
+  }
+
+  setMinimunTotalCreditSumm() {
+    if (this.currentData.minimumTotalCreditSumm) {
+      this.minimumTotalCreditSumm = this.currentData.minimumTotalCreditSumm;
+    }
   }
 
   setCreditSumm(summ) {

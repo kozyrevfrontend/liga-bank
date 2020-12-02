@@ -5,6 +5,7 @@ import { createAutoCalculatorPaymentValueTemplate } from './markups/auto/calcula
 import { createCalculatorPeriodTemplate } from './markups/creditCalculatorPeriodTemplate';
 import { createCalculatorPeriodValueTemplate } from './markups/creditCalculatorPeriodValueTemplate';
 import { createAutoCalculatorSpecialsTemplate } from './markups/auto/calculatorAutoSpecialsTemplate';
+import { createCalculatorUserMessageTemplate } from './markups/creditCalculatorUserMessageTemplate';
 import { renderElement } from './utils';
 import { deleteChildrenElements } from './utils';
 
@@ -17,6 +18,7 @@ class AutoCalculatorView {
     this.createCalculatorPeriodTemplate = markups.createCalculatorPeriodTemplate;
     this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
     this.createAutoCalculatorSpecialsTemplate = markups.createAutoCalculatorSpecialsTemplate;
+    this.createCalculatorUserMessageTemplate = markups.createCalculatorUserMessageTemplate;
 
     this.renderElement = utils.renderElement;
     this.deleteChildrenElements = utils.deleteChildrenElements;
@@ -191,6 +193,17 @@ class AutoCalculatorView {
       lifeInsuranceCheckboxHandler(evt.currentTarget);
     });
   }
+
+  renderCalculatorUserMessage(minimumTotalCreditSumm) {
+    const calculatorContainer = document.querySelector(`.calculator__container`);
+    const calculatorResults = calculatorContainer.querySelector(`.calculator__results`);
+
+    if (calculatorResults) {
+      calculatorContainer.removeChild(calculatorResults);
+    }
+
+    this.renderElement(calculatorContainer, this.createCalculatorUserMessageTemplate(minimumTotalCreditSumm));
+  }
 }
 
 export const autoCalculatorView = new AutoCalculatorView(
@@ -201,7 +214,8 @@ export const autoCalculatorView = new AutoCalculatorView(
     createAutoCalculatorPaymentValueTemplate,
     createCalculatorPeriodTemplate,
     createCalculatorPeriodValueTemplate,
-    createAutoCalculatorSpecialsTemplate
+    createAutoCalculatorSpecialsTemplate,
+    createCalculatorUserMessageTemplate
   },
   {
     renderElement,
