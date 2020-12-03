@@ -5,7 +5,7 @@ export function createMortgageCalculatorSpecialsTemplate() {
       <ul class="calculator__specials-list">
         <li class="calculator__specials-item">
           <input class="calculator__checkbox" id="maternityCapital" type="checkbox" name="maternityCapital">
-          <label class="calculator__label" for="maternityCapital">Использовать материнский капитал</label>
+          <label class="calculator__label" for="maternityCapital" tabindex="0">Использовать материнский капитал</label>
         </li>
       </ul>
     </div>`

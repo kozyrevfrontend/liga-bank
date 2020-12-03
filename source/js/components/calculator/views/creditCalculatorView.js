@@ -3,6 +3,7 @@ import { createCreditCalculatorCreditSummTemplate } from './markups/credit/calcu
 import { createCalculatorPeriodTemplate } from './markups/creditCalculatorPeriodTemplate';
 import { createCalculatorPeriodValueTemplate } from './markups/creditCalculatorPeriodValueTemplate';
 import { createCreditCalculatorSpecialsTemplate } from './markups/credit/calculatorCreditSpecialsTemplate';
+import { createCreditCalculatorOrderTemplate } from './markups/credit/calculatorCreditOrderTemplate';
 import { renderElement } from './utils';
 import { deleteChildrenElements } from './utils';
 
@@ -13,12 +14,13 @@ class CreditCalculatorView {
     this.createCalculatorPeriodTemplate = markups.createCalculatorPeriodTemplate;
     this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
     this.createCreditCalculatorSpecialsTemplate = markups.createCreditCalculatorSpecialsTemplate;
+    this.createCreditCalculatorOrderTemplate = markups.createCreditCalculatorOrderTemplate;
 
     this.renderElement = utils.renderElement;
     this.deleteChildrenElements = utils.deleteChildrenElements;
   }
 
-  renderCalculatorResults(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome) {
+  renderCalculatorResults(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome, handler) {
     const calculatorContainer = document.querySelector(`.calculator__container`);
     const calculatorResults = calculatorContainer.querySelector(`.calculator__results`);
 
@@ -27,6 +29,12 @@ class CreditCalculatorView {
     }
 
     this.renderElement(calculatorContainer, this.createCreditCalculatorResultsTemplate(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome));
+
+    const resultsApplyButton = calculatorContainer.querySelector(`.results__apply`);
+
+    resultsApplyButton.addEventListener(`click`, () => {
+      handler();
+    });
   }
 
   renderCalculatorCreditSumm(minimumCreditSumm, maximumCreditSumm, creditSumm, handler) {
@@ -133,6 +141,23 @@ class CreditCalculatorView {
       handler(evt.currentTarget);
     });
   }
+
+  renderCalculatorOrder(creditSumm, downPayment, creditPeriod) {
+    this.removeCalculatorOrder();
+
+    const calculator = document.querySelector(`.calculator`);
+
+    this.renderElement(calculator, this.createCreditCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod));
+  }
+
+  removeCalculatorOrder() {
+    const calculator = document.querySelector(`.calculator`);
+    const calculatorOrder = calculator.querySelector(`.calculator__form`);
+
+    if (calculatorOrder) {
+      calculator.removeChild(calculatorOrder);
+    }
+  }
 }
 
 export const creditCalculatorView = new CreditCalculatorView(
@@ -141,7 +166,8 @@ export const creditCalculatorView = new CreditCalculatorView(
     createCreditCalculatorCreditSummTemplate,
     createCalculatorPeriodTemplate,
     createCalculatorPeriodValueTemplate,
-    createCreditCalculatorSpecialsTemplate
+    createCreditCalculatorSpecialsTemplate,
+    createCreditCalculatorOrderTemplate
   },
   {
     renderElement,

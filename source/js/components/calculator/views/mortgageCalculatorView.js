@@ -6,6 +6,7 @@ import { createCalculatorPeriodTemplate } from './markups/creditCalculatorPeriod
 import { createCalculatorPeriodValueTemplate } from './markups/creditCalculatorPeriodValueTemplate';
 import { createMortgageCalculatorSpecialsTemplate } from './markups/mortgage/calculatorMortgageSpecialsTemplate';
 import { createMortgageCalculatorUserMessageTemplate } from './markups/mortgage/calculatorMortgageUserMessageTemplate';
+import { createMortgageCalculatorOrderTemplate } from './markups/mortgage/calculatorMortgageOrderTemplate';
 import { renderElement } from './utils';
 import { deleteChildrenElements } from './utils';
 
@@ -20,13 +21,14 @@ class MortgageCalculatorView {
     this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
     this.createMortgageCalculatorSpecialsTemplate = markups.createMortgageCalculatorSpecialsTemplate;
     this.createMortgageCalculatorUserMessageTemplate = markups.createMortgageCalculatorUserMessageTemplate;
+    this.createMortgageCalculatorOrderTemplate = markups.createMortgageCalculatorOrderTemplate;
 
 
     this.renderElement = utils.renderElement;
     this.deleteChildrenElements = utils.deleteChildrenElements;
   }
 
-  renderCalculatorResults(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome) {
+  renderCalculatorResults(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome, handler) {
     const calculatorContainer = document.querySelector(`.calculator__container`);
     const calculatorResults = calculatorContainer.querySelector(`.calculator__results`);
 
@@ -35,6 +37,12 @@ class MortgageCalculatorView {
     }
 
     this.renderElement(calculatorContainer, this.createMortgageCalculatorResultsTemplate(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome));
+
+    const resultsApplyButton = calculatorContainer.querySelector(`.results__apply`);
+
+    resultsApplyButton.addEventListener(`click`, () => {
+      handler();
+    });
   }
 
   renderCalculatorCreditSumm(minimumCreditSumm, maximumCreditSumm, creditSumm, handler) {
@@ -200,6 +208,23 @@ class MortgageCalculatorView {
 
     this.renderElement(calculatorContainer, this.createMortgageCalculatorUserMessageTemplate(minimumTotalCreditSumm));
   }
+
+  renderCalculatorOrder(creditSumm, downPayment, creditPeriod) {
+    this.removeCalculatorOrder();
+
+    const calculator = document.querySelector(`.calculator`);
+
+    this.renderElement(calculator, this.createMortgageCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod));
+  }
+
+  removeCalculatorOrder() {
+    const calculator = document.querySelector(`.calculator`);
+    const calculatorOrder = calculator.querySelector(`.calculator__form`);
+
+    if (calculatorOrder) {
+      calculator.removeChild(calculatorOrder);
+    }
+  }
 }
 
 export const mortgageCalculatorView = new MortgageCalculatorView(
@@ -211,7 +236,8 @@ export const mortgageCalculatorView = new MortgageCalculatorView(
     createCalculatorPeriodTemplate,
     createCalculatorPeriodValueTemplate,
     createMortgageCalculatorSpecialsTemplate,
-    createMortgageCalculatorUserMessageTemplate
+    createMortgageCalculatorUserMessageTemplate,
+    createMortgageCalculatorOrderTemplate
   },
   {
     renderElement,

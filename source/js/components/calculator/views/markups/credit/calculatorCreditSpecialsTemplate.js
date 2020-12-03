@@ -5,7 +5,7 @@ export function createCreditCalculatorSpecialsTemplate() {
       <ul class="calculator__specials-list">
         <li class="calculator__specials-item">
           <input class="calculator__checkbox" id="salaryProject" type="checkbox" name="salaryProject">
-          <label class="calculator__label" for="salaryProject">Участник зарплатного проекта нашего банка</label>
+          <label class="calculator__label" for="salaryProject" tabindex="0">Участник зарплатного проекта нашего банка</label>
         </li>
       </ul>
     </div>`

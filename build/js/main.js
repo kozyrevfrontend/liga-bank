@@ -405,6 +405,7 @@
       this.calculator = model;
       this.view = view;
 
+      this.creditResultsButtonHandler = this.creditResultsButtonHandler.bind(this);
       this.creditSummInputHandler = this.creditSummInputHandler.bind(this);
       this.downPaymentInputHandler = this.downPaymentInputHandler.bind(this);
       this.downPaymentRangeHandler = this.downPaymentRangeHandler.bind(this);
@@ -417,11 +418,14 @@
 
       console.dir(this.calculator);
 
+      this.view.removeCalculatorOrder();
+
       this.view.renderCalculatorResults(
         this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
         this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
         this.calculator.annuityPayment.toLocaleString('ru-RU'),
-        this.calculator.minimumIncome.toLocaleString('ru-RU')
+        this.calculator.minimumIncome.toLocaleString('ru-RU'),
+        this.creditResultsButtonHandler
       );
 
       this.view.renderCalculatorCreditSumm(
@@ -450,6 +454,14 @@
       );
     }
 
+    creditResultsButtonHandler() {
+      this.view.renderCalculatorOrder(
+        this.calculator.creditSumm,
+        this.calculator.downPayment,
+        this.calculator.creditPeriod
+      );
+    }
+
     creditSummInputHandler(value) {
       this.calculator.setCreditSumm(value);
 
@@ -474,7 +486,8 @@
         this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
         this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
         this.calculator.annuityPayment.toLocaleString('ru-RU'),
-        this.calculator.minimumIncome.toLocaleString('ru-RU')
+        this.calculator.minimumIncome.toLocaleString('ru-RU'),
+        this.creditResultsButtonHandler
       );
     }
 
@@ -495,7 +508,8 @@
             this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
             this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
             this.calculator.annuityPayment.toLocaleString('ru-RU'),
-            this.calculator.minimumIncome.toLocaleString('ru-RU')
+            this.calculator.minimumIncome.toLocaleString('ru-RU'),
+            this.creditResultsButtonHandler
           );
         }
       }
@@ -520,7 +534,8 @@
             this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
             this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
             this.calculator.annuityPayment.toLocaleString('ru-RU'),
-            this.calculator.minimumIncome.toLocaleString('ru-RU')
+            this.calculator.minimumIncome.toLocaleString('ru-RU'),
+            this.creditResultsButtonHandler
           );
         }
       }
@@ -538,7 +553,8 @@
         this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
         this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
         this.calculator.annuityPayment.toLocaleString('ru-RU'),
-        this.calculator.minimumIncome.toLocaleString('ru-RU')
+        this.calculator.minimumIncome.toLocaleString('ru-RU'),
+        this.creditResultsButtonHandler
       );
     }
 
@@ -556,7 +572,8 @@
         this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
         this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
         this.calculator.annuityPayment.toLocaleString('ru-RU'),
-        this.calculator.minimumIncome.toLocaleString('ru-RU')
+        this.calculator.minimumIncome.toLocaleString('ru-RU'),
+        this.creditResultsButtonHandler
       );
     }
   }
@@ -853,7 +870,7 @@
       <ul class="calculator__specials-list">
         <li class="calculator__specials-item">
           <input class="calculator__checkbox" id="maternityCapital" type="checkbox" name="maternityCapital">
-          <label class="calculator__label" for="maternityCapital">Использовать материнский капитал</label>
+          <label class="calculator__label" for="maternityCapital" tabindex="0">Использовать материнский капитал</label>
         </li>
       </ul>
     </div>`
@@ -870,6 +887,63 @@
     );
   }
 
+  function createMortgageCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod) {
+    let years = `лет`;
+
+    if (creditPeriod === 1) {
+      years = `год`;
+    }
+
+    if (creditPeriod >= 2 && creditPeriod <= 4) {
+      years = `года`;
+    }
+
+    return (
+      `<div class="calculator__form form">
+      <h3 class="form__title">Шаг 3. Оформление заявки</h3>
+      <form id="calculatorForm" action="https://echo.htmlacademy.ru" method="POST">
+        <p class="form__item form__item--readonly">
+          <label for="orderNumber">Номер заявки</label>
+          <input id="orderNumber" name="orderNumber" type="text" value="№ 0010" tabindex="-1" readonly>
+        </p>
+        <p class="form__item form__item--readonly">
+          <label for="creditPropose">Цель кредита</label>
+          <input id="creditPropose" name="creditPropose" type="text" value="Ипотека" tabindex="-1" readonly>
+        </p>
+        <p class="form__item form__item--readonly">
+          <label for="creditSumm">Стоимость недвижимости</label>
+          <input id="creditSumm" name="creditSumm" type="text" value="${creditSumm.toLocaleString(`ru-RU`)} рублей" tabindex="-1" readonly>
+        </p>
+        <p class="form__item form__item--readonly">
+          <label for="downPayment">Первоначальный взнос</label>
+          <input id="downPayment" name="downPayment" type="text" value="${downPayment.toLocaleString(`ru-RU`)} рублей" tabindex="-1" readonly>
+        </p>
+        <p class="form__item form__item--readonly">
+          <label for="creditPeriod">Срок кредитования</label>
+          <input id="creditPeriod" name="creditPeriod" type="text" value="${creditPeriod} ${years}" tabindex="-1" readonly>
+        </p>
+        <p class="form__item">
+          <label class="visually-hidden" for="userName">Введите ваши ФИО</label>
+          <input id="userName" name="userName" type="text" placeholder="ФИО" required autofocus>
+        </p>
+        <div class="form__wrapper-inner">
+          <p class="form__item">
+            <label class="visually-hidden" for="userPhone">Введите ваш номер телефона</label>
+            <input id="userPhone" name="userPhone" type="number" placeholder="Телефон" required>
+          </p>
+          <p class="form__item">
+            <label class="visually-hidden" for="userEmail">Введите вашу почту</label>
+            <input id="userEmail" name="userEmail" type="email" placeholder="E-mail" required>
+          </p>
+        </div>
+        <button class="button form__button" type="submit">
+          <span>Отправить</span>
+        </button>
+      </form>
+    </div>`
+    );
+  }
+
   class MortgageCalculatorView {
     constructor(markups, utils) {
       this.createMortgageCalculatorResultsTemplate = markups.createMortgageCalculatorResultsTemplate;
@@ -881,13 +955,14 @@
       this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
       this.createMortgageCalculatorSpecialsTemplate = markups.createMortgageCalculatorSpecialsTemplate;
       this.createMortgageCalculatorUserMessageTemplate = markups.createMortgageCalculatorUserMessageTemplate;
+      this.createMortgageCalculatorOrderTemplate = markups.createMortgageCalculatorOrderTemplate;
 
 
       this.renderElement = utils.renderElement;
       this.deleteChildrenElements = utils.deleteChildrenElements;
     }
 
-    renderCalculatorResults(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome) {
+    renderCalculatorResults(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome, handler) {
       const calculatorContainer = document.querySelector(`.calculator__container`);
       const calculatorResults = calculatorContainer.querySelector(`.calculator__results`);
 
@@ -896,6 +971,12 @@
       }
 
       this.renderElement(calculatorContainer, this.createMortgageCalculatorResultsTemplate(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome));
+
+      const resultsApplyButton = calculatorContainer.querySelector(`.results__apply`);
+
+      resultsApplyButton.addEventListener(`click`, () => {
+        handler();
+      });
     }
 
     renderCalculatorCreditSumm(minimumCreditSumm, maximumCreditSumm, creditSumm, handler) {
@@ -1061,6 +1142,23 @@
 
       this.renderElement(calculatorContainer, this.createMortgageCalculatorUserMessageTemplate(minimumTotalCreditSumm));
     }
+
+    renderCalculatorOrder(creditSumm, downPayment, creditPeriod) {
+      this.removeCalculatorOrder();
+
+      const calculator = document.querySelector(`.calculator`);
+
+      this.renderElement(calculator, this.createMortgageCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod));
+    }
+
+    removeCalculatorOrder() {
+      const calculator = document.querySelector(`.calculator`);
+      const calculatorOrder = calculator.querySelector(`.calculator__form`);
+
+      if (calculatorOrder) {
+        calculator.removeChild(calculatorOrder);
+      }
+    }
   }
 
   const mortgageCalculatorView = new MortgageCalculatorView(
@@ -1072,7 +1170,8 @@
       createCalculatorPeriodTemplate,
       createCalculatorPeriodValueTemplate,
       createMortgageCalculatorSpecialsTemplate,
-      createMortgageCalculatorUserMessageTemplate
+      createMortgageCalculatorUserMessageTemplate,
+      createMortgageCalculatorOrderTemplate
     },
     {
       renderElement,
@@ -1110,7 +1209,8 @@
           this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
           this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
           this.calculator.annuityPayment.toLocaleString('ru-RU'),
-          this.calculator.minimumIncome.toLocaleString('ru-RU')
+          this.calculator.minimumIncome.toLocaleString('ru-RU'),
+          this.creditResultsButtonHandler
         );
       }
     }
@@ -1226,11 +1326,11 @@
       <ul class="calculator__specials-list">
         <li class="calculator__specials-item">
           <input class="calculator__checkbox" id="autoInsurance" type="checkbox" name="autoInsurance">
-          <label class="calculator__label" for="autoInsurance">Оформить КАСКО в нашем банке</label>
+          <label class="calculator__label" for="autoInsurance" tabindex="0">Оформить КАСКО в нашем банке</label>
         </li>
         <li class="calculator__specials-item">
           <input class="calculator__checkbox" id="lifeInsurance" type="checkbox" name="lifeInsurance">
-          <label class="calculator__label" for="lifeInsurance">Оформить Страхование жизни в нашем банке</label>
+          <label class="calculator__label" for="lifeInsurance" tabindex="0">Оформить Страхование жизни в нашем банке</label>
         </li>
       </ul>
     </div>`
@@ -1246,6 +1346,63 @@
     );
   }
 
+  function createAutoCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod) {
+    let years = `лет`;
+
+    if (creditPeriod === 1) {
+      years = `год`;
+    }
+
+    if (creditPeriod >= 2 && creditPeriod <= 4) {
+      years = `года`;
+    }
+
+    return (
+      `<div class="calculator__form form">
+      <h3 class="form__title">Шаг 3. Оформление заявки</h3>
+      <form id="calculatorForm" action="https://echo.htmlacademy.ru" method="POST">
+        <p class="form__item form__item--readonly">
+          <label for="orderNumber">Номер заявки</label>
+          <input id="orderNumber" name="orderNumber" type="text" value="№ 0010" tabindex="-1" readonly>
+        </p>
+        <p class="form__item form__item--readonly">
+          <label for="creditPropose">Цель кредита</label>
+          <input id="creditPropose" name="creditPropose" type="text" value="Автокредит" tabindex="-1" readonly>
+        </p>
+        <p class="form__item form__item--readonly">
+          <label for="creditSumm">Стоимость автомобиля</label>
+          <input id="creditSumm" name="creditSumm" type="text" value="${creditSumm.toLocaleString(`ru-RU`)} рублей" tabindex="-1" readonly>
+        </p>
+        <p class="form__item form__item--readonly">
+          <label for="downPayment">Первоначальный взнос</label>
+          <input id="downPayment" name="downPayment" type="text" value="${downPayment.toLocaleString(`ru-RU`)} рублей" tabindex="-1" readonly>
+        </p>
+        <p class="form__item form__item--readonly">
+          <label for="creditPeriod">Срок кредитования</label>
+          <input id="creditPeriod" name="creditPeriod" type="text" value="${creditPeriod} ${years}" tabindex="-1" readonly>
+        </p>
+        <p class="form__item">
+          <label class="visually-hidden" for="userName">Введите ваши ФИО</label>
+          <input id="userName" name="userName" type="text" placeholder="ФИО" required autofocus>
+        </p>
+        <div class="form__wrapper-inner">
+          <p class="form__item">
+            <label class="visually-hidden" for="userPhone">Введите ваш номер телефона</label>
+            <input id="userPhone" name="userPhone" type="number" placeholder="Телефон" required>
+          </p>
+          <p class="form__item">
+            <label class="visually-hidden" for="userEmail">Введите вашу почту</label>
+            <input id="userEmail" name="userEmail" type="email" placeholder="E-mail" required>
+          </p>
+        </div>
+        <button class="button form__button" type="submit">
+          <span>Отправить</span>
+        </button>
+      </form>
+    </div>`
+    );
+  }
+
   class AutoCalculatorView {
     constructor(markups, utils) {
       this.createAutoCalculatorResultsTemplate = markups.createAutoCalculatorResultsTemplate;
@@ -1256,12 +1413,13 @@
       this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
       this.createAutoCalculatorSpecialsTemplate = markups.createAutoCalculatorSpecialsTemplate;
       this.createAutoCalculatorUserMessageTemplate = markups.createAutoCalculatorUserMessageTemplate;
+      this.createAutoCalculatorOrderTemplate = markups.createAutoCalculatorOrderTemplate;
 
       this.renderElement = utils.renderElement;
       this.deleteChildrenElements = utils.deleteChildrenElements;
     }
 
-    renderCalculatorResults(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome) {
+    renderCalculatorResults(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome, handler) {
       const calculatorContainer = document.querySelector(`.calculator__container`);
       const calculatorResults = calculatorContainer.querySelector(`.calculator__results`);
 
@@ -1270,6 +1428,12 @@
       }
 
       this.renderElement(calculatorContainer, this.createAutoCalculatorResultsTemplate(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome));
+
+      const resultsApplyButton = calculatorContainer.querySelector(`.results__apply`);
+
+      resultsApplyButton.addEventListener(`click`, () => {
+        handler();
+      });
     }
 
     renderCalculatorCreditSumm(minimumCreditSumm, maximumCreditSumm, creditSumm, handler) {
@@ -1441,6 +1605,23 @@
 
       this.renderElement(calculatorContainer, this.createAutoCalculatorUserMessageTemplate(minimumTotalCreditSumm));
     }
+
+    renderCalculatorOrder(creditSumm, downPayment, creditPeriod) {
+      this.removeCalculatorOrder();
+
+      const calculator = document.querySelector(`.calculator`);
+
+      this.renderElement(calculator, this.createAutoCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod));
+    }
+
+    removeCalculatorOrder() {
+      const calculator = document.querySelector(`.calculator`);
+      const calculatorOrder = calculator.querySelector(`.calculator__form`);
+
+      if (calculatorOrder) {
+        calculator.removeChild(calculatorOrder);
+      }
+    }
   }
 
   const autoCalculatorView = new AutoCalculatorView(
@@ -1452,7 +1633,8 @@
       createCalculatorPeriodTemplate,
       createCalculatorPeriodValueTemplate,
       createAutoCalculatorSpecialsTemplate,
-      createAutoCalculatorUserMessageTemplate
+      createAutoCalculatorUserMessageTemplate,
+      createAutoCalculatorOrderTemplate
     },
     {
       renderElement,
@@ -1488,7 +1670,8 @@
         this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
         this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
         this.calculator.annuityPayment.toLocaleString('ru-RU'),
-        this.calculator.minimumIncome.toLocaleString('ru-RU')
+        this.calculator.minimumIncome.toLocaleString('ru-RU'),
+        this.creditResultsButtonHandler
       );
     }
 
@@ -1508,7 +1691,8 @@
         this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
         this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
         this.calculator.annuityPayment.toLocaleString('ru-RU'),
-        this.calculator.minimumIncome.toLocaleString('ru-RU')
+        this.calculator.minimumIncome.toLocaleString('ru-RU'),
+        this.creditResultsButtonHandler
       );
     }
   }
@@ -1604,9 +1788,62 @@
       <ul class="calculator__specials-list">
         <li class="calculator__specials-item">
           <input class="calculator__checkbox" id="salaryProject" type="checkbox" name="salaryProject">
-          <label class="calculator__label" for="salaryProject">Участник зарплатного проекта нашего банка</label>
+          <label class="calculator__label" for="salaryProject" tabindex="0">Участник зарплатного проекта нашего банка</label>
         </li>
       </ul>
+    </div>`
+    );
+  }
+
+  function createCreditCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod) {
+    let years = `лет`;
+
+    if (creditPeriod === 1) {
+      years = `год`;
+    }
+
+    if (creditPeriod >= 2 && creditPeriod <= 4) {
+      years = `года`;
+    }
+
+    return (
+      `<div class="calculator__form form">
+      <h3 class="form__title">Шаг 3. Оформление заявки</h3>
+      <form id="calculatorForm" action="https://echo.htmlacademy.ru" method="POST">
+        <p class="form__item form__item--readonly">
+          <label for="orderNumber">Номер заявки</label>
+          <input id="orderNumber" name="orderNumber" type="text" value="№ 0010" tabindex="-1" readonly>
+        </p>
+        <p class="form__item form__item--readonly">
+          <label for="creditPropose">Цель кредита</label>
+          <input id="creditPropose" name="creditPropose" type="text" value="Потребительский кредит" tabindex="-1" readonly>
+        </p>
+        <p class="form__item form__item--readonly">
+          <label for="creditSumm">Сумма кредита</label>
+          <input id="creditSumm" name="creditSumm" type="text" value="${creditSumm.toLocaleString(`ru-RU`)} рублей" tabindex="-1" readonly>
+        </p>
+        <p class="form__item form__item--readonly">
+          <label for="creditPeriod">Срок кредитования</label>
+          <input id="creditPeriod" name="creditPeriod" type="text" value="${creditPeriod} ${years}" tabindex="-1" readonly>
+        </p>
+        <p class="form__item">
+          <label class="visually-hidden" for="userName">Введите ваши ФИО</label>
+          <input id="userName" name="userName" type="text" placeholder="ФИО" required autofocus>
+        </p>
+        <div class="form__wrapper-inner">
+          <p class="form__item">
+            <label class="visually-hidden" for="userPhone">Введите ваш номер телефона</label>
+            <input id="userPhone" name="userPhone" type="number" placeholder="Телефон" required>
+          </p>
+          <p class="form__item">
+            <label class="visually-hidden" for="userEmail">Введите вашу почту</label>
+            <input id="userEmail" name="userEmail" type="email" placeholder="E-mail" required>
+          </p>
+        </div>
+        <button class="button form__button" type="submit">
+          <span>Отправить</span>
+        </button>
+      </form>
     </div>`
     );
   }
@@ -1618,12 +1855,13 @@
       this.createCalculatorPeriodTemplate = markups.createCalculatorPeriodTemplate;
       this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
       this.createCreditCalculatorSpecialsTemplate = markups.createCreditCalculatorSpecialsTemplate;
+      this.createCreditCalculatorOrderTemplate = markups.createCreditCalculatorOrderTemplate;
 
       this.renderElement = utils.renderElement;
       this.deleteChildrenElements = utils.deleteChildrenElements;
     }
 
-    renderCalculatorResults(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome) {
+    renderCalculatorResults(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome, handler) {
       const calculatorContainer = document.querySelector(`.calculator__container`);
       const calculatorResults = calculatorContainer.querySelector(`.calculator__results`);
 
@@ -1632,6 +1870,12 @@
       }
 
       this.renderElement(calculatorContainer, this.createCreditCalculatorResultsTemplate(totalCreditSumm, creditPersentage, annuityPayment, minimumIncome));
+
+      const resultsApplyButton = calculatorContainer.querySelector(`.results__apply`);
+
+      resultsApplyButton.addEventListener(`click`, () => {
+        handler();
+      });
     }
 
     renderCalculatorCreditSumm(minimumCreditSumm, maximumCreditSumm, creditSumm, handler) {
@@ -1738,6 +1982,23 @@
         handler(evt.currentTarget);
       });
     }
+
+    renderCalculatorOrder(creditSumm, downPayment, creditPeriod) {
+      this.removeCalculatorOrder();
+
+      const calculator = document.querySelector(`.calculator`);
+
+      this.renderElement(calculator, this.createCreditCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod));
+    }
+
+    removeCalculatorOrder() {
+      const calculator = document.querySelector(`.calculator`);
+      const calculatorOrder = calculator.querySelector(`.calculator__form`);
+
+      if (calculatorOrder) {
+        calculator.removeChild(calculatorOrder);
+      }
+    }
   }
 
   const creditCalculatorView = new CreditCalculatorView(
@@ -1746,7 +2007,8 @@
       createCreditCalculatorCreditSummTemplate,
       createCalculatorPeriodTemplate,
       createCalculatorPeriodValueTemplate,
-      createCreditCalculatorSpecialsTemplate
+      createCreditCalculatorSpecialsTemplate,
+      createCreditCalculatorOrderTemplate
     },
     {
       renderElement,
@@ -1781,7 +2043,8 @@
         this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
         this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
         this.calculator.annuityPayment.toLocaleString('ru-RU'),
-        this.calculator.minimumIncome.toLocaleString('ru-RU')
+        this.calculator.minimumIncome.toLocaleString('ru-RU'),
+        this.creditResultsButtonHandler
       );
     }
   }
