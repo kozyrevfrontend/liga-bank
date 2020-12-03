@@ -1,4 +1,4 @@
-export function createCalculatorUserMessageTemplate(minimumTotalCreditSumm) {
+export function createMortgageCalculatorUserMessageTemplate(minimumTotalCreditSumm) {
   return (
     `<div class="calculator__results user-message">
       <p class="user-message__message">Наш банк не выдаёт ипотечные

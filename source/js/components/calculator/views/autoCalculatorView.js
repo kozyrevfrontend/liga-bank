@@ -5,7 +5,7 @@ import { createAutoCalculatorPaymentValueTemplate } from './markups/auto/calcula
 import { createCalculatorPeriodTemplate } from './markups/creditCalculatorPeriodTemplate';
 import { createCalculatorPeriodValueTemplate } from './markups/creditCalculatorPeriodValueTemplate';
 import { createAutoCalculatorSpecialsTemplate } from './markups/auto/calculatorAutoSpecialsTemplate';
-import { createCalculatorUserMessageTemplate } from './markups/creditCalculatorUserMessageTemplate';
+import { createAutoCalculatorUserMessageTemplate } from './markups/auto/calculatorAutoUserMessageTemplate';
 import { renderElement } from './utils';
 import { deleteChildrenElements } from './utils';
 
@@ -18,7 +18,7 @@ class AutoCalculatorView {
     this.createCalculatorPeriodTemplate = markups.createCalculatorPeriodTemplate;
     this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
     this.createAutoCalculatorSpecialsTemplate = markups.createAutoCalculatorSpecialsTemplate;
-    this.createCalculatorUserMessageTemplate = markups.createCalculatorUserMessageTemplate;
+    this.createAutoCalculatorUserMessageTemplate = markups.createAutoCalculatorUserMessageTemplate;
 
     this.renderElement = utils.renderElement;
     this.deleteChildrenElements = utils.deleteChildrenElements;
@@ -202,7 +202,7 @@ class AutoCalculatorView {
       calculatorContainer.removeChild(calculatorResults);
     }
 
-    this.renderElement(calculatorContainer, this.createCalculatorUserMessageTemplate(minimumTotalCreditSumm));
+    this.renderElement(calculatorContainer, this.createAutoCalculatorUserMessageTemplate(minimumTotalCreditSumm));
   }
 }
 
@@ -215,7 +215,7 @@ export const autoCalculatorView = new AutoCalculatorView(
     createCalculatorPeriodTemplate,
     createCalculatorPeriodValueTemplate,
     createAutoCalculatorSpecialsTemplate,
-    createCalculatorUserMessageTemplate
+    createAutoCalculatorUserMessageTemplate
   },
   {
     renderElement,

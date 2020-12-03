@@ -1,0 +1,148 @@
+.form {
+  padding-top: 63px;
+  padding-right: 70px;
+  padding-left: 70px;
+  padding-bottom: 70px;
+
+  border-radius: 4px;
+
+  background-color: #f6f7ff;
+
+  &--invalid {
+    animation-name: error;
+    animation-duration: 0.5s;
+    animation-delay: 0.25s;
+  }
+}
+
+@keyframes error {
+  0% {
+    transform: translateX(0);
+    timing-function: ease-in;
+  }
+
+  37% {
+    transform: translateX(5px);
+    timing-function: ease-out;
+  }
+
+  55% {
+    transform: translateX(-5px);
+    timing-function: ease-in;
+  }
+
+  73% {
+    transform: translateX(4px);
+    timing-function: ease-out;
+  }
+
+  82% {
+    transform: translateX(-4px);
+    timing-function: ease-in;
+  }
+
+  91% {
+    transform: translateX(2px);
+    timing-function: ease-out;
+  }
+
+  96% {
+    transform: translateX(-2px);
+    timing-function: ease-in;
+  }
+
+  100% {
+    transform: translateX(0);
+    timing-function: ease-in;
+  }
+}
+
+.form__title {
+  margin: 0;
+  margin-bottom: 12px;
+
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 31px;
+  color: #1f1e25;
+  text-align: center;
+}
+
+.form__wrapper-inner {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+
+  .form__item {
+    width: 47.6%;
+  }
+}
+
+.form__item {
+  margin: 0;
+
+  input {
+    display: block;
+    width: 100%;
+    height: 60px;
+    margin-top: 30px;
+    padding: 0 23px;
+
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 25px;
+    color: #707c87;
+
+    border: 1px solid #0a1e32;
+    border-radius: 4px;
+
+    background-color: transparent;
+
+    &:hover,
+    &:focus {
+      color: #1f1e25;
+    }
+  }
+
+  &--readonly {
+    position: relative;
+
+    input {
+      height: 55px;
+      margin-top: 0;
+      padding: 0;
+
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 31px;
+      color: #1f1e25;
+      text-align: right;
+
+      border: none;
+      border-radius: 0;
+      border-bottom: 1px solid #c4c4c4;
+      background-color: transparent;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    label {
+      position: absolute;
+      top: 17px;
+      left: 0;
+
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 22px;
+      color: #394959;
+    }
+  }
+}
+
+.form__button {
+  width: 198px;
+  height: 51px;
+  margin: 0 auto;
+}

@@ -1,0 +1,32 @@
+.user-message {
+  align-self: start;
+  width: 500px;
+  padding-left: 59px;
+  padding-right: 59px;
+  padding-top: 53px;
+  padding-bottom: 60px;
+
+  border-radius: 4px;
+
+  background-color: #f6f7ff;
+}
+
+.user-message__message {
+  margin: 0;
+  margin-bottom: 20px;
+
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 31px;
+  color: #1f1e25;
+}
+
+.user-message__proposal {
+  width: 255px;
+  margin: 0;
+
+  font-style: 16px;
+  font-weight: 400;
+  line-height: 22px;
+  color: #394959;
+}
