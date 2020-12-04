@@ -60,14 +60,55 @@
   min-height: 51px;
 }
 
+@media (max-width: $tablet-width) {
+  .results {
+    width: 100%;
+  }
+
+  .results__board {
+    width: 385px;
+  }
+}
+
 @media (max-width: $mobile-width) {
+  .results {
+    padding-top: 34px;
+    padding-right: 16px;
+    padding-left: 16px;
+    padding-bottom: 40px;
+  }
+
   .results__title {
     font-size: 18px;
     line-height: 25px;
   }
 
+  .results__board {
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+    margin-bottom: 18px;
+  }
+
+  .results__wrapper {
+    width: 100%;
+    margin-bottom: 13px;
+
+    &--fix {
+      width: 100%;
+    }
+  }
+
   .results__value {
+    margin-bottom: 0;
+
     font-size: 18px;
     line-height: 25px;
+  }
+
+  .results__apply {
+    span {
+      font-size: 14px;
+    }
   }
 }

@@ -25,8 +25,50 @@
   width: 255px;
   margin: 0;
 
-  font-style: 16px;
+  font-size: 16px;
   font-weight: 400;
   line-height: 22px;
   color: #394959;
+}
+
+@media (max-width: $tablet-width) {
+  .user-message {
+    width: 100%;
+    padding-left: 59px;
+    padding-right: 59px;
+    padding-top: 53px;
+    padding-bottom: 60px;
+  }
+
+  .user-message__message {
+    width: 350px;
+
+    font-size: 22px;
+    line-height: 31px;
+  }
+
+  .user-message__proposal {
+    width: 255px;
+  }
+}
+
+@media (max-width: $mobile-width) {
+  .user-message {
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 37px;
+    padding-bottom: 37px;
+  }
+
+  .user-message__message {
+    width: 80%;
+
+    font-size: 18px;
+    line-height: 25px;
+  }
+
+  .user-message__proposal {
+    width: 97.5%;
+  }
 }
