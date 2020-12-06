@@ -1,0 +1,201 @@
+.popup-login {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 100;
+
+  width: 544px;
+
+  border: 4px solid #2c36f2;
+
+  background-color: #f6f7ff;
+
+  box-shadow: 0 5px 6px rgba(63, 63, 63, 0.2);
+
+  transform: translate(-50%, -50%);
+}
+
+.popup-login__wrapper {
+  position: relative;
+
+  padding: 60px;
+}
+
+.popup-login__form {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    display: block;
+    margin-bottom: 10px;
+
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    color: #394959;
+  }
+
+  input {
+    display: block;
+    width: 100%;
+    height: 60px;
+    padding: 0 50px;
+
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 25px;
+    color: #1f1e25;
+
+    border: 1px solid #1f1e25;
+    border-radius: 4px;
+
+    background-color: transparent;
+  }
+}
+
+.popup-login__form-item {
+  position: relative;
+
+  margin: 0;
+
+  &--login {
+    margin-bottom: 30px;
+  }
+
+  &--password {
+    svg {
+      position: absolute;
+      top: 48px;
+      right: 24px;
+    }
+  }
+}
+
+.popup-login__form-link {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 30px;
+
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 17px;
+  color: #707c87;
+  text-decoration: none;
+  text-align: right;
+
+  &:hover,
+  &:focus {
+    opacity: 0.8;
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
+}
+
+.popup-login__logo {
+  margin-bottom: 45px;
+}
+
+.popup-login__close {
+  position: absolute;
+  top: 60px;
+  right: 60px;
+
+  display: block;
+  margin: 0;
+  padding: 0;
+
+
+  background-color: transparent;
+  border: none;
+
+  cursor: pointer;
+}
+
+.popup-login__form-button {
+  width: 100%;
+  height: 60px;
+
+  span {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 21px;
+  }
+}
+
+@media (max-width: $tablet-width) {
+  .popup-login {
+    width: 678px;
+  }
+
+  .popup-login__wrapper {
+    position: relative;
+
+    padding: 60px 88px;
+  }
+
+  .popup-login__close {
+    position: absolute;
+    top: 60px;
+    right: 88px;
+  }
+}
+
+@media (max-width: $mobile-width) {
+  .popup-login {
+    width: 90.6%;
+  }
+
+  .popup-login__wrapper {
+    position: relative;
+
+    padding: 50px 15px;
+  }
+
+  .popup-login__form-item {
+    &--login {
+      margin-bottom: 25px;
+    }
+
+    &--password {
+      svg {
+        position: absolute;
+        top: 56px;
+        right: 15px;
+      }
+    }
+  }
+
+  .popup-login__form-link {
+    margin-top: 15px;
+    margin-bottom: 0;
+    order: 4;
+
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+  }
+
+  .popup-login__form {
+    input {
+      padding: 0 39px;
+    }
+  }
+
+  .popup-login__close {
+    position: absolute;
+    top: 50px;
+    right: 20px;
+  }
+
+  .popup-login__form-button {
+    height: 51px;
+    margin-top: 30px;
+
+    span {
+      font-size: 14px;
+      line-height: 16px;
+    }
+  }
+}
