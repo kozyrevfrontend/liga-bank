@@ -9,6 +9,7 @@ export class BasicPresenter {
     this.downPaymentRangeHandler = this.downPaymentRangeHandler.bind(this);
     this.periodInputHandler = this.periodInputHandler.bind(this);
     this.periodRangeHandler = this.periodRangeHandler.bind(this);
+    this.orderFormSubmitHandler = this.orderFormSubmitHandler.bind(this);
   }
 
   init(id) {
@@ -56,7 +57,8 @@ export class BasicPresenter {
     this.view.renderCalculatorOrder(
       this.calculator.creditSumm,
       this.calculator.downPayment,
-      this.calculator.creditPeriod
+      this.calculator.creditPeriod,
+      this.orderFormSubmitHandler
     );
   }
 
@@ -173,5 +175,9 @@ export class BasicPresenter {
       this.calculator.minimumIncome.toLocaleString('ru-RU'),
       this.creditResultsButtonHandler
     );
+  }
+
+  orderFormSubmitHandler() {
+    this.view.popup.renderPopupCalculatorSuccess();
   }
 }

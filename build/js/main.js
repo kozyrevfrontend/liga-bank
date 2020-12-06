@@ -411,6 +411,7 @@
       this.downPaymentRangeHandler = this.downPaymentRangeHandler.bind(this);
       this.periodInputHandler = this.periodInputHandler.bind(this);
       this.periodRangeHandler = this.periodRangeHandler.bind(this);
+      this.orderFormSubmitHandler = this.orderFormSubmitHandler.bind(this);
     }
 
     init(id) {
@@ -458,7 +459,8 @@
       this.view.renderCalculatorOrder(
         this.calculator.creditSumm,
         this.calculator.downPayment,
-        this.calculator.creditPeriod
+        this.calculator.creditPeriod,
+        this.orderFormSubmitHandler
       );
     }
 
@@ -575,6 +577,10 @@
         this.calculator.minimumIncome.toLocaleString('ru-RU'),
         this.creditResultsButtonHandler
       );
+    }
+
+    orderFormSubmitHandler() {
+      this.view.popup.renderPopupCalculatorSuccess();
     }
   }
 
@@ -964,8 +970,102 @@
     );
   }
 
-  class MortgageCalculatorView {
+  function createPopupTemplate() {
+    return (
+      `<div class="popup">
+      <div class="popup__overlay">
+      </div>
+    </div>`
+    );
+  }
+
+  function createPopupCalculatorSuccessTemplate() {
+    return (
+      `<div class="popup-success">
+      <div class="popup-success__wrapper">
+        <p class="popup-success__title">Спасибо за обращение в наш банк.</p>
+        <p class="popup-success__message">Наш менеджер скоро свяжется с вами
+        по указанному номеру телефона.</p>
+        <button class="popup-success__close" aria-label="Закрыть попап">
+          <svg width="16" height="16">
+            <use href="img/sprite_auto.svg#icon-cross"></use>
+          </svg>
+        </button>
+      </div>
+    </div>`
+    );
+  }
+
+  class Popup {
     constructor(markups, utils) {
+      this.createPopupTemplate = markups.createPopupTemplate;
+      this.createPopupCalculatorSuccessTemplate = markups.createPopupCalculatorSuccessTemplate;
+
+      this.renderElement = utils.renderElement;
+      this.deleteChildrenElements = utils.deleteChildrenElements;
+
+      this.closePopupEscPress = this.closePopupEscPress.bind(this);
+    }
+
+    renderPopup() {
+      this.renderElement(document.body, this.createPopupTemplate());
+
+      document.body.classList.add(`overflow-hidden`);
+
+      const popup = document.querySelector(`.popup`);
+      const popupOverlay = popup.querySelector(`.popup__overlay`);
+
+      document.addEventListener(`keydown`, this.closePopupEscPress);
+
+      popupOverlay.addEventListener(`click`, (evt) => {
+        if (evt.target === popupOverlay) {
+          this.closePopup();
+        }
+      });
+    }
+
+    closePopup() {
+      const popup = document.querySelector(`.popup`);
+
+      document.body.removeChild(popup);
+      document.body.classList.remove(`overflow-hidden`);
+      document.removeEventListener(`keydown`, this.closePopupEscPress);
+    }
+
+    closePopupEscPress(evt) {
+      if (evt.key === `Escape`) {
+        this.closePopup();
+      }
+    }
+
+    renderPopupCalculatorSuccess() {
+      this.renderPopup();
+
+      const popupOverlay = document.querySelector(`.popup__overlay`);
+
+      this.renderElement(popupOverlay, this.createPopupCalculatorSuccessTemplate());
+
+      const closeButton = popupOverlay.querySelector(`.popup-success__close`);
+
+      closeButton.addEventListener('click', () => {
+        this.closePopup();
+      });
+    }
+  }
+
+  const popup = new Popup(
+    {
+      createPopupTemplate,
+      createPopupCalculatorSuccessTemplate
+    },
+    {
+      renderElement,
+      deleteChildrenElements
+    }
+  );
+
+  class MortgageCalculatorView {
+    constructor(markups, utils, basicPopup) {
       this.createMortgageCalculatorResultsTemplate = markups.createMortgageCalculatorResultsTemplate;
       this.createMortgageCalculatorCreditSummTemplate = markups.createMortgageCalculatorCreditSummTemplate;
       this.createCalculatorCreditSummInputTemplate = markups.createCalculatorCreditSummInputTemplate;
@@ -976,6 +1076,8 @@
       this.createMortgageCalculatorSpecialsTemplate = markups.createMortgageCalculatorSpecialsTemplate;
       this.createMortgageCalculatorUserMessageTemplate = markups.createMortgageCalculatorUserMessageTemplate;
       this.createMortgageCalculatorOrderTemplate = markups.createMortgageCalculatorOrderTemplate;
+      this.createPopupTemplate = markups.createPopupTemplate;
+      this.popup = basicPopup;
 
 
       this.renderElement = utils.renderElement;
@@ -1163,12 +1265,22 @@
       this.renderElement(calculatorContainer, this.createMortgageCalculatorUserMessageTemplate(minimumTotalCreditSumm));
     }
 
-    renderCalculatorOrder(creditSumm, downPayment, creditPeriod) {
+    renderCalculatorOrder(creditSumm, downPayment, creditPeriod, handler) {
       this.removeCalculatorOrder();
 
       const calculator = document.querySelector(`.calculator`);
 
       this.renderElement(calculator, this.createMortgageCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod));
+
+      const calculatorForm = calculator.querySelector(`#calculatorForm`);
+
+      calculatorForm.addEventListener(`submit`, (evt) => {
+        evt.preventDefault();
+
+        this.removeCalculatorOrder();
+
+        handler();
+      });
     }
 
     removeCalculatorOrder() {
@@ -1196,7 +1308,8 @@
     {
       renderElement,
       deleteChildrenElements
-    }
+    },
+    popup
   );
 
   class MortgagePresenter extends BasicPresenter {
@@ -1424,7 +1537,7 @@
   }
 
   class AutoCalculatorView {
-    constructor(markups, utils) {
+    constructor(markups, utils, basicPopup) {
       this.createAutoCalculatorResultsTemplate = markups.createAutoCalculatorResultsTemplate;
       this.createAutoCalculatorCreditSummTemplate = markups.createAutoCalculatorCreditSummTemplate;
       this.createAutoCalculatorDownPaymentTemplate = markups.createAutoCalculatorDownPaymentTemplate;
@@ -1434,6 +1547,7 @@
       this.createAutoCalculatorSpecialsTemplate = markups.createAutoCalculatorSpecialsTemplate;
       this.createAutoCalculatorUserMessageTemplate = markups.createAutoCalculatorUserMessageTemplate;
       this.createAutoCalculatorOrderTemplate = markups.createAutoCalculatorOrderTemplate;
+      this.popup = basicPopup;
 
       this.renderElement = utils.renderElement;
       this.deleteChildrenElements = utils.deleteChildrenElements;
@@ -1626,12 +1740,22 @@
       this.renderElement(calculatorContainer, this.createAutoCalculatorUserMessageTemplate(minimumTotalCreditSumm));
     }
 
-    renderCalculatorOrder(creditSumm, downPayment, creditPeriod) {
+    renderCalculatorOrder(creditSumm, downPayment, creditPeriod, handler) {
       this.removeCalculatorOrder();
 
       const calculator = document.querySelector(`.calculator`);
 
       this.renderElement(calculator, this.createAutoCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod));
+
+      const calculatorForm = calculator.querySelector(`#calculatorForm`);
+
+      calculatorForm.addEventListener(`submit`, (evt) => {
+        evt.preventDefault();
+
+        this.removeCalculatorOrder();
+
+        handler();
+      });
     }
 
     removeCalculatorOrder() {
@@ -1659,7 +1783,8 @@
     {
       renderElement,
       deleteChildrenElements
-    }
+    },
+    popup
   );
 
   class AutoPresenter extends BasicPresenter {
@@ -1869,13 +1994,14 @@
   }
 
   class CreditCalculatorView {
-    constructor(markups, utils) {
+    constructor(markups, utils, basicPopup) {
       this.createCreditCalculatorResultsTemplate = markups.createCreditCalculatorResultsTemplate;
       this.createCreditCalculatorCreditSummTemplate = markups.createCreditCalculatorCreditSummTemplate;
       this.createCalculatorPeriodTemplate = markups.createCalculatorPeriodTemplate;
       this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
       this.createCreditCalculatorSpecialsTemplate = markups.createCreditCalculatorSpecialsTemplate;
       this.createCreditCalculatorOrderTemplate = markups.createCreditCalculatorOrderTemplate;
+      this.popup = basicPopup;
 
       this.renderElement = utils.renderElement;
       this.deleteChildrenElements = utils.deleteChildrenElements;
@@ -2003,12 +2129,22 @@
       });
     }
 
-    renderCalculatorOrder(creditSumm, downPayment, creditPeriod) {
+    renderCalculatorOrder(creditSumm, downPayment, creditPeriod, handler) {
       this.removeCalculatorOrder();
 
       const calculator = document.querySelector(`.calculator`);
 
       this.renderElement(calculator, this.createCreditCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod));
+
+      const calculatorForm = calculator.querySelector(`#calculatorForm`);
+
+      calculatorForm.addEventListener(`submit`, (evt) => {
+        evt.preventDefault();
+
+        this.removeCalculatorOrder();
+
+        handler();
+      });
     }
 
     removeCalculatorOrder() {
@@ -2033,7 +2169,8 @@
     {
       renderElement,
       deleteChildrenElements
-    }
+    },
+    popup
   );
 
   class CreditPresenter extends BasicPresenter {

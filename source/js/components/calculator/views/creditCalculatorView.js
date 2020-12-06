@@ -4,17 +4,19 @@ import { createCalculatorPeriodTemplate } from './markups/creditCalculatorPeriod
 import { createCalculatorPeriodValueTemplate } from './markups/creditCalculatorPeriodValueTemplate';
 import { createCreditCalculatorSpecialsTemplate } from './markups/credit/calculatorCreditSpecialsTemplate';
 import { createCreditCalculatorOrderTemplate } from './markups/credit/calculatorCreditOrderTemplate';
+import { popup } from '../../popup/popup';
 import { renderElement } from './utils';
 import { deleteChildrenElements } from './utils';
 
 class CreditCalculatorView {
-  constructor(markups, utils) {
+  constructor(markups, utils, basicPopup) {
     this.createCreditCalculatorResultsTemplate = markups.createCreditCalculatorResultsTemplate;
     this.createCreditCalculatorCreditSummTemplate = markups.createCreditCalculatorCreditSummTemplate;
     this.createCalculatorPeriodTemplate = markups.createCalculatorPeriodTemplate;
     this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
     this.createCreditCalculatorSpecialsTemplate = markups.createCreditCalculatorSpecialsTemplate;
     this.createCreditCalculatorOrderTemplate = markups.createCreditCalculatorOrderTemplate;
+    this.popup = basicPopup;
 
     this.renderElement = utils.renderElement;
     this.deleteChildrenElements = utils.deleteChildrenElements;
@@ -142,12 +144,22 @@ class CreditCalculatorView {
     });
   }
 
-  renderCalculatorOrder(creditSumm, downPayment, creditPeriod) {
+  renderCalculatorOrder(creditSumm, downPayment, creditPeriod, handler) {
     this.removeCalculatorOrder();
 
     const calculator = document.querySelector(`.calculator`);
 
     this.renderElement(calculator, this.createCreditCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod));
+
+    const calculatorForm = calculator.querySelector(`#calculatorForm`);
+
+    calculatorForm.addEventListener(`submit`, (evt) => {
+      evt.preventDefault();
+
+      this.removeCalculatorOrder();
+
+      handler();
+    });
   }
 
   removeCalculatorOrder() {
@@ -172,5 +184,6 @@ export const creditCalculatorView = new CreditCalculatorView(
   {
     renderElement,
     deleteChildrenElements
-  }
+  },
+  popup
 );

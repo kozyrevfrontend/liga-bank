@@ -7,11 +7,12 @@ import { createCalculatorPeriodValueTemplate } from './markups/creditCalculatorP
 import { createMortgageCalculatorSpecialsTemplate } from './markups/mortgage/calculatorMortgageSpecialsTemplate';
 import { createMortgageCalculatorUserMessageTemplate } from './markups/mortgage/calculatorMortgageUserMessageTemplate';
 import { createMortgageCalculatorOrderTemplate } from './markups/mortgage/calculatorMortgageOrderTemplate';
+import { popup } from '../../popup/popup';
 import { renderElement } from './utils';
 import { deleteChildrenElements } from './utils';
 
 class MortgageCalculatorView {
-  constructor(markups, utils) {
+  constructor(markups, utils, basicPopup) {
     this.createMortgageCalculatorResultsTemplate = markups.createMortgageCalculatorResultsTemplate;
     this.createMortgageCalculatorCreditSummTemplate = markups.createMortgageCalculatorCreditSummTemplate;
     this.createCalculatorCreditSummInputTemplate = markups.createCalculatorCreditSummInputTemplate;
@@ -22,6 +23,8 @@ class MortgageCalculatorView {
     this.createMortgageCalculatorSpecialsTemplate = markups.createMortgageCalculatorSpecialsTemplate;
     this.createMortgageCalculatorUserMessageTemplate = markups.createMortgageCalculatorUserMessageTemplate;
     this.createMortgageCalculatorOrderTemplate = markups.createMortgageCalculatorOrderTemplate;
+    this.createPopupTemplate = markups.createPopupTemplate;
+    this.popup = basicPopup;
 
 
     this.renderElement = utils.renderElement;
@@ -209,12 +212,22 @@ class MortgageCalculatorView {
     this.renderElement(calculatorContainer, this.createMortgageCalculatorUserMessageTemplate(minimumTotalCreditSumm));
   }
 
-  renderCalculatorOrder(creditSumm, downPayment, creditPeriod) {
+  renderCalculatorOrder(creditSumm, downPayment, creditPeriod, handler) {
     this.removeCalculatorOrder();
 
     const calculator = document.querySelector(`.calculator`);
 
     this.renderElement(calculator, this.createMortgageCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod));
+
+    const calculatorForm = calculator.querySelector(`#calculatorForm`);
+
+    calculatorForm.addEventListener(`submit`, (evt) => {
+      evt.preventDefault();
+
+      this.removeCalculatorOrder();
+
+      handler();
+    });
   }
 
   removeCalculatorOrder() {
@@ -242,5 +255,6 @@ export const mortgageCalculatorView = new MortgageCalculatorView(
   {
     renderElement,
     deleteChildrenElements
-  }
+  },
+  popup
 );

@@ -7,11 +7,12 @@ import { createCalculatorPeriodValueTemplate } from './markups/creditCalculatorP
 import { createAutoCalculatorSpecialsTemplate } from './markups/auto/calculatorAutoSpecialsTemplate';
 import { createAutoCalculatorUserMessageTemplate } from './markups/auto/calculatorAutoUserMessageTemplate';
 import { createAutoCalculatorOrderTemplate } from './markups/auto/calculatorAutoOrderTemplate';
+import { popup } from '../../popup/popup';
 import { renderElement } from './utils';
 import { deleteChildrenElements } from './utils';
 
 class AutoCalculatorView {
-  constructor(markups, utils) {
+  constructor(markups, utils, basicPopup) {
     this.createAutoCalculatorResultsTemplate = markups.createAutoCalculatorResultsTemplate;
     this.createAutoCalculatorCreditSummTemplate = markups.createAutoCalculatorCreditSummTemplate;
     this.createAutoCalculatorDownPaymentTemplate = markups.createAutoCalculatorDownPaymentTemplate;
@@ -21,6 +22,7 @@ class AutoCalculatorView {
     this.createAutoCalculatorSpecialsTemplate = markups.createAutoCalculatorSpecialsTemplate;
     this.createAutoCalculatorUserMessageTemplate = markups.createAutoCalculatorUserMessageTemplate;
     this.createAutoCalculatorOrderTemplate = markups.createAutoCalculatorOrderTemplate;
+    this.popup = basicPopup;
 
     this.renderElement = utils.renderElement;
     this.deleteChildrenElements = utils.deleteChildrenElements;
@@ -213,12 +215,22 @@ class AutoCalculatorView {
     this.renderElement(calculatorContainer, this.createAutoCalculatorUserMessageTemplate(minimumTotalCreditSumm));
   }
 
-  renderCalculatorOrder(creditSumm, downPayment, creditPeriod) {
+  renderCalculatorOrder(creditSumm, downPayment, creditPeriod, handler) {
     this.removeCalculatorOrder();
 
     const calculator = document.querySelector(`.calculator`);
 
     this.renderElement(calculator, this.createAutoCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod));
+
+    const calculatorForm = calculator.querySelector(`#calculatorForm`);
+
+    calculatorForm.addEventListener(`submit`, (evt) => {
+      evt.preventDefault();
+
+      this.removeCalculatorOrder();
+
+      handler();
+    });
   }
 
   removeCalculatorOrder() {
@@ -246,5 +258,6 @@ export const autoCalculatorView = new AutoCalculatorView(
   {
     renderElement,
     deleteChildrenElements
-  }
+  },
+  popup
 );
