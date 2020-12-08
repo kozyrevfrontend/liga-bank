@@ -845,7 +845,10 @@
 
   function createMortgageCalculatorPaymentValueTemplate(minimumDownPayment, downPayment) {
     return (
-      `<input class="calculator__field" id="downPayment" type="number" value="${downPayment}" min="${minimumDownPayment}">`
+      `<div class="calculator__field-wrapper">
+      <input class="calculator__field" id="downPayment" type="number" value="${downPayment}" min="${minimumDownPayment}">
+      <span class="calculator__field-mask">${downPayment.toLocaleString(`ru-RU`)} рублей</span>
+    </div>`
     );
   }
 
@@ -1187,23 +1190,38 @@
       this.renderElement(downPaymentSectionInner, this.createMortgageCalculatorPaymentValueTemplate(minimumDownPayment, downPayment), `afterbegin`);
 
       const downPaymentInput = downPaymentSection.querySelector(`#downPayment`);
+      const downPaymentInputMask = downPaymentSection.querySelector(`.calculator__field-mask`);
 
       downPaymentInput.addEventListener(`change`, (evt) => {
         if (parseInt(evt.currentTarget.value, 10) < parseInt(evt.currentTarget.min, 10)) {
           evt.currentTarget.value = evt.currentTarget.min;
         }
 
+        downPaymentInputMask.textContent = `${parseInt(downPaymentInput.value, 10).toLocaleString(`ru-RU`)} рублей`;
+
         inputHandler(parseInt(evt.currentTarget.value, 10));
+      });
+
+      downPaymentInput.addEventListener(`focus`, () => {
+        downPaymentInputMask.style.display = `none`;
+      });
+
+      downPaymentInput.addEventListener(`blur`, () => {
+        downPaymentInputMask.style.display = `inline-block`;
+      });
+
+      downPaymentInputMask.addEventListener(`click`, () => {
+        downPaymentInput.focus();
       });
     }
 
     removeCalculatorPaymentValue() {
       const downPaymentSection = document.querySelector(`#downPaymentSection`);
       const downPaymentSectionInner = downPaymentSection.querySelector(`.calculator__section-inner`);
-      const downPaymentInput = downPaymentSection.querySelector(`#downPayment`);
+      const downPaymentInputWrapper = downPaymentSection.querySelector(`.calculator__field-wrapper`);
 
       if (downPaymentSection.querySelector(`#downPayment`)) {
-        downPaymentSectionInner.removeChild(downPaymentInput);
+        downPaymentSectionInner.removeChild(downPaymentInputWrapper);
       }
     }
 
@@ -1489,7 +1507,10 @@
 
   function createAutoCalculatorPaymentValueTemplate(minimumDownPayment, downPayment) {
     return (
-      `<input class="calculator__field" id="downPayment" type="number" value="${downPayment}" min="${minimumDownPayment}">`
+      `<div class="calculator__field-wrapper">
+      <input class="calculator__field" id="downPayment" type="number" value="${downPayment}" min="${minimumDownPayment}">
+      <span class="calculator__field-mask">${downPayment.toLocaleString(`ru-RU`)} рублей</span>
+    </div>`
     );
   }
 
@@ -1696,23 +1717,38 @@
       this.renderElement(downPaymentSectionInner, this.createAutoCalculatorPaymentValueTemplate(minimumDownPayment, downPayment), `afterbegin`);
 
       const downPaymentInput = downPaymentSection.querySelector(`#downPayment`);
+      const downPaymentInputMask = downPaymentSection.querySelector(`.calculator__field-mask`);
 
       downPaymentInput.addEventListener(`change`, (evt) => {
         if (parseInt(evt.currentTarget.value, 10) < parseInt(evt.currentTarget.min, 10)) {
           evt.currentTarget.value = evt.currentTarget.min;
         }
 
+        downPaymentInputMask.textContent = `${parseInt(downPaymentInput.value, 10).toLocaleString(`ru-RU`)} рублей`;
+
         inputHandler(parseInt(evt.currentTarget.value, 10));
+      });
+
+      downPaymentInput.addEventListener(`focus`, () => {
+        downPaymentInputMask.style.display = `none`;
+      });
+
+      downPaymentInput.addEventListener(`blur`, () => {
+        downPaymentInputMask.style.display = `inline-block`;
+      });
+
+      downPaymentInputMask.addEventListener(`click`, () => {
+        downPaymentInput.focus();
       });
     }
 
     removeCalculatorPaymentValue() {
       const downPaymentSection = document.querySelector(`#downPaymentSection`);
       const downPaymentSectionInner = downPaymentSection.querySelector(`.calculator__section-inner`);
-      const downPaymentInput = downPaymentSection.querySelector(`#downPayment`);
+      const downPaymentInputWrapper = downPaymentSection.querySelector(`.calculator__field-wrapper`);
 
       if (downPaymentSection.querySelector(`#downPayment`)) {
-        downPaymentSectionInner.removeChild(downPaymentInput);
+        downPaymentSectionInner.removeChild(downPaymentInputWrapper);
       }
     }
 
