@@ -15,15 +15,13 @@ export class BasicPresenter {
   init(id) {
     this.calculator.init(id);
 
-    console.dir(this.calculator);
-
     this.view.removeCalculatorOrder();
 
     this.view.renderCalculatorResults(
-      this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
-      this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-      this.calculator.annuityPayment.toLocaleString('ru-RU'),
-      this.calculator.minimumIncome.toLocaleString('ru-RU'),
+      this.calculator.totalCreditSumm,
+      this.calculator.creditPersentage,
+      this.calculator.annuityPayment,
+      this.calculator.minimumIncome,
       this.creditResultsButtonHandler
     );
 
@@ -83,10 +81,10 @@ export class BasicPresenter {
     this.calculator.calculateMinimumIncome();
 
     this.view.renderCalculatorResults(
-      this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
-      this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-      this.calculator.annuityPayment.toLocaleString('ru-RU'),
-      this.calculator.minimumIncome.toLocaleString('ru-RU'),
+      this.calculator.totalCreditSumm,
+      this.calculator.creditPersentage,
+      this.calculator.annuityPayment,
+      this.calculator.minimumIncome,
       this.creditResultsButtonHandler
     );
   }
@@ -105,10 +103,10 @@ export class BasicPresenter {
         this.view.renderCalculatorUserMessage(this.calculator.minimumTotalCreditSumm);
       } else {
         this.view.renderCalculatorResults(
-          this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
-          this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-          this.calculator.annuityPayment.toLocaleString('ru-RU'),
-          this.calculator.minimumIncome.toLocaleString('ru-RU'),
+          this.calculator.totalCreditSumm,
+          this.calculator.creditPersentage,
+          this.calculator.annuityPayment,
+          this.calculator.minimumIncome,
           this.creditResultsButtonHandler
         );
       }
@@ -131,10 +129,10 @@ export class BasicPresenter {
         this.view.renderCalculatorUserMessage(this.calculator.minimumTotalCreditSumm);
       } else {
         this.view.renderCalculatorResults(
-          this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
-          this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-          this.calculator.annuityPayment.toLocaleString('ru-RU'),
-          this.calculator.minimumIncome.toLocaleString('ru-RU'),
+          this.calculator.totalCreditSumm,
+          this.calculator.creditPersentage,
+          this.calculator.annuityPayment,
+          this.calculator.minimumIncome,
           this.creditResultsButtonHandler
         );
       }
@@ -150,10 +148,10 @@ export class BasicPresenter {
     this.calculator.calculateMinimumIncome();
 
     this.view.renderCalculatorResults(
-      this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
-      this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-      this.calculator.annuityPayment.toLocaleString('ru-RU'),
-      this.calculator.minimumIncome.toLocaleString('ru-RU'),
+      this.calculator.totalCreditSumm,
+      this.calculator.creditPersentage,
+      this.calculator.annuityPayment,
+      this.calculator.minimumIncome,
       this.creditResultsButtonHandler
     );
   }
@@ -169,10 +167,10 @@ export class BasicPresenter {
     this.calculator.calculateMinimumIncome();
 
     this.view.renderCalculatorResults(
-      this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
-      this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-      this.calculator.annuityPayment.toLocaleString('ru-RU'),
-      this.calculator.minimumIncome.toLocaleString('ru-RU'),
+      this.calculator.totalCreditSumm,
+      this.calculator.creditPersentage,
+      this.calculator.annuityPayment,
+      this.calculator.minimumIncome,
       this.creditResultsButtonHandler
     );
   }

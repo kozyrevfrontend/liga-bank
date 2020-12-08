@@ -221,6 +221,22 @@ class MortgageCalculatorView {
 
     const calculatorForm = calculator.querySelector(`#calculatorForm`);
 
+    const userNameInput = calculatorForm.querySelector(`#userName`);
+    userNameInput.focus();
+
+    const calculatorFormInputs = calculatorForm.querySelectorAll(`input`);
+
+    const calculatorFormContainer = document.querySelector(`.calculator__form`);
+
+    calculatorFormInputs.forEach((input) => {
+      input.addEventListener(`invalid`, () => {
+        calculatorFormContainer.classList.add("form--invalid");
+        setTimeout(() => {
+          calculatorFormContainer.classList.remove("form--invalid");
+        }, 1000);
+      });
+    });
+
     calculatorForm.addEventListener(`submit`, (evt) => {
       evt.preventDefault();
 

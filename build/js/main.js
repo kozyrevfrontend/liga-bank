@@ -417,15 +417,13 @@
     init(id) {
       this.calculator.init(id);
 
-      console.dir(this.calculator);
-
       this.view.removeCalculatorOrder();
 
       this.view.renderCalculatorResults(
-        this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
-        this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-        this.calculator.annuityPayment.toLocaleString('ru-RU'),
-        this.calculator.minimumIncome.toLocaleString('ru-RU'),
+        this.calculator.totalCreditSumm,
+        this.calculator.creditPersentage,
+        this.calculator.annuityPayment,
+        this.calculator.minimumIncome,
         this.creditResultsButtonHandler
       );
 
@@ -485,10 +483,10 @@
       this.calculator.calculateMinimumIncome();
 
       this.view.renderCalculatorResults(
-        this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
-        this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-        this.calculator.annuityPayment.toLocaleString('ru-RU'),
-        this.calculator.minimumIncome.toLocaleString('ru-RU'),
+        this.calculator.totalCreditSumm,
+        this.calculator.creditPersentage,
+        this.calculator.annuityPayment,
+        this.calculator.minimumIncome,
         this.creditResultsButtonHandler
       );
     }
@@ -507,10 +505,10 @@
           this.view.renderCalculatorUserMessage(this.calculator.minimumTotalCreditSumm);
         } else {
           this.view.renderCalculatorResults(
-            this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
-            this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-            this.calculator.annuityPayment.toLocaleString('ru-RU'),
-            this.calculator.minimumIncome.toLocaleString('ru-RU'),
+            this.calculator.totalCreditSumm,
+            this.calculator.creditPersentage,
+            this.calculator.annuityPayment,
+            this.calculator.minimumIncome,
             this.creditResultsButtonHandler
           );
         }
@@ -533,10 +531,10 @@
           this.view.renderCalculatorUserMessage(this.calculator.minimumTotalCreditSumm);
         } else {
           this.view.renderCalculatorResults(
-            this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
-            this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-            this.calculator.annuityPayment.toLocaleString('ru-RU'),
-            this.calculator.minimumIncome.toLocaleString('ru-RU'),
+            this.calculator.totalCreditSumm,
+            this.calculator.creditPersentage,
+            this.calculator.annuityPayment,
+            this.calculator.minimumIncome,
             this.creditResultsButtonHandler
           );
         }
@@ -552,10 +550,10 @@
       this.calculator.calculateMinimumIncome();
 
       this.view.renderCalculatorResults(
-        this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
-        this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-        this.calculator.annuityPayment.toLocaleString('ru-RU'),
-        this.calculator.minimumIncome.toLocaleString('ru-RU'),
+        this.calculator.totalCreditSumm,
+        this.calculator.creditPersentage,
+        this.calculator.annuityPayment,
+        this.calculator.minimumIncome,
         this.creditResultsButtonHandler
       );
     }
@@ -571,10 +569,10 @@
       this.calculator.calculateMinimumIncome();
 
       this.view.renderCalculatorResults(
-        this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
-        this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-        this.calculator.annuityPayment.toLocaleString('ru-RU'),
-        this.calculator.minimumIncome.toLocaleString('ru-RU'),
+        this.calculator.totalCreditSumm,
+        this.calculator.creditPersentage,
+        this.calculator.annuityPayment,
+        this.calculator.minimumIncome,
         this.creditResultsButtonHandler
       );
     }
@@ -784,19 +782,19 @@
       <h3 class="results__title">Наше предложение</h3>
       <dl class="results__board">
         <div class="results__wrapper">
-          <dt class="results__value">${creditSumm} рублей </dt>
+          <dt class="results__value">${creditSumm.toLocaleString('ru-RU')} рублей </dt>
           <dd class="results__description">Сумма ипотеки</dd>
         </div>
         <div class="results__wrapper results__wrapper--fix">
-          <dt class="results__value">${creditPersentage}%</dt>
+          <dt class="results__value">${creditPersentage.toFixed(2).replace('.', ',')}%</dt>
           <dd class="results__description">Процентная ставка</dd>
         </div>
         <div class="results__wrapper">
-          <dt class="results__value">${annuityPayment} рублей</dt>
+          <dt class="results__value">${annuityPayment.toLocaleString('ru-RU')} рублей</dt>
           <dd class="results__description">Ежемесячный платеж</dd>
         </div>
         <div class="results__wrapper results__wrapper--fix">
-          <dt class="results__value">${minimumIncome} рублей</dt>
+          <dt class="results__value">${minimumIncome.toLocaleString('ru-RU')} рублей</dt>
           <dd class="results__description">Необходимый доход</dd>
         </div>
       </dl>
@@ -1274,6 +1272,22 @@
 
       const calculatorForm = calculator.querySelector(`#calculatorForm`);
 
+      const userNameInput = calculatorForm.querySelector(`#userName`);
+      userNameInput.focus();
+
+      const calculatorFormInputs = calculatorForm.querySelectorAll(`input`);
+
+      const calculatorFormContainer = document.querySelector(`.calculator__form`);
+
+      calculatorFormInputs.forEach((input) => {
+        input.addEventListener(`invalid`, () => {
+          calculatorFormContainer.classList.add("form--invalid");
+          setTimeout(() => {
+            calculatorFormContainer.classList.remove("form--invalid");
+          }, 1000);
+        });
+      });
+
       calculatorForm.addEventListener(`submit`, (evt) => {
         evt.preventDefault();
 
@@ -1339,10 +1353,10 @@
         this.view.renderCalculatorUserMessage(this.calculator.minimumTotalCreditSumm);
       } else {
         this.view.renderCalculatorResults(
-          this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
-          this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-          this.calculator.annuityPayment.toLocaleString('ru-RU'),
-          this.calculator.minimumIncome.toLocaleString('ru-RU'),
+          this.calculator.totalCreditSumm,
+          this.calculator.creditPersentage,
+          this.calculator.annuityPayment,
+          this.calculator.minimumIncome,
           this.creditResultsButtonHandler
         );
       }
@@ -1388,19 +1402,19 @@
       <h3 class="results__title">Наше предложение</h3>
       <dl class="results__board">
         <div class="results__wrapper">
-          <dt class="results__value">${creditSumm} рублей </dt>
+          <dt class="results__value">${creditSumm.toLocaleString('ru-RU')} рублей </dt>
           <dd class="results__description">Сумма автокредита</dd>
         </div>
         <div class="results__wrapper results__wrapper--fix">
-          <dt class="results__value">${creditPersentage}%</dt>
+          <dt class="results__value">${creditPersentage.toFixed(2).replace('.', ',')}%</dt>
           <dd class="results__description">Процентная ставка</dd>
         </div>
         <div class="results__wrapper">
-          <dt class="results__value">${annuityPayment} рублей</dt>
+          <dt class="results__value">${annuityPayment.toLocaleString('ru-RU')} рублей</dt>
           <dd class="results__description">Ежемесячный платеж</dd>
         </div>
         <div class="results__wrapper results__wrapper--fix">
-          <dt class="results__value">${minimumIncome} рублей</dt>
+          <dt class="results__value">${minimumIncome.toLocaleString('ru-RU')} рублей</dt>
           <dd class="results__description">Необходимый доход</dd>
         </div>
       </dl>
@@ -1749,6 +1763,22 @@
 
       const calculatorForm = calculator.querySelector(`#calculatorForm`);
 
+      const userNameInput = calculatorForm.querySelector(`#userName`);
+      userNameInput.focus();
+
+      const calculatorFormInputs = calculatorForm.querySelectorAll(`input`);
+
+      const calculatorFormContainer = document.querySelector(`.calculator__form`);
+
+      calculatorFormInputs.forEach((input) => {
+        input.addEventListener(`invalid`, () => {
+          calculatorFormContainer.classList.add("form--invalid");
+          setTimeout(() => {
+            calculatorFormContainer.classList.remove("form--invalid");
+          }, 1000);
+        });
+      });
+
       calculatorForm.addEventListener(`submit`, (evt) => {
         evt.preventDefault();
 
@@ -1812,10 +1842,10 @@
       this.calculator.calculateMinimumIncome();
 
       this.view.renderCalculatorResults(
-        this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
-        this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-        this.calculator.annuityPayment.toLocaleString('ru-RU'),
-        this.calculator.minimumIncome.toLocaleString('ru-RU'),
+        this.calculator.totalCreditSumm,
+        this.calculator.creditPersentage,
+        this.calculator.annuityPayment,
+        this.calculator.minimumIncome,
         this.creditResultsButtonHandler
       );
     }
@@ -1833,10 +1863,10 @@
       this.calculator.calculateMinimumIncome();
 
       this.view.renderCalculatorResults(
-        this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
-        this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-        this.calculator.annuityPayment.toLocaleString('ru-RU'),
-        this.calculator.minimumIncome.toLocaleString('ru-RU'),
+        this.calculator.totalCreditSumm,
+        this.calculator.creditPersentage,
+        this.calculator.annuityPayment,
+        this.calculator.minimumIncome,
         this.creditResultsButtonHandler
       );
     }
@@ -1880,19 +1910,19 @@
       <h3 class="results__title">Наше предложение</h3>
       <dl class="results__board">
         <div class="results__wrapper">
-          <dt class="results__value">${creditSumm} рублей </dt>
+          <dt class="results__value">${creditSumm.toLocaleString('ru-RU')} рублей </dt>
           <dd class="results__description">Сумма кредита</dd>
         </div>
         <div class="results__wrapper results__wrapper--fix">
-          <dt class="results__value">${creditPersentage}%</dt>
+          <dt class="results__value">${creditPersentage.toFixed(2).replace('.', ',')}%</dt>
           <dd class="results__description">Процентная ставка</dd>
         </div>
         <div class="results__wrapper">
-          <dt class="results__value">${annuityPayment} рублей</dt>
+          <dt class="results__value">${annuityPayment.toLocaleString('ru-RU')} рублей</dt>
           <dd class="results__description">Ежемесячный платеж</dd>
         </div>
         <div class="results__wrapper results__wrapper--fix">
-          <dt class="results__value">${minimumIncome} рублей</dt>
+          <dt class="results__value">${minimumIncome.toLocaleString('ru-RU')} рублей</dt>
           <dd class="results__description">Необходимый доход</dd>
         </div>
       </dl>
@@ -2138,6 +2168,22 @@
 
       const calculatorForm = calculator.querySelector(`#calculatorForm`);
 
+      const userNameInput = calculatorForm.querySelector(`#userName`);
+      userNameInput.focus();
+
+      const calculatorFormInputs = calculatorForm.querySelectorAll(`input`);
+
+      const calculatorFormContainer = document.querySelector(`.calculator__form`);
+
+      calculatorFormInputs.forEach((input) => {
+        input.addEventListener(`invalid`, () => {
+          calculatorFormContainer.classList.add("form--invalid");
+          setTimeout(() => {
+            calculatorFormContainer.classList.remove("form--invalid");
+          }, 1000);
+        });
+      });
+
       calculatorForm.addEventListener(`submit`, (evt) => {
         evt.preventDefault();
 
@@ -2197,10 +2243,10 @@
       this.calculator.calculateMinimumIncome();
 
       this.view.renderCalculatorResults(
-        this.calculator.totalCreditSumm.toLocaleString('ru-RU'),
-        this.calculator.creditPersentage.toFixed(2).toLocaleString('ru-RU'),
-        this.calculator.annuityPayment.toLocaleString('ru-RU'),
-        this.calculator.minimumIncome.toLocaleString('ru-RU'),
+        this.calculator.totalCreditSumm,
+        this.calculator.creditPersentage,
+        this.calculator.annuityPayment,
+        this.calculator.minimumIncome,
         this.creditResultsButtonHandler
       );
     }
