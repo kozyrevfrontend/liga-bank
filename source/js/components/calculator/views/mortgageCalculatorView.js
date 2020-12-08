@@ -196,6 +196,7 @@ class MortgageCalculatorView {
     this.renderElement(periodSectionInner, this.createCalculatorPeriodValueTemplate(minimumCreditPeriod, maximumCreditPeriod, creditPeriod), `afterbegin`);
 
     const periodInput = periodSection.querySelector(`#period`);
+    const periodInputMask = periodSection.querySelector(`.calculator__field-mask`);
 
     periodInput.addEventListener(`change`, (evt) => {
       if (parseInt(evt.currentTarget.value, 10) < parseInt(evt.currentTarget.min, 10)) {
@@ -206,17 +207,41 @@ class MortgageCalculatorView {
         evt.currentTarget.value = evt.currentTarget.max;
       }
 
+      let years = `лет`;
+
+      if (parseInt(evt.currentTarget.value, 10) === 1 || parseInt(evt.currentTarget.value, 10) === 21) {
+        years = `год`;
+      }
+
+      if (evt.currentTarget.value >= 2 && evt.currentTarget.value <= 4 || evt.currentTarget.value >= 22 && evt.currentTarget.value <= 24) {
+        years = `года`;
+      }
+
+      periodInputMask.textContent = `${evt.currentTarget.value} ${years}`;
+
       inputHandler(parseInt(evt.currentTarget.value, 10));
+    });
+
+    periodInput.addEventListener(`focus`, () => {
+      periodInputMask.style.display = `none`;
+    });
+
+    periodInput.addEventListener(`blur`, () => {
+      periodInputMask.style.display = `inline-block`;
+    });
+
+    periodInputMask.addEventListener(`click`, () => {
+      periodInput.focus();
     });
   }
 
   removeCalculatorPeriodValue() {
     const periodSection = document.querySelector(`#periodSection`);
     const periodSectionInner = periodSection.querySelector(`.calculator__section-inner`);
-    const periodInput = periodSection.querySelector(`#period`);
+    const periodInputWrapper = periodSection.querySelector(`.calculator__field-wrapper`);
 
     if (periodSection.querySelector(`#period`)) {
-      periodSectionInner.removeChild(periodInput);
+      periodSectionInner.removeChild(periodInputWrapper);
     }
   }
 

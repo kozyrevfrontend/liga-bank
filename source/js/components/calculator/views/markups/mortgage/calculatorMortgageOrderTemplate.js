@@ -1,11 +1,11 @@
 export function createMortgageCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod) {
   let years = `лет`;
 
-  if (creditPeriod === 1) {
+  if (creditPeriod === 1 || creditPeriod === 21) {
     years = `год`;
   }
 
-  if (creditPeriod >= 2 && creditPeriod <= 4) {
+  if (creditPeriod >= 2 && creditPeriod <= 4 || creditPeriod >= 22 && creditPeriod <= 24) {
     years = `года`;
   }
 

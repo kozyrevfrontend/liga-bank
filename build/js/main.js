@@ -888,8 +888,21 @@
   }
 
   function createCalculatorPeriodValueTemplate(minimumCreditPeriod, maximumCreditPeriod, creditPeriod) {
+    let years = `лет`;
+
+    if (creditPeriod === 1 || creditPeriod === 21) {
+      years = `год`;
+    }
+
+    if (creditPeriod >= 2 && creditPeriod <= 4 || creditPeriod >= 22 && creditPeriod <= 24) {
+      years = `года`;
+    }
+
     return (
-      `<input class="calculator__field" id="period" type="number" value="${creditPeriod}" min="${minimumCreditPeriod}" max="${maximumCreditPeriod}">`
+      `<div class="calculator__field-wrapper">
+      <input class="calculator__field" id="period" type="number" value="${creditPeriod}" min="${minimumCreditPeriod}" max="${maximumCreditPeriod}">
+      <span class="calculator__field-mask">${creditPeriod} ${years}</span>
+    </div>`
     );
   }
 
@@ -920,11 +933,11 @@
   function createMortgageCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod) {
     let years = `лет`;
 
-    if (creditPeriod === 1) {
+    if (creditPeriod === 1 || creditPeriod === 21) {
       years = `год`;
     }
 
-    if (creditPeriod >= 2 && creditPeriod <= 4) {
+    if (creditPeriod >= 2 && creditPeriod <= 4 || creditPeriod >= 22 && creditPeriod <= 24) {
       years = `года`;
     }
 
@@ -1253,6 +1266,7 @@
       this.renderElement(periodSectionInner, this.createCalculatorPeriodValueTemplate(minimumCreditPeriod, maximumCreditPeriod, creditPeriod), `afterbegin`);
 
       const periodInput = periodSection.querySelector(`#period`);
+      const periodInputMask = periodSection.querySelector(`.calculator__field-mask`);
 
       periodInput.addEventListener(`change`, (evt) => {
         if (parseInt(evt.currentTarget.value, 10) < parseInt(evt.currentTarget.min, 10)) {
@@ -1263,17 +1277,41 @@
           evt.currentTarget.value = evt.currentTarget.max;
         }
 
+        let years = `лет`;
+
+        if (parseInt(evt.currentTarget.value, 10) === 1 || parseInt(evt.currentTarget.value, 10) === 21) {
+          years = `год`;
+        }
+
+        if (evt.currentTarget.value >= 2 && evt.currentTarget.value <= 4 || evt.currentTarget.value >= 22 && evt.currentTarget.value <= 24) {
+          years = `года`;
+        }
+
+        periodInputMask.textContent = `${evt.currentTarget.value} ${years}`;
+
         inputHandler(parseInt(evt.currentTarget.value, 10));
+      });
+
+      periodInput.addEventListener(`focus`, () => {
+        periodInputMask.style.display = `none`;
+      });
+
+      periodInput.addEventListener(`blur`, () => {
+        periodInputMask.style.display = `inline-block`;
+      });
+
+      periodInputMask.addEventListener(`click`, () => {
+        periodInput.focus();
       });
     }
 
     removeCalculatorPeriodValue() {
       const periodSection = document.querySelector(`#periodSection`);
       const periodSectionInner = periodSection.querySelector(`.calculator__section-inner`);
-      const periodInput = periodSection.querySelector(`#period`);
+      const periodInputWrapper = periodSection.querySelector(`.calculator__field-wrapper`);
 
       if (periodSection.querySelector(`#period`)) {
-        periodSectionInner.removeChild(periodInput);
+        periodSectionInner.removeChild(periodInputWrapper);
       }
     }
 
@@ -1780,6 +1818,7 @@
       this.renderElement(periodSectionInner, this.createCalculatorPeriodValueTemplate(minimumCreditPeriod, maximumCreditPeriod, creditPeriod), `afterbegin`);
 
       const periodInput = periodSection.querySelector(`#period`);
+      const periodInputMask = periodSection.querySelector(`.calculator__field-mask`);
 
       periodInput.addEventListener(`change`, (evt) => {
         if (parseInt(evt.currentTarget.value, 10) < parseInt(evt.currentTarget.min, 10)) {
@@ -1790,17 +1829,41 @@
           evt.currentTarget.value = evt.currentTarget.max;
         }
 
+        let years = `лет`;
+
+        if (parseInt(evt.currentTarget.value, 10) === 1 || parseInt(evt.currentTarget.value, 10) === 21) {
+          years = `год`;
+        }
+
+        if (evt.currentTarget.value >= 2 && evt.currentTarget.value <= 4 || evt.currentTarget.value >= 22 && evt.currentTarget.value <= 24) {
+          years = `года`;
+        }
+
+        periodInputMask.textContent = `${evt.currentTarget.value} ${years}`;
+
         inputHandler(parseInt(evt.currentTarget.value, 10));
+      });
+
+      periodInput.addEventListener(`focus`, () => {
+        periodInputMask.style.display = `none`;
+      });
+
+      periodInput.addEventListener(`blur`, () => {
+        periodInputMask.style.display = `inline-block`;
+      });
+
+      periodInputMask.addEventListener(`click`, () => {
+        periodInput.focus();
       });
     }
 
     removeCalculatorPeriodValue() {
       const periodSection = document.querySelector(`#periodSection`);
       const periodSectionInner = periodSection.querySelector(`.calculator__section-inner`);
-      const periodInput = periodSection.querySelector(`#period`);
+      const periodInputWrapper = periodSection.querySelector(`.calculator__field-wrapper`);
 
       if (periodSection.querySelector(`#period`)) {
-        periodSectionInner.removeChild(periodInput);
+        periodSectionInner.removeChild(periodInputWrapper);
       }
     }
 
@@ -2226,6 +2289,7 @@
       this.renderElement(periodSectionInner, this.createCalculatorPeriodValueTemplate(minimumCreditPeriod, maximumCreditPeriod, creditPeriod), `afterbegin`);
 
       const periodInput = periodSection.querySelector(`#period`);
+      const periodInputMask = periodSection.querySelector(`.calculator__field-mask`);
 
       periodInput.addEventListener(`change`, (evt) => {
         if (parseInt(evt.currentTarget.value, 10) < parseInt(evt.currentTarget.min, 10)) {
@@ -2236,17 +2300,41 @@
           evt.currentTarget.value = evt.currentTarget.max;
         }
 
+        let years = `лет`;
+
+        if (parseInt(evt.currentTarget.value, 10) === 1 || parseInt(evt.currentTarget.value, 10) === 21) {
+          years = `год`;
+        }
+
+        if (evt.currentTarget.value >= 2 && evt.currentTarget.value <= 4 || evt.currentTarget.value >= 22 && evt.currentTarget.value <= 24) {
+          years = `года`;
+        }
+
+        periodInputMask.textContent = `${evt.currentTarget.value} ${years}`;
+
         inputHandler(parseInt(evt.currentTarget.value, 10));
+      });
+
+      periodInput.addEventListener(`focus`, () => {
+        periodInputMask.style.display = `none`;
+      });
+
+      periodInput.addEventListener(`blur`, () => {
+        periodInputMask.style.display = `inline-block`;
+      });
+
+      periodInputMask.addEventListener(`click`, () => {
+        periodInput.focus();
       });
     }
 
     removeCalculatorPeriodValue() {
       const periodSection = document.querySelector(`#periodSection`);
       const periodSectionInner = periodSection.querySelector(`.calculator__section-inner`);
-      const periodInput = periodSection.querySelector(`#period`);
+      const periodInputWrapper = periodSection.querySelector(`.calculator__field-wrapper`);
 
       if (periodSection.querySelector(`#period`)) {
-        periodSectionInner.removeChild(periodInput);
+        periodSectionInner.removeChild(periodInputWrapper);
       }
     }
 
