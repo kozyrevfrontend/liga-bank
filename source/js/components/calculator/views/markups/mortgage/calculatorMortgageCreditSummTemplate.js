@@ -4,8 +4,11 @@ export function createMortgageCalculatorCreditSummTemplate(minimumCreditSumm, ma
       <h3 class="calculator__title calculator__title--step-two">Шаг 2. Введите параметры кредита</h3>
       <div class="calculator__section">
         <h4 class="calculator__title-inner">Стоимость недвижимости</h4>
-        <p class="calculator__section-inner" id="section-summ">
-          <input class="calculator__field" id="creditSumm" type="number" value="${creditSumm}" min="${minimumCreditSumm}" max="${maximumCreditSumm}">
+        <div class="calculator__section-inner" id="section-summ">
+          <div class="calculator__field-wrapper">
+            <input class="calculator__field" id="creditSumm" type="number" value="${creditSumm}" min="${minimumCreditSumm}" max="${maximumCreditSumm}">
+            <span class="calculator__field-mask">${creditSumm.toLocaleString(`ru-RU`)} рублей</span>
+          </div>
           <button class="calculator__button calculator__button--decrease" aria-label="Уменьшить стоимость автомобиля">
             <svg width="16" height="2">
               <use href="img/sprite_auto.svg#icon-minus"></use>
@@ -16,7 +19,7 @@ export function createMortgageCalculatorCreditSummTemplate(minimumCreditSumm, ma
               <use href="img/sprite_auto.svg#icon-plus"></use>
             </svg>
           </button>
-        </p>
+        </div>
         <p class="calculator__legend">От ${minimumCreditSumm.toLocaleString('ru-RU')}  до ${maximumCreditSumm.toLocaleString('ru-RU')} рублей</p>
       </div>
     </div>`

@@ -809,8 +809,11 @@
       <h3 class="calculator__title calculator__title--step-two">Шаг 2. Введите параметры кредита</h3>
       <div class="calculator__section">
         <h4 class="calculator__title-inner">Стоимость недвижимости</h4>
-        <p class="calculator__section-inner" id="section-summ">
-          <input class="calculator__field" id="creditSumm" type="number" value="${creditSumm}" min="${minimumCreditSumm}" max="${maximumCreditSumm}">
+        <div class="calculator__section-inner" id="section-summ">
+          <div class="calculator__field-wrapper">
+            <input class="calculator__field" id="creditSumm" type="number" value="${creditSumm}" min="${minimumCreditSumm}" max="${maximumCreditSumm}">
+            <span class="calculator__field-mask">${creditSumm.toLocaleString(`ru-RU`)} рублей</span>
+          </div>
           <button class="calculator__button calculator__button--decrease" aria-label="Уменьшить стоимость автомобиля">
             <svg width="16" height="2">
               <use href="img/sprite_auto.svg#icon-minus"></use>
@@ -821,7 +824,7 @@
               <use href="img/sprite_auto.svg#icon-plus"></use>
             </svg>
           </button>
-        </p>
+        </div>
         <p class="calculator__legend">От ${minimumCreditSumm.toLocaleString('ru-RU')}  до ${maximumCreditSumm.toLocaleString('ru-RU')} рублей</p>
       </div>
     </div>`
@@ -1113,16 +1116,36 @@
       const decreaseButton = calculatorWrapper.querySelector(`.calculator__button--decrease`);
       const increaseButton = calculatorWrapper.querySelector(`.calculator__button--increase`);
       const creditSummStep = 100000;
+      const creditSummInputMask = calculatorWrapper.querySelector(`.calculator__field-mask`);
 
       creditSummInput.addEventListener(`change`, (evt) => {
+        creditSummInputMask.textContent = `${parseInt(creditSummInput.value, 10).toLocaleString(`ru-RU`)} рублей`;
+
+        if (!evt.currentTarget.validity.valid) {
+          creditSummInputMask.textContent = `Некорректное значение`;
+        }
+
         if (evt.currentTarget.validity.valid) {
           handler(parseInt(evt.currentTarget.value, 10));
         }
       });
 
+      creditSummInput.addEventListener(`focus`, () => {
+        creditSummInputMask.style.display = `none`;
+      });
+
+      creditSummInput.addEventListener(`blur`, () => {
+        creditSummInputMask.style.display = `inline-block`;
+      });
+
+      creditSummInputMask.addEventListener(`click`, () => {
+        creditSummInput.focus();
+      });
+
       decreaseButton.addEventListener(`click`, () => {
         if (parseInt(creditSummInput.value, 10) > parseInt(creditSummInput.min, 10)) {
           creditSummInput.value = parseInt(creditSummInput.value, 10) - creditSummStep;
+          creditSummInputMask.textContent = `${parseInt(creditSummInput.value, 10).toLocaleString(`ru-RU`)} рублей`;
           handler(parseInt(creditSummInput.value, 10));
         }
       });
@@ -1130,6 +1153,7 @@
       increaseButton.addEventListener(`click`, () => {
         if (parseInt(creditSummInput.value, 10) < parseInt(creditSummInput.max, 10)) {
           creditSummInput.value = parseInt(creditSummInput.value, 10) + creditSummStep;
+          creditSummInputMask.textContent = `${parseInt(creditSummInput.value, 10).toLocaleString(`ru-RU`)} рублей`;
           handler(parseInt(creditSummInput.value, 10));
         }
       });
@@ -1429,8 +1453,11 @@
       <h3 class="calculator__title calculator__title--step-two">Шаг 2. Введите параметры кредита</h3>
       <div class="calculator__section">
         <h4 class="calculator__title-inner">Стоимость автомобиля</h4>
-        <p class="calculator__section-inner" id="section-summ">
-          <input class="calculator__field" id="creditSumm" type="number" value="${creditSumm}" min="${minimumCreditSumm}" max="${maximumCreditSumm}">
+        <div class="calculator__section-inner" id="section-summ">
+          <div class="calculator__field-wrapper">
+            <input class="calculator__field" id="creditSumm" type="number" value="${creditSumm}" min="${minimumCreditSumm}" max="${maximumCreditSumm}">
+            <span class="calculator__field-mask">${creditSumm.toLocaleString(`ru-RU`)} рублей</span>
+          </div>
           <button class="calculator__button calculator__button--decrease" aria-label="Уменьшить стоимость автомобиля">
             <svg width="16" height="2">
               <use href="img/sprite_auto.svg#icon-minus"></use>
@@ -1441,7 +1468,7 @@
               <use href="img/sprite_auto.svg#icon-plus"></use>
             </svg>
           </button>
-        </p>
+        </div>
         <p class="calculator__legend">От ${minimumCreditSumm.toLocaleString('ru-RU')}  до ${maximumCreditSumm.toLocaleString('ru-RU')} рублей</p>
       </div>
     </div>`
@@ -1598,16 +1625,36 @@
       const decreaseButton = calculatorWrapper.querySelector(`.calculator__button--decrease`);
       const increaseButton = calculatorWrapper.querySelector(`.calculator__button--increase`);
       const creditSummStep = 50000;
+      const creditSummInputMask = calculatorWrapper.querySelector(`.calculator__field-mask`);
 
       creditSummInput.addEventListener(`change`, (evt) => {
+        creditSummInputMask.textContent = `${parseInt(creditSummInput.value, 10).toLocaleString(`ru-RU`)} рублей`;
+
+        if (!evt.currentTarget.validity.valid) {
+          creditSummInputMask.textContent = `Некорректное значение`;
+        }
+
         if (evt.currentTarget.validity.valid) {
           handler(parseInt(evt.currentTarget.value, 10));
         }
       });
 
+      creditSummInput.addEventListener(`focus`, () => {
+        creditSummInputMask.style.display = `none`;
+      });
+
+      creditSummInput.addEventListener(`blur`, () => {
+        creditSummInputMask.style.display = `inline-block`;
+      });
+
+      creditSummInputMask.addEventListener(`click`, () => {
+        creditSummInput.focus();
+      });
+
       decreaseButton.addEventListener(`click`, () => {
         if (parseInt(creditSummInput.value, 10) > parseInt(creditSummInput.min, 10)) {
           creditSummInput.value = parseInt(creditSummInput.value, 10) - creditSummStep;
+          creditSummInputMask.textContent = `${parseInt(creditSummInput.value, 10).toLocaleString(`ru-RU`)} рублей`;
           handler(parseInt(creditSummInput.value, 10));
         }
       });
@@ -1615,6 +1662,7 @@
       increaseButton.addEventListener(`click`, () => {
         if (parseInt(creditSummInput.value, 10) < parseInt(creditSummInput.max, 10)) {
           creditSummInput.value = parseInt(creditSummInput.value, 10) + creditSummStep;
+          creditSummInputMask.textContent = `${parseInt(creditSummInput.value, 10).toLocaleString(`ru-RU`)} рублей`;
           handler(parseInt(creditSummInput.value, 10));
         }
       });
@@ -1937,8 +1985,11 @@
       <h3 class="calculator__title calculator__title--step-two">Шаг 2. Введите параметры кредита</h3>
       <div class="calculator__section">
         <h4 class="calculator__title-inner">Сумма потребительского кредита</h4>
-        <p class="calculator__section-inner" id="section-summ">
-          <input class="calculator__field" id="creditSumm" type="number" value="${creditSumm}" min="${minimumCreditSumm}" max="${maximumCreditSumm}">
+        <div class="calculator__section-inner" id="section-summ">
+          <div class="calculator__field-wrapper">
+            <input class="calculator__field" id="creditSumm" type="number" value="${creditSumm}" min="${minimumCreditSumm}" max="${maximumCreditSumm}">
+            <span class="calculator__field-mask">${creditSumm.toLocaleString(`ru-RU`)} рублей</span>
+          </div>
           <button class="calculator__button calculator__button--decrease" aria-label="Уменьшить стоимость автомобиля">
             <svg width="16" height="2">
               <use href="img/sprite_auto.svg#icon-minus"></use>
@@ -1949,7 +2000,7 @@
               <use href="img/sprite_auto.svg#icon-plus"></use>
             </svg>
           </button>
-        </p>
+        </div>
         <p class="calculator__legend">От ${minimumCreditSumm.toLocaleString('ru-RU')}  до ${maximumCreditSumm.toLocaleString('ru-RU')} рублей</p>
       </div>
     </div>`
@@ -2068,16 +2119,36 @@
       const decreaseButton = calculatorWrapper.querySelector(`.calculator__button--decrease`);
       const increaseButton = calculatorWrapper.querySelector(`.calculator__button--increase`);
       const creditSummStep = 50000;
+      const creditSummInputMask = calculatorWrapper.querySelector(`.calculator__field-mask`);
 
       creditSummInput.addEventListener(`change`, (evt) => {
+        creditSummInputMask.textContent = `${parseInt(creditSummInput.value, 10).toLocaleString(`ru-RU`)} рублей`;
+
+        if (!evt.currentTarget.validity.valid) {
+          creditSummInputMask.textContent = `Некорректное значение`;
+        }
+
         if (evt.currentTarget.validity.valid) {
           handler(parseInt(evt.currentTarget.value, 10));
         }
       });
 
+      creditSummInput.addEventListener(`focus`, () => {
+        creditSummInputMask.style.display = `none`;
+      });
+
+      creditSummInput.addEventListener(`blur`, () => {
+        creditSummInputMask.style.display = `inline-block`;
+      });
+
+      creditSummInputMask.addEventListener(`click`, () => {
+        creditSummInput.focus();
+      });
+
       decreaseButton.addEventListener(`click`, () => {
         if (parseInt(creditSummInput.value, 10) > parseInt(creditSummInput.min, 10)) {
           creditSummInput.value = parseInt(creditSummInput.value, 10) - creditSummStep;
+          creditSummInputMask.textContent = `${parseInt(creditSummInput.value, 10).toLocaleString(`ru-RU`)} рублей`;
           handler(parseInt(creditSummInput.value, 10));
         }
       });
@@ -2085,6 +2156,7 @@
       increaseButton.addEventListener(`click`, () => {
         if (parseInt(creditSummInput.value, 10) < parseInt(creditSummInput.max, 10)) {
           creditSummInput.value = parseInt(creditSummInput.value, 10) + creditSummStep;
+          creditSummInputMask.textContent = `${parseInt(creditSummInput.value, 10).toLocaleString(`ru-RU`)} рублей`;
           handler(parseInt(creditSummInput.value, 10));
         }
       });

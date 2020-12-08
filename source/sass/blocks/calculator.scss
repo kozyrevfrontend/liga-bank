@@ -83,6 +83,10 @@
   color: #394959;
 }
 
+.calculator__field-wrapper {
+  position: relative;
+}
+
 .calculator__field {
   position: relative;
 
@@ -125,6 +129,24 @@
   &:invalid {
     border-color: red;
   }
+}
+
+.calculator__field-mask {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 10;
+
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 25px;
+  color: #1f1e25;
+
+  background-color: #ffffff;
+
+  transform: translate(-50%, -50%);
+
+  cursor: pointer;
 }
 
 .calculator__legend {

@@ -53,16 +53,36 @@ class CreditCalculatorView {
     const decreaseButton = calculatorWrapper.querySelector(`.calculator__button--decrease`);
     const increaseButton = calculatorWrapper.querySelector(`.calculator__button--increase`);
     const creditSummStep = 50000;
+    const creditSummInputMask = calculatorWrapper.querySelector(`.calculator__field-mask`);
 
     creditSummInput.addEventListener(`change`, (evt) => {
+      creditSummInputMask.textContent = `${parseInt(creditSummInput.value, 10).toLocaleString(`ru-RU`)} рублей`;
+
+      if (!evt.currentTarget.validity.valid) {
+        creditSummInputMask.textContent = `Некорректное значение`;
+      }
+
       if (evt.currentTarget.validity.valid) {
         handler(parseInt(evt.currentTarget.value, 10));
       }
     });
 
+    creditSummInput.addEventListener(`focus`, () => {
+      creditSummInputMask.style.display = `none`;
+    });
+
+    creditSummInput.addEventListener(`blur`, () => {
+      creditSummInputMask.style.display = `inline-block`;
+    });
+
+    creditSummInputMask.addEventListener(`click`, () => {
+      creditSummInput.focus();
+    });
+
     decreaseButton.addEventListener(`click`, () => {
       if (parseInt(creditSummInput.value, 10) > parseInt(creditSummInput.min, 10)) {
         creditSummInput.value = parseInt(creditSummInput.value, 10) - creditSummStep;
+        creditSummInputMask.textContent = `${parseInt(creditSummInput.value, 10).toLocaleString(`ru-RU`)} рублей`;
         handler(parseInt(creditSummInput.value, 10));
       }
     });
@@ -70,6 +90,7 @@ class CreditCalculatorView {
     increaseButton.addEventListener(`click`, () => {
       if (parseInt(creditSummInput.value, 10) < parseInt(creditSummInput.max, 10)) {
         creditSummInput.value = parseInt(creditSummInput.value, 10) + creditSummStep;
+        creditSummInputMask.textContent = `${parseInt(creditSummInput.value, 10).toLocaleString(`ru-RU`)} рублей`;
         handler(parseInt(creditSummInput.value, 10));
       }
     });
