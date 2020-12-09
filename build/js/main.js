@@ -1,10 +1,198 @@
 (function () {
   'use strict';
 
+  function createPopupTemplate() {
+    return (
+      `<div class="popup">
+      <div class="popup__overlay">
+      </div>
+    </div>`
+    );
+  }
+
+  function createPopupCalculatorSuccessTemplate() {
+    return (
+      `<div class="popup-success">
+      <div class="popup-success__wrapper">
+        <p class="popup-success__title">Спасибо за обращение в наш банк.</p>
+        <p class="popup-success__message">Наш менеджер скоро свяжется с вами
+        по указанному номеру телефона.</p>
+        <button class="popup-success__close" aria-label="Закрыть попап">
+          <svg width="16" height="16">
+            <use href="img/sprite_auto.svg#icon-cross"></use>
+          </svg>
+        </button>
+      </div>
+    </div>`
+    );
+  }
+
+  function createPopupLoginTemplate() {
+    return (
+      `<div class="popup-login">
+    <div class="popup-login__wrapper">
+      <div class="popup-login__logo">
+        <a class="popup-login__logo-link">
+          <picture>
+            <source type="image/webp" srcset="img/logo-login@1x.webp 1x, img/logo-login@2x.webp 2x">
+            <img class="popup-login__logo-img" src="img/logo-login@1x.png" srcset="img/logo-login@2x.png 2x" width="151" height="31" alt="Лига Банк">
+          </picture>
+        </a>
+      </div>
+      <form class="popup-login__form" id="loginForm" action="https://echo.htmlacademy.ru" method="POST">
+        <p class="popup-login__form-item popup-login__form-item--login">
+          <label for="login">Логин</label>
+          <input id="login" name="login" type="text" autofocus required>
+        </p>
+        <p class="popup-login__form-item popup-login__form-item--password">
+          <label for="password">Пароль</label>
+          <input id="password" name="password" type="password" required>
+          <svg id="passwordIcon" width="22" height="12">
+            <use href="img/sprite_auto.svg#icon-eye"></use>
+          </svg>
+        </p>
+        <a class="popup-login__form-link" href="#">Забыли пароль?</a>
+        <button class="popup-login__form-button button">
+          <span>Войти</span>
+        </button>
+      </form>
+      <button class="popup-login__close" aria-label="Закрыть попап">
+        <svg width="16" height="16">
+          <use href="img/sprite_auto.svg#icon-cross"></use>
+        </svg>
+      </button>
+    </div>
+  </div>`
+    );
+  }
+
+  function renderElement(parentElement, template, place = `beforeend`) {
+    parentElement.insertAdjacentHTML(place, template);
+  }
+
+  function deleteChildrenElements(list) {
+    while (list.firstChild) {
+      list.removeChild(list.firstChild);
+    }
+  }
+
+  class Popup {
+    constructor(markups, utils) {
+      this.createPopupTemplate = markups.createPopupTemplate;
+      this.createPopupCalculatorSuccessTemplate = markups.createPopupCalculatorSuccessTemplate;
+      this.createPopupLoginTemplate = markups.createPopupLoginTemplate;
+
+      this.renderElement = utils.renderElement;
+      this.deleteChildrenElements = utils.deleteChildrenElements;
+
+      this.closePopupEscPress = this.closePopupEscPress.bind(this);
+    }
+
+    renderPopup() {
+      this.renderElement(document.body, this.createPopupTemplate());
+
+      document.body.classList.add(`overflow-hidden`);
+
+      const popup = document.querySelector(`.popup`);
+      const popupOverlay = popup.querySelector(`.popup__overlay`);
+
+      document.addEventListener(`keydown`, this.closePopupEscPress);
+
+      popupOverlay.addEventListener(`click`, (evt) => {
+        if (evt.target === popupOverlay) {
+          this.closePopup();
+        }
+      });
+    }
+
+    closePopup() {
+      const popup = document.querySelector(`.popup`);
+
+      document.body.removeChild(popup);
+      document.body.classList.remove(`overflow-hidden`);
+      document.removeEventListener(`keydown`, this.closePopupEscPress);
+    }
+
+    closePopupEscPress(evt) {
+      if (evt.key === `Escape`) {
+        this.closePopup();
+      }
+    }
+
+    renderPopupMenuLogin() {
+      this.renderPopup();
+
+      const popupOverlay = document.querySelector(`.popup__overlay`);
+
+      this.renderElement(popupOverlay, this.createPopupLoginTemplate());
+
+      const loginInput = popupOverlay.querySelector(`#login`);
+
+      loginInput.focus();
+
+      const closeButton = popupOverlay.querySelector(`.popup-login__close`);
+
+      closeButton.addEventListener('click', () => {
+        this.closePopup();
+      });
+
+      const passwordInput = popupOverlay.querySelector(`#password`);
+      const passwordIcon = popupOverlay.querySelector(`#passwordIcon`);
+
+      passwordIcon.addEventListener(`mousedown`, (evt) => {
+        evt.stopPropagation();
+        passwordInput.setAttribute(`type`, `text`);
+      });
+
+      passwordIcon.addEventListener(`mouseup`, (evt) => {
+        evt.stopPropagation();
+        passwordInput.setAttribute(`type`, `password`);
+      });
+
+      passwordIcon.addEventListener(`touchstart`, (evt) => {
+        evt.stopPropagation();
+        passwordInput.setAttribute(`type`, `text`);
+      });
+
+      passwordIcon.addEventListener(`touchends`, (evt) => {
+        evt.stopPropagation();
+        passwordInput.setAttribute(`type`, `password`);
+      });
+    }
+
+    renderPopupCalculatorSuccess() {
+      this.renderPopup();
+
+      const popupOverlay = document.querySelector(`.popup__overlay`);
+
+      this.renderElement(popupOverlay, this.createPopupCalculatorSuccessTemplate());
+
+      const closeButton = popupOverlay.querySelector(`.popup-success__close`);
+
+      closeButton.addEventListener('click', () => {
+        this.closePopup();
+      });
+    }
+  }
+
+  const popup = new Popup(
+    {
+      createPopupTemplate,
+      createPopupCalculatorSuccessTemplate,
+      createPopupLoginTemplate
+    },
+    {
+      renderElement,
+      deleteChildrenElements
+    }
+  );
+
   class Menu {
-    constructor() {
+    constructor(popupBasic) {
       this.navigation = document.querySelector(`.page-header__nav`);
       this.button = document.querySelector(`.page-header__menu`);
+      this.enterLink = document.querySelector(`.enter`);
+      this.popup = popupBasic;
     }
 
     init() {
@@ -15,10 +203,14 @@
         this.button.classList.toggle(`page-header__menu--closed`);
         this.navigation.classList.toggle(`page-header__nav--closed`);
       });
+
+      this.enterLink.addEventListener(`click`, () => {
+        this.popup.renderPopupMenuLogin();
+      });
     }
   }
 
-  const menu = new Menu();
+  const menu = new Menu(popup);
 
   class Slider {
     constructor(domNode, config, nameSpace) {
@@ -345,16 +537,6 @@
 
   const promoSlider = new Slider(document.querySelector(`.promo`), promoConfig, `promo`);
   const productsSlider = new Slider(document.querySelector(`.products`), productsConfig, `products`);
-
-  function renderElement(parentElement, template, place = `beforeend`) {
-    parentElement.insertAdjacentHTML(place, template);
-  }
-
-  function deleteChildrenElements(list) {
-    while (list.firstChild) {
-      list.removeChild(list.firstChild);
-    }
-  }
 
   class BasicCalculatorView {
     constructor(utils) {
@@ -986,100 +1168,6 @@
     </div>`
     );
   }
-
-  function createPopupTemplate() {
-    return (
-      `<div class="popup">
-      <div class="popup__overlay">
-      </div>
-    </div>`
-    );
-  }
-
-  function createPopupCalculatorSuccessTemplate() {
-    return (
-      `<div class="popup-success">
-      <div class="popup-success__wrapper">
-        <p class="popup-success__title">Спасибо за обращение в наш банк.</p>
-        <p class="popup-success__message">Наш менеджер скоро свяжется с вами
-        по указанному номеру телефона.</p>
-        <button class="popup-success__close" aria-label="Закрыть попап">
-          <svg width="16" height="16">
-            <use href="img/sprite_auto.svg#icon-cross"></use>
-          </svg>
-        </button>
-      </div>
-    </div>`
-    );
-  }
-
-  class Popup {
-    constructor(markups, utils) {
-      this.createPopupTemplate = markups.createPopupTemplate;
-      this.createPopupCalculatorSuccessTemplate = markups.createPopupCalculatorSuccessTemplate;
-
-      this.renderElement = utils.renderElement;
-      this.deleteChildrenElements = utils.deleteChildrenElements;
-
-      this.closePopupEscPress = this.closePopupEscPress.bind(this);
-    }
-
-    renderPopup() {
-      this.renderElement(document.body, this.createPopupTemplate());
-
-      document.body.classList.add(`overflow-hidden`);
-
-      const popup = document.querySelector(`.popup`);
-      const popupOverlay = popup.querySelector(`.popup__overlay`);
-
-      document.addEventListener(`keydown`, this.closePopupEscPress);
-
-      popupOverlay.addEventListener(`click`, (evt) => {
-        if (evt.target === popupOverlay) {
-          this.closePopup();
-        }
-      });
-    }
-
-    closePopup() {
-      const popup = document.querySelector(`.popup`);
-
-      document.body.removeChild(popup);
-      document.body.classList.remove(`overflow-hidden`);
-      document.removeEventListener(`keydown`, this.closePopupEscPress);
-    }
-
-    closePopupEscPress(evt) {
-      if (evt.key === `Escape`) {
-        this.closePopup();
-      }
-    }
-
-    renderPopupCalculatorSuccess() {
-      this.renderPopup();
-
-      const popupOverlay = document.querySelector(`.popup__overlay`);
-
-      this.renderElement(popupOverlay, this.createPopupCalculatorSuccessTemplate());
-
-      const closeButton = popupOverlay.querySelector(`.popup-success__close`);
-
-      closeButton.addEventListener('click', () => {
-        this.closePopup();
-      });
-    }
-  }
-
-  const popup = new Popup(
-    {
-      createPopupTemplate,
-      createPopupCalculatorSuccessTemplate
-    },
-    {
-      renderElement,
-      deleteChildrenElements
-    }
-  );
 
   class MortgageCalculatorView {
     constructor(markups, utils, basicPopup) {

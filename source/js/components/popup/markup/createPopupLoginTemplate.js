@@ -13,12 +13,12 @@ export function createPopupLoginTemplate() {
       <form class="popup-login__form" id="loginForm" action="https://echo.htmlacademy.ru" method="POST">
         <p class="popup-login__form-item popup-login__form-item--login">
           <label for="login">Логин</label>
-          <input id="login" name="login" type="text" autofocus>
+          <input id="login" name="login" type="text" autofocus required>
         </p>
         <p class="popup-login__form-item popup-login__form-item--password">
           <label for="password">Пароль</label>
-          <input id="password" name="password" type="password">
-          <svg width="22" height="12">
+          <input id="password" name="password" type="password" required>
+          <svg id="passwordIcon" width="22" height="12">
             <use href="img/sprite_auto.svg#icon-eye"></use>
           </svg>
         </p>

@@ -1,7 +1,11 @@
+import {popup} from './popup/popup';
+
 class Menu {
-  constructor() {
+  constructor(popupBasic) {
     this.navigation = document.querySelector(`.page-header__nav`);
     this.button = document.querySelector(`.page-header__menu`);
+    this.enterLink = document.querySelector(`.enter`);
+    this.popup = popupBasic;
   }
 
   init() {
@@ -12,7 +16,11 @@ class Menu {
       this.button.classList.toggle(`page-header__menu--closed`);
       this.navigation.classList.toggle(`page-header__nav--closed`);
     });
+
+    this.enterLink.addEventListener(`click`, () => {
+      this.popup.renderPopupMenuLogin();
+    });
   }
 }
 
-export const menu = new Menu();
+export const menu = new Menu(popup);

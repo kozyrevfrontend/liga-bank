@@ -1,5 +1,6 @@
 import { createPopupTemplate } from './markup/createPopupTemplate';
 import { createPopupCalculatorSuccessTemplate } from './markup/createPopupCalculatorSuccessTemplate';
+import { createPopupLoginTemplate } from './markup/createPopupLoginTemplate';
 import { renderElement } from '../calculator/views/utils';
 import { deleteChildrenElements } from '../calculator/views/utils';
 
@@ -7,6 +8,7 @@ class Popup {
   constructor(markups, utils) {
     this.createPopupTemplate = markups.createPopupTemplate;
     this.createPopupCalculatorSuccessTemplate = markups.createPopupCalculatorSuccessTemplate;
+    this.createPopupLoginTemplate = markups.createPopupLoginTemplate;
 
     this.renderElement = utils.renderElement;
     this.deleteChildrenElements = utils.deleteChildrenElements;
@@ -45,6 +47,47 @@ class Popup {
     }
   }
 
+  renderPopupMenuLogin() {
+    this.renderPopup();
+
+    const popupOverlay = document.querySelector(`.popup__overlay`);
+
+    this.renderElement(popupOverlay, this.createPopupLoginTemplate());
+
+    const loginInput = popupOverlay.querySelector(`#login`);
+
+    loginInput.focus();
+
+    const closeButton = popupOverlay.querySelector(`.popup-login__close`);
+
+    closeButton.addEventListener('click', () => {
+      this.closePopup();
+    });
+
+    const passwordInput = popupOverlay.querySelector(`#password`);
+    const passwordIcon = popupOverlay.querySelector(`#passwordIcon`);
+
+    passwordIcon.addEventListener(`mousedown`, (evt) => {
+      evt.stopPropagation();
+      passwordInput.setAttribute(`type`, `text`);
+    });
+
+    passwordIcon.addEventListener(`mouseup`, (evt) => {
+      evt.stopPropagation();
+      passwordInput.setAttribute(`type`, `password`);
+    });
+
+    passwordIcon.addEventListener(`touchstart`, (evt) => {
+      evt.stopPropagation();
+      passwordInput.setAttribute(`type`, `text`);
+    });
+
+    passwordIcon.addEventListener(`touchends`, (evt) => {
+      evt.stopPropagation();
+      passwordInput.setAttribute(`type`, `password`);
+    });
+  }
+
   renderPopupCalculatorSuccess() {
     this.renderPopup();
 
@@ -63,7 +106,8 @@ class Popup {
 export const popup = new Popup(
   {
     createPopupTemplate,
-    createPopupCalculatorSuccessTemplate
+    createPopupCalculatorSuccessTemplate,
+    createPopupLoginTemplate
   },
   {
     renderElement,
