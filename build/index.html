@@ -12,6 +12,7 @@
     <link href="fonts/Roboto-Medium.woff2" rel="preload" as="font" crossorigin="">
     <link href="fonts/Roboto-Bold.woff2" rel="preload" as="font" crossorigin="">
     <link rel="stylesheet" href="css/style.min.css">
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;amp;apikey=32d3b598-6172-4939-924b-399b27ff4c9b"></script>
   </head>
   <body>
     <header class="page-header">
@@ -138,7 +139,7 @@
             <div class="products__image-container">
               <picture>
                 <source type="image/webp" srcset="img/products-bg-deposits@1x.webp 1x, img/products-bg-deposits@1x.webp 2x">
-                <img src="img/products-bg-deposits@1x.jpg" srcset="img/products-bg-deposits@2x.jpg 2x" alt="Вклады" width="440" height="290">
+                <img src="img/products-bg-deposits@1x.jpg" srcset="img/products-bg-deposits@2x.jpg 2x" alt="Вклады" width="440" height="290" loading="lazy">
               </picture>
             </div>
           </li>
@@ -157,7 +158,7 @@
             <div class="products__image-container">
               <picture>
                 <source type="image/webp" srcset="img/products-bg-credits@1x.webp 1x, img/products-bg-credits@1x.webp 2x">
-                <img src="img/products-bg-credits@1x.jpg" srcset="img/products-bg-credits@2x.jpg 2x" alt="Вклады" width="440" height="290">
+                <img src="img/products-bg-credits@1x.jpg" srcset="img/products-bg-credits@2x.jpg 2x" alt="Вклады" width="440" height="290" loading="lazy">
               </picture>
             </div>
           </li>
@@ -177,7 +178,7 @@
             <div class="products__image-container">
               <picture>
                 <source type="image/webp" srcset="img/products-bg-insurance@1x.webp 1x, img/products-bg-insurance@1x.webp 2x">
-                <img src="img/products-bg-insurance@1x.png" srcset="img/products-bg-insurance@2x.jpg 2x" alt="Вклады" width="440" height="290">
+                <img src="img/products-bg-insurance@1x.png" srcset="img/products-bg-insurance@2x.jpg 2x" alt="Вклады" width="440" height="290" loading="lazy">
               </picture>
             </div>
           </li>
@@ -196,7 +197,7 @@
             <div class="products__image-container">
               <picture>
                 <source type="image/webp" srcset="img/products-bg-online@1x.webp 1x, img/products-bg-online@1x.webp 2x">
-                <img src="img/products-bg-online@1x.png" srcset="img/products-bg-online@2x.jpg 2x" alt="Вклады" width="440" height="290">
+                <img src="img/products-bg-online@1x.png" srcset="img/products-bg-online@2x.jpg 2x" alt="Вклады" width="440" height="290" loading="lazy">
               </picture>
             </div>
           </li>
@@ -227,6 +228,26 @@
               </ul>
             </div>
           </div>
+        </div>
+      </section>
+      <section class="map">
+        <h2 class="map__title">Отделения Лига Банка</h2>
+        <div class="map__wrapper">
+          <ul class="map__controls-list">
+            <li class="map__controls-item">
+              <input class="map__checkbox visually-hidden" id="russia" name="russia" type="checkbox">
+              <label class="map__label" for="russia">Россия</label>
+            </li>
+            <li class="map__controls-item">
+              <input class="map__checkbox visually-hidden" id="cis" name="cis" type="checkbox">
+              <label class="map__label" for="cis">СНГ</label>
+            </li>
+            <li class="map__controls-item">
+              <input class="map__checkbox visually-hidden" id="europe" name="europe" type="checkbox">
+              <label class="map__label" for="europe">Европа</label>
+            </li>
+          </ul>
+          <div class="map__container" id="map"></div>
         </div>
       </section>
     </main>

@@ -1,0 +1,143 @@
+.map {
+  width: 85.65%;
+  margin: 0 auto;
+  margin-bottom: 110px;
+}
+
+.map__title {
+  margin: 0;
+  margin-bottom: 56px;
+
+  font-size: 41px;
+  font-weight: 700;
+  line-height: 57px;
+  color: #1f1e25;
+}
+
+.map__controls-list {
+  @include list-reset;
+
+  display: flex;
+  justify-content: center;
+  padding-top: 34px;
+
+  border-bottom: 1px solid #c1c2ca;
+
+  background-color: #f6f7ff;
+}
+
+.map__controls-item {
+  margin-right: 30px;
+  margin-bottom: 27px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.map__label {
+  position: relative;
+
+  display: inline-block;
+  padding-left: 26px;
+
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #1f1e25;
+
+  cursor: pointer;
+
+  &::before {
+    content: "";
+
+    position: absolute;
+    top: 2px;
+    left: 1px;
+
+    display: block;
+    width: 16px;
+    height: 16px;
+
+    border: 1px solid #2c36f2;
+    border-radius: 2px;
+
+    background-color: transparent;
+  }
+}
+
+.map__checkbox {
+  &:checked ~ .map__label::before {
+    background-color: #2c36f2;
+    background-image: url("../img/icon-check-white.svg");
+    background-repeat: no-repeat;
+    background-position: 3px 4px;
+    background-size: 8px 6px;
+  }
+
+  &:focus ~ .map__label {
+    opacity: 0.8;
+  }
+}
+
+.map__container {
+  width: 100%;
+  height: 462px;
+}
+
+@media (max-width: $tablet-width) {
+  .map {
+    width: 88.28%;
+    margin-bottom: 80px;
+  }
+
+  .map__title {
+    margin-bottom: 33px;
+
+    font-size: 32px;
+    line-height: 45px;
+  }
+
+  .map__controls-list {
+    padding-top: 31px;
+  }
+
+  .map__controls-item {
+    margin-bottom: 30px;
+  }
+
+  .map__checkbox {
+    &:focus ~ .map__label {
+      opacity: 1;
+    }
+  }
+}
+
+@media (max-width: $mobile-width) {
+  .map {
+    width: 100%;
+    margin-bottom: 60px;
+  }
+
+  .map__title {
+    margin: 0;
+    margin-bottom: 27px;
+    padding-left: 15px;
+
+    font-size: 22px;
+    line-height: 31px;
+  }
+
+  .map__controls-list {
+    padding-top: 18px;
+  }
+
+  .map__controls-item {
+    margin-right: 20px;
+    margin-bottom: 17px;
+  }
+
+  .map__container {
+    height: 381px;
+  }
+}

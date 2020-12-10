@@ -1,6 +1,7 @@
 .calculator {
   width: 85.65%;
   margin: 0 auto;
+  margin-bottom: 94px;
 
   input {
     appearance: textfield;
@@ -245,10 +246,12 @@
 }
 
 .calculator__checkbox {
-  display: none;
-
   &:checked ~ .calculator__label::after {
     display: block;
+  }
+
+  &:focus ~ .calculator__label {
+    opacity: 0.8;
   }
 }
 
@@ -300,6 +303,7 @@
 @media (max-width: $tablet-width) {
   .calculator {
     width: 88.3%;
+    margin-bottom: 20px;
   }
 
   .calculator__container {
@@ -338,6 +342,12 @@
 
     font-size: 18px;
     line-height: 25px;
+  }
+
+  .calculator__checkbox {
+    &:focus ~ .calculator__label {
+      opacity: 1;
+    }
   }
 }
 

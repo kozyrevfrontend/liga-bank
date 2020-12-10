@@ -1094,7 +1094,7 @@
       <h4 class="calculator__title-inner visually-hidden">Специальные условия</h4>
       <ul class="calculator__specials-list">
         <li class="calculator__specials-item">
-          <input class="calculator__checkbox" id="maternityCapital" type="checkbox" name="maternityCapital">
+          <input class="calculator__checkbox visually-hidden" id="maternityCapital" type="checkbox" name="maternityCapital">
           <label class="calculator__label" for="maternityCapital" tabindex="0">Использовать материнский капитал</label>
         </li>
       </ul>
@@ -1646,11 +1646,11 @@
       <h4 class="calculator__title-inner visually-hidden">Специальные условия</h4>
       <ul class="calculator__specials-list">
         <li class="calculator__specials-item">
-          <input class="calculator__checkbox" id="autoInsurance" type="checkbox" name="autoInsurance">
+          <input class="calculator__checkbox visually-hidden" id="autoInsurance" type="checkbox" name="autoInsurance">
           <label class="calculator__label" for="autoInsurance" tabindex="0">Оформить КАСКО в нашем банке</label>
         </li>
         <li class="calculator__specials-item">
-          <input class="calculator__checkbox" id="lifeInsurance" type="checkbox" name="lifeInsurance">
+          <input class="calculator__checkbox visually-hidden" id="lifeInsurance" type="checkbox" name="lifeInsurance">
           <label class="calculator__label" for="lifeInsurance" tabindex="0">Оформить Страхование жизни в нашем банке</label>
         </li>
       </ul>
@@ -2200,7 +2200,7 @@
       <h4 class="calculator__title-inner visually-hidden">Специальные условия</h4>
       <ul class="calculator__specials-list">
         <li class="calculator__specials-item">
-          <input class="calculator__checkbox" id="salaryProject" type="checkbox" name="salaryProject">
+          <input class="calculator__checkbox visually-hidden" id="salaryProject" type="checkbox" name="salaryProject">
           <label class="calculator__label" for="salaryProject" tabindex="0">Участник зарплатного проекта нашего банка</label>
         </li>
       </ul>
@@ -2580,10 +2580,136 @@
     basicCalculatorView
   );
 
+  const mapData = {
+    russia: [
+      [55.755814, 37.617635],
+      [59.939095, 30.315868],
+      [51.533557, 46.034257],
+      [67.612056, 33.668228],
+      [57.153033, 65.534328],
+      [54.989342, 73.368212]
+    ],
+    cis: [
+      [40.372967, 49.853139],
+      [41.311151, 69.279737],
+      [53.902284, 27.561831],
+      [43.237156, 76.945618]
+    ],
+    europe: [
+      [48.856663, 2.351556],
+      [50.080293, 14.428983],
+      [51.507351, -0.127660],
+      [41.902689, 12.496176]
+    ]
+  };
+
+  class Map {
+    constructor(data) {
+      this.data = data;
+
+      this.initMap = this.initMap.bind(this);
+    }
+
+    init() {
+      window.addEventListener(`scroll`, this.initMap);
+    }
+
+    initMap() {
+      if (this.isVisible()) {
+        this.insertApi();
+        this.renderMap();
+        window.removeEventListener(`scroll`, this.initMap);
+      }
+    }
+
+    isVisible() {
+      const map = document.querySelector(`.map`);
+
+      let coords = map.getBoundingClientRect();
+
+      let windowHeight = document.documentElement.clientHeight;
+
+      let topVisible = coords.top > 0 && coords.top < windowHeight;
+
+      return topVisible;
+    }
+
+    insertApi() {
+      const script = document.createElement(`script`);
+
+      script.src = `https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=32d3b598-6172-4939-924b-399b27ff4c9b`;
+
+      document.body.appendChild(script);
+    }
+
+    renderMap() {
+      ymaps.ready(() => {
+        const myMap = new ymaps.Map(`map`,
+          {
+            center: [56.838011, 60.597465],
+            zoom: 5,
+            controls: [`zoomControl`]
+          },
+          {
+            searchControlProvider: 'yandex#search'
+          }
+        );
+
+        const controlsList = document.querySelector(`.map__controls-list`);
+        const checkBoxes = controlsList.querySelectorAll(`.map__checkbox`);
+
+        const addObjectOnMap = (obj) => {
+          myMap.geoObjects.add(obj);
+        };
+
+        const removeObjectFromMap = (obj) => {
+          myMap.geoObjects.remove(obj);
+        };
+
+        const checkBoxHandler = (node) => {
+          node.addEventListener(`change`, (evt) => {
+            this.data[evt.currentTarget.id].forEach((point) => {
+              let office = new ymaps.Placemark(point, {
+                id: evt.currentTarget.id
+              },
+              {
+                iconLayout: 'default#image',
+                iconImageHref: 'img/icon-pin.svg',
+                iconImageSize: [35, 40],
+                iconImageOffset: [-18, -40]
+              });
+
+              if (evt.currentTarget.checked) {
+                addObjectOnMap(office);
+              }
+
+              if (!evt.currentTarget.checked) {
+                myMap.geoObjects.each((geoObject) => {
+                  if (geoObject.properties.get('id') === evt.currentTarget.id) {
+                    removeObjectFromMap(geoObject);
+                  }
+                });
+              }
+            });
+          });
+        };
+
+
+        checkBoxes.forEach((checkbox) => {
+          checkBoxHandler(checkbox);
+          checkbox.click();
+        });
+      });
+    }
+  }
+
+  const map = new Map(mapData);
+
   menu.init();
   promoSlider.init();
   productsSlider.init();
   startingPresenter.init();
+  map.init();
 
 }());
 
