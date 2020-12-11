@@ -190,12 +190,12 @@ class CreditCalculatorView {
     });
   }
 
-  renderCalculatorOrder(creditSumm, downPayment, creditPeriod, handler) {
+  renderCalculatorOrder(creditSumm, downPayment, creditPeriod, orderCount, handler) {
     this.removeCalculatorOrder();
 
     const calculator = document.querySelector(`.calculator`);
 
-    this.renderElement(calculator, this.createCreditCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod));
+    this.renderElement(calculator, this.createCreditCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod, orderCount));
 
     const calculatorForm = calculator.querySelector(`#calculatorForm`);
 

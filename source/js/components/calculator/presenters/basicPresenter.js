@@ -56,6 +56,7 @@ export class BasicPresenter {
       this.calculator.creditSumm,
       this.calculator.downPayment,
       this.calculator.creditPeriod,
+      parseInt(localStorage.orders, 10) + 1,
       this.orderFormSubmitHandler
     );
   }
@@ -177,5 +178,6 @@ export class BasicPresenter {
 
   orderFormSubmitHandler() {
     this.view.popup.renderPopupCalculatorSuccess();
+    localStorage.orders = parseInt(localStorage.orders, 10) + 1;
   }
 }

@@ -27,6 +27,7 @@ export class Calculator {
 
   init(id) {
     this.setCurrentData(id);
+    this.setOrders();
     this.setMinimunTotalCreditSumm();
     this.setMinimumCreditSumm();
     this.setMaximumCreditSumm();
@@ -50,6 +51,14 @@ export class Calculator {
 
   setCurrentData(id) {
     this.currentData = this.data[id];
+  }
+
+  setOrders() {
+    if (localStorage.orders) {
+      return;
+    }
+
+    localStorage.orders = 9;
   }
 
   setMinimunTotalCreditSumm() {

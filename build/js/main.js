@@ -657,6 +657,7 @@
         this.calculator.creditSumm,
         this.calculator.downPayment,
         this.calculator.creditPeriod,
+        parseInt(localStorage.orders, 10) + 1,
         this.orderFormSubmitHandler
       );
     }
@@ -778,6 +779,7 @@
 
     orderFormSubmitHandler() {
       this.view.popup.renderPopupCalculatorSuccess();
+      localStorage.orders = parseInt(localStorage.orders, 10) + 1;
     }
   }
 
@@ -810,6 +812,7 @@
 
     init(id) {
       this.setCurrentData(id);
+      this.setOrders();
       this.setMinimunTotalCreditSumm();
       this.setMinimumCreditSumm();
       this.setMaximumCreditSumm();
@@ -833,6 +836,14 @@
 
     setCurrentData(id) {
       this.currentData = this.data[id];
+    }
+
+    setOrders() {
+      if (localStorage.orders) {
+        return;
+      }
+
+      localStorage.orders = 9;
     }
 
     setMinimunTotalCreditSumm() {
@@ -1129,7 +1140,7 @@
     );
   }
 
-  function createMortgageCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod) {
+  function createMortgageCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod, orderCount) {
     let years = `лет`;
 
     if (creditPeriod === 1 || creditPeriod === 21) {
@@ -1146,7 +1157,7 @@
       <form id="calculatorForm" action="https://echo.htmlacademy.ru" method="POST">
         <p class="form__item form__item--readonly">
           <label for="orderNumber">Номер заявки</label>
-          <input id="orderNumber" name="orderNumber" type="text" value="№ 0010" tabindex="-1" readonly>
+          <input id="orderNumber" name="orderNumber" type="text" value="№ 00${orderCount}" tabindex="-1" readonly>
         </p>
         <p class="form__item form__item--readonly">
           <label for="creditPropose">Цель кредита</label>
@@ -1448,12 +1459,12 @@
       this.renderElement(calculatorContainer, this.createMortgageCalculatorUserMessageTemplate(minimumTotalCreditSumm));
     }
 
-    renderCalculatorOrder(creditSumm, downPayment, creditPeriod, handler) {
+    renderCalculatorOrder(creditSumm, downPayment, creditPeriod, orderCount, handler) {
       this.removeCalculatorOrder();
 
       const calculator = document.querySelector(`.calculator`);
 
-      this.renderElement(calculator, this.createMortgageCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod));
+      this.renderElement(calculator, this.createMortgageCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod, orderCount));
 
       const calculatorForm = calculator.querySelector(`#calculatorForm`);
 
@@ -1684,7 +1695,7 @@
     );
   }
 
-  function createAutoCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod) {
+  function createAutoCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod, orderCount) {
     let years = `лет`;
 
     if (creditPeriod === 1) {
@@ -1701,7 +1712,7 @@
       <form id="calculatorForm" action="https://echo.htmlacademy.ru" method="POST">
         <p class="form__item form__item--readonly">
           <label for="orderNumber">Номер заявки</label>
-          <input id="orderNumber" name="orderNumber" type="text" value="№ 0010" tabindex="-1" readonly>
+          <input id="orderNumber" name="orderNumber" type="text" value="№ 00${orderCount}" tabindex="-1" readonly>
         </p>
         <p class="form__item form__item--readonly">
           <label for="creditPropose">Цель кредита</label>
@@ -2006,12 +2017,12 @@
       this.renderElement(calculatorContainer, this.createAutoCalculatorUserMessageTemplate(minimumTotalCreditSumm));
     }
 
-    renderCalculatorOrder(creditSumm, downPayment, creditPeriod, handler) {
+    renderCalculatorOrder(creditSumm, downPayment, creditPeriod, orderCount, handler) {
       this.removeCalculatorOrder();
 
       const calculator = document.querySelector(`.calculator`);
 
-      this.renderElement(calculator, this.createAutoCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod));
+      this.renderElement(calculator, this.createAutoCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod, orderCount));
 
       const calculatorForm = calculator.querySelector(`#calculatorForm`);
 
@@ -2225,7 +2236,7 @@
     );
   }
 
-  function createCreditCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod) {
+  function createCreditCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod, orderCount) {
     let years = `лет`;
 
     if (creditPeriod === 1) {
@@ -2242,7 +2253,7 @@
       <form id="calculatorForm" action="https://echo.htmlacademy.ru" method="POST">
         <p class="form__item form__item--readonly">
           <label for="orderNumber">Номер заявки</label>
-          <input id="orderNumber" name="orderNumber" type="text" value="№ 0010" tabindex="-1" readonly>
+          <input id="orderNumber" name="orderNumber" type="text" value="№ 00${orderCount}" tabindex="-1" readonly>
         </p>
         <p class="form__item form__item--readonly">
           <label for="creditPropose">Цель кредита</label>
@@ -2460,12 +2471,12 @@
       });
     }
 
-    renderCalculatorOrder(creditSumm, downPayment, creditPeriod, handler) {
+    renderCalculatorOrder(creditSumm, downPayment, creditPeriod, orderCount, handler) {
       this.removeCalculatorOrder();
 
       const calculator = document.querySelector(`.calculator`);
 
-      this.renderElement(calculator, this.createCreditCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod));
+      this.renderElement(calculator, this.createCreditCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod, orderCount));
 
       const calculatorForm = calculator.querySelector(`#calculatorForm`);
 

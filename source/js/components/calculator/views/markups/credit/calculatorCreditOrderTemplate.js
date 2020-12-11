@@ -1,4 +1,4 @@
-export function createCreditCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod) {
+export function createCreditCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod, orderCount) {
   let years = `лет`;
 
   if (creditPeriod === 1) {
@@ -15,7 +15,7 @@ export function createCreditCalculatorOrderTemplate(creditSumm, downPayment, cre
       <form id="calculatorForm" action="https://echo.htmlacademy.ru" method="POST">
         <p class="form__item form__item--readonly">
           <label for="orderNumber">Номер заявки</label>
-          <input id="orderNumber" name="orderNumber" type="text" value="№ 0010" tabindex="-1" readonly>
+          <input id="orderNumber" name="orderNumber" type="text" value="№ 00${orderCount}" tabindex="-1" readonly>
         </p>
         <p class="form__item form__item--readonly">
           <label for="creditPropose">Цель кредита</label>

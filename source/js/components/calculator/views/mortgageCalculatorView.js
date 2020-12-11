@@ -273,12 +273,12 @@ class MortgageCalculatorView {
     this.renderElement(calculatorContainer, this.createMortgageCalculatorUserMessageTemplate(minimumTotalCreditSumm));
   }
 
-  renderCalculatorOrder(creditSumm, downPayment, creditPeriod, handler) {
+  renderCalculatorOrder(creditSumm, downPayment, creditPeriod, orderCount, handler) {
     this.removeCalculatorOrder();
 
     const calculator = document.querySelector(`.calculator`);
 
-    this.renderElement(calculator, this.createMortgageCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod));
+    this.renderElement(calculator, this.createMortgageCalculatorOrderTemplate(creditSumm, downPayment, creditPeriod, orderCount));
 
     const calculatorForm = calculator.querySelector(`#calculatorForm`);
 
