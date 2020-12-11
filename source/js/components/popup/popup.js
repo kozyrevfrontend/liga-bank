@@ -58,6 +58,15 @@ class Popup {
 
     loginInput.focus();
 
+    if (localStorage.login) {
+      loginInput.value = localStorage.login;
+    }
+
+    loginInput.addEventListener(`change`, (evt) => {
+      localStorage.login = evt.currentTarget.value;
+    });
+
+
     const closeButton = popupOverlay.querySelector(`.popup-login__close`);
 
     closeButton.addEventListener('click', () => {
@@ -66,6 +75,14 @@ class Popup {
 
     const passwordInput = popupOverlay.querySelector(`#password`);
     const passwordIcon = popupOverlay.querySelector(`#passwordIcon`);
+
+    if (localStorage.password) {
+      passwordInput.value = localStorage.password;
+    }
+
+    passwordInput.addEventListener(`change`, (evt) => {
+      localStorage.password = evt.currentTarget.value;
+    });
 
     passwordIcon.addEventListener(`mousedown`, (evt) => {
       evt.stopPropagation();
