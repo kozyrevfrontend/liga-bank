@@ -121,7 +121,7 @@ class Slider {
     }
 
     const firstDot = this.sliderNavigation.querySelector(`.${nameSpace}__nav-btn:first-child`);
-    firstDot.classList.add(`${nameSpace}__nav-btn--active`)
+    firstDot.classList.add(`${nameSpace}__nav-btn--active`);
   }
 
   setActiveClass(nameSpace) {

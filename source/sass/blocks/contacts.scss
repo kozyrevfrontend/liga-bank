@@ -1,0 +1,36 @@
+.contacts__list {
+  @include list-reset;
+
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.contacts__item {
+  margin-right: 15px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.contacts__link {
+  display: block;
+
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  &:hover,
+  &:focus {
+    opacity: 0.8;
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: $tablet-width) {
+  .contacts__item {
+    margin-right: 20px;
+  }
+}

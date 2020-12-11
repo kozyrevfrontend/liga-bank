@@ -64,6 +64,10 @@
 
     background-color: transparent;
   }
+
+  &:hover {
+    opacity: 0.8;
+  }
 }
 
 .map__checkbox {
@@ -108,6 +112,12 @@
 
   .map__checkbox {
     &:focus ~ .map__label {
+      opacity: 1;
+    }
+  }
+
+  .map__label {
+    &:hover {
       opacity: 1;
     }
   }
