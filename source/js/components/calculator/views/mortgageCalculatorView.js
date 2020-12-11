@@ -285,6 +285,34 @@ class MortgageCalculatorView {
     const userNameInput = calculatorForm.querySelector(`#userName`);
     userNameInput.focus();
 
+    if (localStorage.orderUserName) {
+      userNameInput.value = localStorage.orderUserName;
+    }
+
+    userNameInput.addEventListener(`change`, (evt) => {
+      localStorage.orderUserName = evt.currentTarget.value;
+    });
+
+    const userPhoneInput = calculatorForm.querySelector(`#userPhone`);
+
+    if (localStorage.orderUserPhone) {
+      userPhoneInput.value = localStorage.orderUserPhone;
+    }
+
+    userPhoneInput.addEventListener(`change`, (evt) => {
+      localStorage.orderUserPhone = evt.currentTarget.value;
+    });
+
+    const userEmailInput = calculatorForm.querySelector(`#userEmail`);
+
+    if (localStorage.orderUserEmail) {
+      userEmailInput.value = localStorage.orderUserEmail;
+    }
+
+    userEmailInput.addEventListener(`change`, (evt) => {
+      localStorage.orderUserEmail = evt.currentTarget.value;
+    });
+
     const calculatorFormInputs = calculatorForm.querySelectorAll(`input`);
 
     const calculatorFormContainer = document.querySelector(`.calculator__form`);
