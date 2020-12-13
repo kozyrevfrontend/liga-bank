@@ -36,7 +36,7 @@ class Map {
 
     script.src = `https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=32d3b598-6172-4939-924b-399b27ff4c9b`;
 
-    document.body.appendChild(script);
+    document.body.insertBefore(script, document.body.querySelector(`#main`));
   }
 
   renderMap() {

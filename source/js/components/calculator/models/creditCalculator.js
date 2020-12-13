@@ -30,4 +30,3 @@ class CreditCalculator extends Calculator {
 }
 
 export const creditCalculator = new CreditCalculator(creditProgramsData);
-
