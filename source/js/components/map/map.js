@@ -97,6 +97,7 @@ class Map {
 
       checkBoxes.forEach((checkbox) => {
         checkBoxHandler(checkbox);
+        checkbox.click();
       });
     });
   }
