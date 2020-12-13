@@ -1,5 +1,5 @@
 import { Calculator } from './calculator';
-import { creditProgramsData } from '../data/CreditProgramsData';
+import { creditProgramsData } from '../data/creditProgramsData';
 
 class MortgageCalculator extends Calculator {
   constructor(data) {
