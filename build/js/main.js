@@ -2735,7 +2735,6 @@
     initMap() {
       if (this.isVisible()) {
         this.insertApi();
-        this.renderMap();
         window.removeEventListener(`scroll`, this.initMap);
       }
     }
@@ -2757,12 +2756,16 @@
 
       script.src = `https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=32d3b598-6172-4939-924b-399b27ff4c9b`;
 
-      document.body.insertBefore(script, document.body.querySelector(`#main`));
+      script.onload = () => {
+        this.renderMap();
+      };
+
+      document.head.appendChild(script);
     }
 
     renderMap() {
-      ymaps.ready(() => {
-        const myMap = new ymaps.Map(`map`,
+      window.ymaps.ready(() => {
+        const myMap = new window.ymaps.Map(`map`,
           {
             center: [56.838011, 60.597465],
             zoom: 5,
@@ -2787,7 +2790,7 @@
         const checkBoxHandler = (node) => {
           node.addEventListener(`change`, (evt) => {
             this.data[evt.currentTarget.id].forEach((point) => {
-              let office = new ymaps.Placemark(point, {
+              let office = new window.ymaps.Placemark(point, {
                 id: evt.currentTarget.id
               },
               {
@@ -2815,7 +2818,6 @@
 
         checkBoxes.forEach((checkbox) => {
           checkBoxHandler(checkbox);
-          checkbox.click();
         });
       });
     }
