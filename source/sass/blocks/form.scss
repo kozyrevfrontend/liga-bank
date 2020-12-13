@@ -194,6 +194,10 @@
     line-height: 22px;
   }
 
+  .form__info {
+    margin-bottom: 30px;
+  }
+
   .form__item {
     width: 100%;
     margin: 0;
@@ -219,10 +223,6 @@
       &:focus {
         color: #1f1e25;
       }
-    }
-
-    &:nth-child(5) {
-      margin-bottom: 30px;
     }
 
     &--readonly {
