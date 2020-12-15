@@ -75,6 +75,7 @@
 
 .popup-login__form-link {
   display: block;
+  align-self: flex-end;
   margin-top: 10px;
   margin-bottom: 30px;
 
@@ -170,6 +171,7 @@
   }
 
   .popup-login__form-link {
+    align-self: center;
     margin-top: 15px;
     margin-bottom: 0;
     order: 4;
