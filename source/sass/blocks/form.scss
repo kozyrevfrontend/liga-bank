@@ -153,7 +153,7 @@
     padding-left: 0;
     padding-right: 0;
     padding-top: 21px;
-    padding-bottom: 47px;
+    padding-bottom: 2px;
 
     background-color: #ffffff;
   }
@@ -173,7 +173,7 @@
 @media (max-width: $mobile-width) {
   .form {
     padding-top: 9px;
-    padding-bottom: 31px;
+    padding-bottom: 1px;
   }
 
   .form__wrapper-inner {

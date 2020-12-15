@@ -73,8 +73,8 @@
     }
 
     &--column {
-      font-size: 14px;
-      line-height: 20px;
+      font-size: 16px;
+      line-height: 22px;
     }
   }
 }
@@ -85,5 +85,12 @@
 
     display: flex;
     flex-direction: column;
+  }
+
+  .site-list__link {
+    &--column {
+      font-size: 14px;
+      line-height: 20px;
+    }
   }
 }

@@ -1,7 +1,6 @@
 .calculator {
   width: 85.65%;
   margin: 0 auto;
-  margin-bottom: 94px;
 
   input {
     appearance: textfield;
@@ -21,7 +20,6 @@
 .calculator__container {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 38px;
 }
 
 .calculator__wrapper {
@@ -36,7 +34,9 @@
 .calculator__wrapper-inner {
   position: relative;
 
-  margin-bottom: 33px;
+  &--step-two {
+    margin-top: 33px;
+  }
 }
 
 .calculator__main-title {
@@ -65,6 +65,10 @@
 
 .calculator__section {
   margin-bottom: 20px;
+
+  &--specials {
+    margin-bottom: 0;
+  }
 }
 
 .calculator__section-inner {
@@ -242,7 +246,11 @@
 }
 
 .calculator__specials-item {
-  margin-bottom: 20px;
+  margin-top: 20px;
+
+  &:first-child {
+    margin-top: 0;
+  }
 }
 
 .calculator__checkbox {
@@ -298,6 +306,7 @@
 .calculator__form {
   width: 65.8%;
   margin: 0 auto;
+  margin-top: 69px;
 }
 
 @media (max-width: $tablet-width) {
@@ -321,11 +330,12 @@
 
   .calculator__wrapper {
     width: 100%;
-    margin-bottom: 12px;
   }
 
   .calculator__wrapper-inner {
-    margin-bottom: 30px;
+    &--step-two {
+      margin-top: 30px;
+    }
   }
 
   .calculator__section {
@@ -333,7 +343,7 @@
   }
 
   .calculator__results {
-    margin-top: 0;
+    margin-top: 30px;
     margin-left: 0;
   }
 
@@ -349,11 +359,19 @@
       opacity: 1;
     }
   }
+
+  .calculator__form {
+    margin-top: 33px;
+  }
 }
 
 @media (max-width: $mobile-width) {
   .calculator {
     width: 91.1%;
+  }
+
+  .calculator__results {
+    margin-top: 25px;
   }
 
   .calculator__main-title {
@@ -372,10 +390,20 @@
 
   .calculator__field {
     padding: 0 15px;
+
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  .calculator__field-mask {
+    font-size: 16px;
+    line-height: 22px;
   }
 
   .calculator__wrapper-inner {
-    margin-bottom: 20px;
+    &--step-two {
+      margin-top: 20px;
+    }
   }
 
   .calculator__section {
@@ -384,5 +412,11 @@
 
   .calculator__label {
     font-size: 14px;
+  }
+
+  .calculator__button {
+    &--increase {
+      right: 14px;
+    }
   }
 }

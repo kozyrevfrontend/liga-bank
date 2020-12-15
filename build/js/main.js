@@ -1015,7 +1015,7 @@
 
   function createMortgageCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm) {
     return (
-      `<div class="calculator__wrapper-inner" id="stepTwoWrapper">
+      `<div class="calculator__wrapper-inner calculator__wrapper-inner--step-two" id="stepTwoWrapper">
       <h3 class="calculator__title calculator__title--step-two">Шаг 2. Введите параметры кредита</h3>
       <div class="calculator__section">
         <h4 class="calculator__title-inner">Стоимость недвижимости</h4>
@@ -1118,7 +1118,7 @@
 
   function createMortgageCalculatorSpecialsTemplate() {
     return (
-      `<div class="calculator__section" id="specials">
+      `<div class="calculator__section calculator__section--specials" id="specials">
       <h4 class="calculator__title-inner visually-hidden">Специальные условия</h4>
       <ul class="calculator__specials-list">
         <li class="calculator__specials-item">
@@ -1651,7 +1651,7 @@
 
   function createAutoCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm) {
     return (
-      `<div class="calculator__wrapper-inner" id="stepTwoWrapper">
+      `<div class="calculator__wrapper-inner calculator__wrapper-inner--step-two" id="stepTwoWrapper">
       <h3 class="calculator__title calculator__title--step-two">Шаг 2. Введите параметры кредита</h3>
       <div class="calculator__section">
         <h4 class="calculator__title-inner">Стоимость автомобиля</h4>
@@ -1700,7 +1700,7 @@
 
   function createAutoCalculatorSpecialsTemplate() {
     return (
-      `<div class="calculator__section" id="specials">
+      `<div class="calculator__section calculator__section--specials" id="specials">
       <h4 class="calculator__title-inner visually-hidden">Специальные условия</h4>
       <ul class="calculator__specials-list">
         <li class="calculator__specials-item">
@@ -2256,7 +2256,7 @@
 
   function createCreditCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm) {
     return (
-      `<div class="calculator__wrapper-inner" id="stepTwoWrapper">
+      `<div class="calculator__wrapper-inner calculator__wrapper-inner--step-two" id="stepTwoWrapper">
       <h3 class="calculator__title calculator__title--step-two">Шаг 2. Введите параметры кредита</h3>
       <div class="calculator__section">
         <h4 class="calculator__title-inner">Сумма потребительского кредита</h4>
@@ -2284,7 +2284,7 @@
 
   function createCreditCalculatorSpecialsTemplate() {
     return (
-      `<div class="calculator__section" id="specials">
+      `<div class="calculator__section calculator__section--specials" id="specials">
       <h4 class="calculator__title-inner visually-hidden">Специальные условия</h4>
       <ul class="calculator__specials-list">
         <li class="calculator__specials-item">

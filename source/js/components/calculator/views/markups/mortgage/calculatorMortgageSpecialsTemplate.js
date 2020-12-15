@@ -1,6 +1,6 @@
 export function createMortgageCalculatorSpecialsTemplate() {
   return (
-    `<div class="calculator__section" id="specials">
+    `<div class="calculator__section calculator__section--specials" id="specials">
       <h4 class="calculator__title-inner visually-hidden">Специальные условия</h4>
       <ul class="calculator__specials-list">
         <li class="calculator__specials-item">

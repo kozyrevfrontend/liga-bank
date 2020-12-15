@@ -1,6 +1,6 @@
 export function createCreditCalculatorCreditSummTemplate(minimumCreditSumm, maximumCreditSumm, creditSumm) {
   return (
-    `<div class="calculator__wrapper-inner" id="stepTwoWrapper">
+    `<div class="calculator__wrapper-inner calculator__wrapper-inner--step-two" id="stepTwoWrapper">
       <h3 class="calculator__title calculator__title--step-two">Шаг 2. Введите параметры кредита</h3>
       <div class="calculator__section">
         <h4 class="calculator__title-inner">Сумма потребительского кредита</h4>
