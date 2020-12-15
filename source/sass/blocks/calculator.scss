@@ -254,6 +254,10 @@
 }
 
 .calculator__checkbox {
+  &:checked ~ .calculator__label::before {
+    background-color: #2c36f2;
+  }
+
   &:checked ~ .calculator__label::after {
     display: block;
   }
@@ -281,9 +285,10 @@
     width: 16px;
     height: 16px;
 
+    border: 1px solid #2c36f2;
     border-radius: 2px;
 
-    background-color: #2c36f2;
+    background-color: #ffffff;
   }
 
   &::after {
