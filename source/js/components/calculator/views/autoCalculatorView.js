@@ -115,8 +115,10 @@ class AutoCalculatorView {
     this.renderCalculatorPaymentValue(minimumDownPayment, downPayment, inputHandler);
 
     const downPaymentRange = stepTwoWrapper.querySelector(`#downPaymentRange`);
+    const downPaymentLegend = stepTwoWrapper.querySelector(`#downPaymentLegend`);
 
     downPaymentRange.addEventListener(`input`, (evt) => {
+      downPaymentLegend.textContent = `${parseInt(evt.currentTarget.value, 10)}%`;
       rangeHandler(parseInt(evt.currentTarget.value, 10));
     });
   }

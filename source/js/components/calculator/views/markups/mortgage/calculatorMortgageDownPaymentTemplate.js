@@ -5,7 +5,7 @@ export function createMortgageCalculatorDownPaymentTemplate(minimumDownPaymentPe
       <p class="calculator__section-inner">
         <input class="calculator__range range" id="downPaymentRange" type="range" min="${minimumDownPaymentPersentage}" max="100" step="10" value="${minimumDownPaymentPersentage}">
       </p>
-      <p class="calculator__legend">${minimumDownPaymentPersentage}%</p>
+      <p class="calculator__legend" id="downPaymentLegend">${minimumDownPaymentPersentage}%</p>
     </div>`
   );
 }

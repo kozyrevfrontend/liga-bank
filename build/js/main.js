@@ -1048,7 +1048,7 @@
       <p class="calculator__section-inner">
         <input class="calculator__range range" id="downPaymentRange" type="range" min="${minimumDownPaymentPersentage}" max="100" step="10" value="${minimumDownPaymentPersentage}">
       </p>
-      <p class="calculator__legend">${minimumDownPaymentPersentage}%</p>
+      <p class="calculator__legend" id="downPaymentLegend">${minimumDownPaymentPersentage}%</p>
     </div>`
     );
   }
@@ -1306,8 +1306,10 @@
       this.renderCalculatorPaymentValue(minimumDownPayment, downPayment, inputHandler);
 
       const downPaymentRange = stepTwoWrapper.querySelector(`#downPaymentRange`);
+      const downPaymentLegend = stepTwoWrapper.querySelector(`#downPaymentLegend`);
 
       downPaymentRange.addEventListener(`input`, (evt) => {
+        downPaymentLegend.textContent = `${parseInt(evt.currentTarget.value, 10)}%`;
         rangeHandler(parseInt(evt.currentTarget.value, 10));
       });
     }
@@ -1684,7 +1686,7 @@
       <p class="calculator__section-inner">
         <input class="calculator__range range" id="downPaymentRange" type="range" min="${minimumDownPaymentPersentage}" max="100" step="5" value="${minimumDownPaymentPersentage}">
       </p>
-      <p class="calculator__legend">${minimumDownPaymentPersentage}%</p>
+      <p class="calculator__legend" id="downPaymentLegend">${minimumDownPaymentPersentage}%</p>
     </div>`
     );
   }
@@ -1888,8 +1890,10 @@
       this.renderCalculatorPaymentValue(minimumDownPayment, downPayment, inputHandler);
 
       const downPaymentRange = stepTwoWrapper.querySelector(`#downPaymentRange`);
+      const downPaymentLegend = stepTwoWrapper.querySelector(`#downPaymentLegend`);
 
       downPaymentRange.addEventListener(`input`, (evt) => {
+        downPaymentLegend.textContent = `${parseInt(evt.currentTarget.value, 10)}%`;
         rangeHandler(parseInt(evt.currentTarget.value, 10));
       });
     }
