@@ -4,6 +4,7 @@ import { createCalculatorPeriodTemplate } from './markups/creditCalculatorPeriod
 import { createCalculatorPeriodValueTemplate } from './markups/creditCalculatorPeriodValueTemplate';
 import { createCreditCalculatorSpecialsTemplate } from './markups/credit/calculatorCreditSpecialsTemplate';
 import { createCreditCalculatorOrderTemplate } from './markups/credit/calculatorCreditOrderTemplate';
+import { createCalculatorPeriodRangeTemplate } from './markups/creditCalculatorPeriodRangeTemplate';
 import { popup } from '../../popup/popup';
 import { renderElement } from './utils';
 import { deleteChildrenElements } from './utils';
@@ -16,6 +17,7 @@ class CreditCalculatorView {
     this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
     this.createCreditCalculatorSpecialsTemplate = markups.createCreditCalculatorSpecialsTemplate;
     this.createCreditCalculatorOrderTemplate = markups.createCreditCalculatorOrderTemplate;
+    this.createCalculatorPeriodRangeTemplate = markups.createCalculatorPeriodRangeTemplate;
     this.popup = basicPopup;
 
     this.renderElement = utils.renderElement;
@@ -108,11 +110,32 @@ class CreditCalculatorView {
 
     this.renderCalculatorPeriodValue(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, inputHandler);
 
-    const periodRange = stepTwoWrapper.querySelector(`#periodRange`);
+    this.renderCalculatorPeriodRange(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, rangeHandler);
+  }
+
+  renderCalculatorPeriodRange(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, rangeHandler) {
+    this.removeCalculatorPeriodRange();
+
+    const periodSection = document.querySelector(`#periodSection`);
+    const periodRangeContainer = periodSection.querySelector(`.calculator__section-inner`);
+
+    this.renderElement(periodRangeContainer, this.createCalculatorPeriodRangeTemplate(minimumCreditPeriod, maximumCreditPeriod, creditPeriod));
+
+    const periodRange = periodRangeContainer.querySelector(`#periodRange`);
 
     periodRange.addEventListener(`input`, (evt) => {
       rangeHandler(parseInt(evt.currentTarget.value, 10));
     });
+  }
+
+  removeCalculatorPeriodRange() {
+    const periodSection = document.querySelector(`#periodSection`);
+    const periodRangeContainer = periodSection.querySelector(`.calculator__section-inner`);
+    const periodRange = periodRangeContainer.querySelector(`#periodRange`);
+
+    if (periodRange) {
+      periodRangeContainer.removeChild(periodRange);
+    }
   }
 
   renderCalculatorPeriodValue(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, inputHandler) {
@@ -269,7 +292,8 @@ export const creditCalculatorView = new CreditCalculatorView(
     createCalculatorPeriodTemplate,
     createCalculatorPeriodValueTemplate,
     createCreditCalculatorSpecialsTemplate,
-    createCreditCalculatorOrderTemplate
+    createCreditCalculatorOrderTemplate,
+    createCalculatorPeriodRangeTemplate
   },
   {
     renderElement,

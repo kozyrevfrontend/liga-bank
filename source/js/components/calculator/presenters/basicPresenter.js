@@ -150,6 +150,13 @@ export class BasicPresenter {
   periodInputHandler(value) {
     this.calculator.creditPeriod = value;
 
+    this.view.renderCalculatorPeriodRange(
+      this.calculator.minimumCreditPeriod,
+      this.calculator.maximumCreditPeriod,
+      this.calculator.creditPeriod,
+      this.periodRangeHandler
+    );
+
     this.calculator.calculateCreditPersentage();
     this.calculator.calculateTotalCreditSumm();
     this.calculator.calculateAnnuityPayment();

@@ -751,6 +751,13 @@
     periodInputHandler(value) {
       this.calculator.creditPeriod = value;
 
+      this.view.renderCalculatorPeriodRange(
+        this.calculator.minimumCreditPeriod,
+        this.calculator.maximumCreditPeriod,
+        this.calculator.creditPeriod,
+        this.periodRangeHandler
+      );
+
       this.calculator.calculateCreditPersentage();
       this.calculator.calculateTotalCreditSumm();
       this.calculator.calculateAnnuityPayment();
@@ -1090,9 +1097,7 @@
     return (
       `<div class="calculator__section" id="periodSection">
       <h4 class="calculator__title-inner">Срок кредитования</h4>
-      <p class="calculator__section-inner">
-        <input class="calculator__range range" id="periodRange" type="range" min="${minimumCreditPeriod}" max="${maximumCreditPeriod}" step="1" value="${minimumCreditPeriod}">
-      </p>
+      <p class="calculator__section-inner"></p>
       <p class="calculator__legend">
         <span>${minimumCreditPeriod} ${yearsMin}</span>
         <span>${maximumCreditPeriod} ${yearMax}</span>
@@ -1215,6 +1220,12 @@
     );
   }
 
+  function createCalculatorPeriodRangeTemplate(minimumCreditPeriod, maximumCreditPeriod, creditPeriod) {
+    return (
+      `<input class="calculator__range range" id="periodRange" type="range" min="${minimumCreditPeriod}" max="${maximumCreditPeriod}" step="1" value="${creditPeriod}">`
+    );
+  }
+
   class MortgageCalculatorView {
     constructor(markups, utils, basicPopup) {
       this.createMortgageCalculatorResultsTemplate = markups.createMortgageCalculatorResultsTemplate;
@@ -1229,6 +1240,7 @@
       this.createMortgageCalculatorUserMessageTemplate = markups.createMortgageCalculatorUserMessageTemplate;
       this.createMortgageCalculatorOrderTemplate = markups.createMortgageCalculatorOrderTemplate;
       this.createMortgageCalculatorPaymentRangeTemplate = markups.createMortgageCalculatorPaymentRangeTemplate;
+      this.createCalculatorPeriodRangeTemplate = markups.createCalculatorPeriodRangeTemplate;
       this.createPopupTemplate = markups.createPopupTemplate;
       this.popup = basicPopup;
 
@@ -1426,11 +1438,32 @@
 
       this.renderCalculatorPeriodValue(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, inputHandler);
 
-      const periodRange = stepTwoWrapper.querySelector(`#periodRange`);
+      this.renderCalculatorPeriodRange(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, rangeHandler);
+    }
+
+    renderCalculatorPeriodRange(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, rangeHandler) {
+      this.removeCalculatorPeriodRange();
+
+      const periodSection = document.querySelector(`#periodSection`);
+      const periodRangeContainer = periodSection.querySelector(`.calculator__section-inner`);
+
+      this.renderElement(periodRangeContainer, this.createCalculatorPeriodRangeTemplate(minimumCreditPeriod, maximumCreditPeriod, creditPeriod));
+
+      const periodRange = periodRangeContainer.querySelector(`#periodRange`);
 
       periodRange.addEventListener(`input`, (evt) => {
         rangeHandler(parseInt(evt.currentTarget.value, 10));
       });
+    }
+
+    removeCalculatorPeriodRange() {
+      const periodSection = document.querySelector(`#periodSection`);
+      const periodRangeContainer = periodSection.querySelector(`.calculator__section-inner`);
+      const periodRange = periodRangeContainer.querySelector(`#periodRange`);
+
+      if (periodRange) {
+        periodRangeContainer.removeChild(periodRange);
+      }
     }
 
     renderCalculatorPeriodValue(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, inputHandler) {
@@ -1603,7 +1636,8 @@
       createMortgageCalculatorSpecialsTemplate,
       createMortgageCalculatorUserMessageTemplate,
       createMortgageCalculatorOrderTemplate,
-      createMortgageCalculatorPaymentRangeTemplate
+      createMortgageCalculatorPaymentRangeTemplate,
+      createCalculatorPeriodRangeTemplate
     },
     {
       renderElement,
@@ -1860,6 +1894,7 @@
       this.createAutoCalculatorOrderTemplate = markups.createAutoCalculatorOrderTemplate;
       this.createCalculatorPeymentLegendTemplate = markups.createCalculatorPeymentLegendTemplate;
       this.createAutoCalculatorPaymentRangeTemplate = markups.createAutoCalculatorPaymentRangeTemplate;
+      this.createCalculatorPeriodRangeTemplate = markups.createCalculatorPeriodRangeTemplate;
       this.popup = basicPopup;
 
       this.renderElement = utils.renderElement;
@@ -2055,11 +2090,32 @@
 
       this.renderCalculatorPeriodValue(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, inputHandler);
 
-      const periodRange = stepTwoWrapper.querySelector(`#periodRange`);
+      this.renderCalculatorPeriodRange(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, rangeHandler);
+    }
+
+    renderCalculatorPeriodRange(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, rangeHandler) {
+      this.removeCalculatorPeriodRange();
+
+      const periodSection = document.querySelector(`#periodSection`);
+      const periodRangeContainer = periodSection.querySelector(`.calculator__section-inner`);
+
+      this.renderElement(periodRangeContainer, this.createCalculatorPeriodRangeTemplate(minimumCreditPeriod, maximumCreditPeriod, creditPeriod));
+
+      const periodRange = periodRangeContainer.querySelector(`#periodRange`);
 
       periodRange.addEventListener(`input`, (evt) => {
         rangeHandler(parseInt(evt.currentTarget.value, 10));
       });
+    }
+
+    removeCalculatorPeriodRange() {
+      const periodSection = document.querySelector(`#periodSection`);
+      const periodRangeContainer = periodSection.querySelector(`.calculator__section-inner`);
+      const periodRange = periodRangeContainer.querySelector(`#periodRange`);
+
+      if (periodRange) {
+        periodRangeContainer.removeChild(periodRange);
+      }
     }
 
     renderCalculatorPeriodValue(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, inputHandler) {
@@ -2238,7 +2294,8 @@
       createAutoCalculatorUserMessageTemplate,
       createAutoCalculatorOrderTemplate,
       createCalculatorPeymentLegendTemplate,
-      createAutoCalculatorPaymentRangeTemplate
+      createAutoCalculatorPaymentRangeTemplate,
+      createCalculatorPeriodRangeTemplate
     },
     {
       renderElement,
@@ -2466,6 +2523,7 @@
       this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
       this.createCreditCalculatorSpecialsTemplate = markups.createCreditCalculatorSpecialsTemplate;
       this.createCreditCalculatorOrderTemplate = markups.createCreditCalculatorOrderTemplate;
+      this.createCalculatorPeriodRangeTemplate = markups.createCalculatorPeriodRangeTemplate;
       this.popup = basicPopup;
 
       this.renderElement = utils.renderElement;
@@ -2558,11 +2616,32 @@
 
       this.renderCalculatorPeriodValue(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, inputHandler);
 
-      const periodRange = stepTwoWrapper.querySelector(`#periodRange`);
+      this.renderCalculatorPeriodRange(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, rangeHandler);
+    }
+
+    renderCalculatorPeriodRange(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, rangeHandler) {
+      this.removeCalculatorPeriodRange();
+
+      const periodSection = document.querySelector(`#periodSection`);
+      const periodRangeContainer = periodSection.querySelector(`.calculator__section-inner`);
+
+      this.renderElement(periodRangeContainer, this.createCalculatorPeriodRangeTemplate(minimumCreditPeriod, maximumCreditPeriod, creditPeriod));
+
+      const periodRange = periodRangeContainer.querySelector(`#periodRange`);
 
       periodRange.addEventListener(`input`, (evt) => {
         rangeHandler(parseInt(evt.currentTarget.value, 10));
       });
+    }
+
+    removeCalculatorPeriodRange() {
+      const periodSection = document.querySelector(`#periodSection`);
+      const periodRangeContainer = periodSection.querySelector(`.calculator__section-inner`);
+      const periodRange = periodRangeContainer.querySelector(`#periodRange`);
+
+      if (periodRange) {
+        periodRangeContainer.removeChild(periodRange);
+      }
     }
 
     renderCalculatorPeriodValue(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, inputHandler) {
@@ -2719,7 +2798,8 @@
       createCalculatorPeriodTemplate,
       createCalculatorPeriodValueTemplate,
       createCreditCalculatorSpecialsTemplate,
-      createCreditCalculatorOrderTemplate
+      createCreditCalculatorOrderTemplate,
+      createCalculatorPeriodRangeTemplate
     },
     {
       renderElement,

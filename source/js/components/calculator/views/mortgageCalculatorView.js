@@ -9,6 +9,7 @@ import { createMortgageCalculatorUserMessageTemplate } from './markups/mortgage/
 import { createMortgageCalculatorOrderTemplate } from './markups/mortgage/calculatorMortgageOrderTemplate';
 import { createCalculatorPeymentLegendTemplate } from './markups/creditCalculatorPeymentLegendTemplate';
 import { createMortgageCalculatorPaymentRangeTemplate } from './markups/mortgage/calculatorMortgagePaymentRangeTemplate';
+import { createCalculatorPeriodRangeTemplate } from './markups/creditCalculatorPeriodRangeTemplate';
 import { popup } from '../../popup/popup';
 import { renderElement } from './utils';
 import { deleteChildrenElements } from './utils';
@@ -27,6 +28,7 @@ class MortgageCalculatorView {
     this.createMortgageCalculatorUserMessageTemplate = markups.createMortgageCalculatorUserMessageTemplate;
     this.createMortgageCalculatorOrderTemplate = markups.createMortgageCalculatorOrderTemplate;
     this.createMortgageCalculatorPaymentRangeTemplate = markups.createMortgageCalculatorPaymentRangeTemplate;
+    this.createCalculatorPeriodRangeTemplate = markups.createCalculatorPeriodRangeTemplate;
     this.createPopupTemplate = markups.createPopupTemplate;
     this.popup = basicPopup;
 
@@ -224,11 +226,32 @@ class MortgageCalculatorView {
 
     this.renderCalculatorPeriodValue(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, inputHandler);
 
-    const periodRange = stepTwoWrapper.querySelector(`#periodRange`);
+    this.renderCalculatorPeriodRange(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, rangeHandler);
+  }
+
+  renderCalculatorPeriodRange(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, rangeHandler) {
+    this.removeCalculatorPeriodRange();
+
+    const periodSection = document.querySelector(`#periodSection`);
+    const periodRangeContainer = periodSection.querySelector(`.calculator__section-inner`);
+
+    this.renderElement(periodRangeContainer, this.createCalculatorPeriodRangeTemplate(minimumCreditPeriod, maximumCreditPeriod, creditPeriod));
+
+    const periodRange = periodRangeContainer.querySelector(`#periodRange`);
 
     periodRange.addEventListener(`input`, (evt) => {
       rangeHandler(parseInt(evt.currentTarget.value, 10));
     });
+  }
+
+  removeCalculatorPeriodRange() {
+    const periodSection = document.querySelector(`#periodSection`);
+    const periodRangeContainer = periodSection.querySelector(`.calculator__section-inner`);
+    const periodRange = periodRangeContainer.querySelector(`#periodRange`);
+
+    if (periodRange) {
+      periodRangeContainer.removeChild(periodRange);
+    }
   }
 
   renderCalculatorPeriodValue(minimumCreditPeriod, maximumCreditPeriod, creditPeriod, inputHandler) {
@@ -401,7 +424,8 @@ export const mortgageCalculatorView = new MortgageCalculatorView(
     createMortgageCalculatorSpecialsTemplate,
     createMortgageCalculatorUserMessageTemplate,
     createMortgageCalculatorOrderTemplate,
-    createMortgageCalculatorPaymentRangeTemplate
+    createMortgageCalculatorPaymentRangeTemplate,
+    createCalculatorPeriodRangeTemplate
   },
   {
     renderElement,
