@@ -7,6 +7,7 @@ import { createCalculatorPeriodValueTemplate } from './markups/creditCalculatorP
 import { createAutoCalculatorSpecialsTemplate } from './markups/auto/calculatorAutoSpecialsTemplate';
 import { createAutoCalculatorUserMessageTemplate } from './markups/auto/calculatorAutoUserMessageTemplate';
 import { createAutoCalculatorOrderTemplate } from './markups/auto/calculatorAutoOrderTemplate';
+import { createCalculatorPeymentLegendTemplate } from './markups/creditCalculatorPeymentLegendTemplate';
 import { popup } from '../../popup/popup';
 import { renderElement } from './utils';
 import { deleteChildrenElements } from './utils';
@@ -22,6 +23,7 @@ class AutoCalculatorView {
     this.createAutoCalculatorSpecialsTemplate = markups.createAutoCalculatorSpecialsTemplate;
     this.createAutoCalculatorUserMessageTemplate = markups.createAutoCalculatorUserMessageTemplate;
     this.createAutoCalculatorOrderTemplate = markups.createAutoCalculatorOrderTemplate;
+    this.createCalculatorPeymentLegendTemplate = markups.createCalculatorPeymentLegendTemplate;
     this.popup = basicPopup;
 
     this.renderElement = utils.renderElement;
@@ -112,15 +114,32 @@ class AutoCalculatorView {
 
     this.renderElement(stepTwoWrapper, this.createAutoCalculatorDownPaymentTemplate(minimumDownPaymentPersentage));
 
+    this.renderCalculatorPaymentLegend(minimumDownPaymentPersentage);
+
     this.renderCalculatorPaymentValue(minimumDownPayment, downPayment, inputHandler);
 
     const downPaymentRange = stepTwoWrapper.querySelector(`#downPaymentRange`);
-    const downPaymentLegend = stepTwoWrapper.querySelector(`#downPaymentLegend`);
 
     downPaymentRange.addEventListener(`input`, (evt) => {
-      downPaymentLegend.textContent = `${parseInt(evt.currentTarget.value, 10)}%`;
       rangeHandler(parseInt(evt.currentTarget.value, 10));
     });
+  }
+
+  renderCalculatorPaymentLegend(downPaymentPersentage) {
+    this.removeCalculatorPaymentLegend();
+
+    const downPaymentSection = document.querySelector(`#downPaymentSection`);
+
+    this.renderElement(downPaymentSection, this.createCalculatorPeymentLegendTemplate(downPaymentPersentage));
+  }
+
+  removeCalculatorPaymentLegend() {
+    const downPaymentSection = document.querySelector(`#downPaymentSection`);
+    const downPaymentLegend = downPaymentSection.querySelector(`#downPaymentLegend`);
+
+    if (downPaymentLegend) {
+      downPaymentSection.removeChild(downPaymentLegend);
+    }
   }
 
   renderCalculatorPaymentValue(minimumDownPayment, downPayment, inputHandler) {
@@ -360,7 +379,8 @@ export const autoCalculatorView = new AutoCalculatorView(
     createCalculatorPeriodValueTemplate,
     createAutoCalculatorSpecialsTemplate,
     createAutoCalculatorUserMessageTemplate,
-    createAutoCalculatorOrderTemplate
+    createAutoCalculatorOrderTemplate,
+    createCalculatorPeymentLegendTemplate
   },
   {
     renderElement,

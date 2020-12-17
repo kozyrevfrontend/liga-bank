@@ -695,6 +695,8 @@
       this.calculator.downPayment = value;
       this.calculator.calculateDownPaymentPersentage();
 
+      this.view.renderCalculatorPaymentLegend(this.calculator.downPaymentPersentage);
+
       this.calculator.calculateCreditPersentage();
       this.calculator.calculateTotalCreditSumm();
       this.calculator.calculateAnnuityPayment();
@@ -720,6 +722,8 @@
       this.calculator.calculateDownPayment(value);
 
       this.view.renderCalculatorPaymentValue(this.calculator.minimumDownPayment, this.calculator.downPayment, this.downPaymentInputHandler);
+
+      this.view.renderCalculatorPaymentLegend(this.calculator.downPaymentPersentage);
 
       this.calculator.calculateCreditPersentage();
       this.calculator.calculateTotalCreditSumm();
@@ -1048,7 +1052,6 @@
       <p class="calculator__section-inner">
         <input class="calculator__range range" id="downPaymentRange" type="range" min="${minimumDownPaymentPersentage}" max="100" step="10" value="${minimumDownPaymentPersentage}">
       </p>
-      <p class="calculator__legend" id="downPaymentLegend">${minimumDownPaymentPersentage}%</p>
     </div>`
     );
   }
@@ -1199,6 +1202,12 @@
     );
   }
 
+  function createCalculatorPeymentLegendTemplate(downPaymentPersentage) {
+    return (
+      `<p class="calculator__legend" id="downPaymentLegend">${downPaymentPersentage}%</p>`
+    );
+  }
+
   class MortgageCalculatorView {
     constructor(markups, utils, basicPopup) {
       this.createMortgageCalculatorResultsTemplate = markups.createMortgageCalculatorResultsTemplate;
@@ -1206,6 +1215,7 @@
       this.createCalculatorCreditSummInputTemplate = markups.createCalculatorCreditSummInputTemplate;
       this.createMortgageCalculatorDownPaymentTemplate = markups.createMortgageCalculatorDownPaymentTemplate;
       this.createMortgageCalculatorPaymentValueTemplate = markups.createMortgageCalculatorPaymentValueTemplate;
+      this.createCalculatorPeymentLegendTemplate = markups.createCalculatorPeymentLegendTemplate;
       this.createCalculatorPeriodTemplate = markups.createCalculatorPeriodTemplate;
       this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
       this.createMortgageCalculatorSpecialsTemplate = markups.createMortgageCalculatorSpecialsTemplate;
@@ -1303,15 +1313,32 @@
 
       this.renderElement(stepTwoWrapper, this.createMortgageCalculatorDownPaymentTemplate(minimumDownPaymentPersentage));
 
+      this.renderCalculatorPaymentLegend(minimumDownPaymentPersentage);
+
       this.renderCalculatorPaymentValue(minimumDownPayment, downPayment, inputHandler);
 
       const downPaymentRange = stepTwoWrapper.querySelector(`#downPaymentRange`);
-      const downPaymentLegend = stepTwoWrapper.querySelector(`#downPaymentLegend`);
 
       downPaymentRange.addEventListener(`input`, (evt) => {
-        downPaymentLegend.textContent = `${parseInt(evt.currentTarget.value, 10)}%`;
         rangeHandler(parseInt(evt.currentTarget.value, 10));
       });
+    }
+
+    renderCalculatorPaymentLegend(downPaymentPersentage) {
+      this.removeCalculatorPaymentLegend();
+
+      const downPaymentSection = document.querySelector(`#downPaymentSection`);
+
+      this.renderElement(downPaymentSection, this.createCalculatorPeymentLegendTemplate(downPaymentPersentage));
+    }
+
+    removeCalculatorPaymentLegend() {
+      const downPaymentSection = document.querySelector(`#downPaymentSection`);
+      const downPaymentLegend = downPaymentSection.querySelector(`#downPaymentLegend`);
+
+      if (downPaymentLegend) {
+        downPaymentSection.removeChild(downPaymentLegend);
+      }
     }
 
     renderCalculatorPaymentValue(minimumDownPayment, downPayment, inputHandler) {
@@ -1541,6 +1568,7 @@
       createMortgageCalculatorCreditSummTemplate,
       createMortgageCalculatorDownPaymentTemplate,
       createMortgageCalculatorPaymentValueTemplate,
+      createCalculatorPeymentLegendTemplate,
       createCalculatorPeriodTemplate,
       createCalculatorPeriodValueTemplate,
       createMortgageCalculatorSpecialsTemplate,
@@ -1797,6 +1825,7 @@
       this.createAutoCalculatorSpecialsTemplate = markups.createAutoCalculatorSpecialsTemplate;
       this.createAutoCalculatorUserMessageTemplate = markups.createAutoCalculatorUserMessageTemplate;
       this.createAutoCalculatorOrderTemplate = markups.createAutoCalculatorOrderTemplate;
+      this.createCalculatorPeymentLegendTemplate = markups.createCalculatorPeymentLegendTemplate;
       this.popup = basicPopup;
 
       this.renderElement = utils.renderElement;
@@ -1887,15 +1916,32 @@
 
       this.renderElement(stepTwoWrapper, this.createAutoCalculatorDownPaymentTemplate(minimumDownPaymentPersentage));
 
+      this.renderCalculatorPaymentLegend(minimumDownPaymentPersentage);
+
       this.renderCalculatorPaymentValue(minimumDownPayment, downPayment, inputHandler);
 
       const downPaymentRange = stepTwoWrapper.querySelector(`#downPaymentRange`);
-      const downPaymentLegend = stepTwoWrapper.querySelector(`#downPaymentLegend`);
 
       downPaymentRange.addEventListener(`input`, (evt) => {
-        downPaymentLegend.textContent = `${parseInt(evt.currentTarget.value, 10)}%`;
         rangeHandler(parseInt(evt.currentTarget.value, 10));
       });
+    }
+
+    renderCalculatorPaymentLegend(downPaymentPersentage) {
+      this.removeCalculatorPaymentLegend();
+
+      const downPaymentSection = document.querySelector(`#downPaymentSection`);
+
+      this.renderElement(downPaymentSection, this.createCalculatorPeymentLegendTemplate(downPaymentPersentage));
+    }
+
+    removeCalculatorPaymentLegend() {
+      const downPaymentSection = document.querySelector(`#downPaymentSection`);
+      const downPaymentLegend = downPaymentSection.querySelector(`#downPaymentLegend`);
+
+      if (downPaymentLegend) {
+        downPaymentSection.removeChild(downPaymentLegend);
+      }
     }
 
     renderCalculatorPaymentValue(minimumDownPayment, downPayment, inputHandler) {
@@ -2135,7 +2181,8 @@
       createCalculatorPeriodValueTemplate,
       createAutoCalculatorSpecialsTemplate,
       createAutoCalculatorUserMessageTemplate,
-      createAutoCalculatorOrderTemplate
+      createAutoCalculatorOrderTemplate,
+      createCalculatorPeymentLegendTemplate
     },
     {
       renderElement,

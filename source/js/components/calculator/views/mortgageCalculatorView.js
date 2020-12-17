@@ -7,6 +7,7 @@ import { createCalculatorPeriodValueTemplate } from './markups/creditCalculatorP
 import { createMortgageCalculatorSpecialsTemplate } from './markups/mortgage/calculatorMortgageSpecialsTemplate';
 import { createMortgageCalculatorUserMessageTemplate } from './markups/mortgage/calculatorMortgageUserMessageTemplate';
 import { createMortgageCalculatorOrderTemplate } from './markups/mortgage/calculatorMortgageOrderTemplate';
+import { createCalculatorPeymentLegendTemplate } from './markups/creditCalculatorPeymentLegendTemplate';
 import { popup } from '../../popup/popup';
 import { renderElement } from './utils';
 import { deleteChildrenElements } from './utils';
@@ -18,6 +19,7 @@ class MortgageCalculatorView {
     this.createCalculatorCreditSummInputTemplate = markups.createCalculatorCreditSummInputTemplate;
     this.createMortgageCalculatorDownPaymentTemplate = markups.createMortgageCalculatorDownPaymentTemplate;
     this.createMortgageCalculatorPaymentValueTemplate = markups.createMortgageCalculatorPaymentValueTemplate;
+    this.createCalculatorPeymentLegendTemplate = markups.createCalculatorPeymentLegendTemplate;
     this.createCalculatorPeriodTemplate = markups.createCalculatorPeriodTemplate;
     this.createCalculatorPeriodValueTemplate = markups.createCalculatorPeriodValueTemplate;
     this.createMortgageCalculatorSpecialsTemplate = markups.createMortgageCalculatorSpecialsTemplate;
@@ -115,15 +117,32 @@ class MortgageCalculatorView {
 
     this.renderElement(stepTwoWrapper, this.createMortgageCalculatorDownPaymentTemplate(minimumDownPaymentPersentage));
 
+    this.renderCalculatorPaymentLegend(minimumDownPaymentPersentage);
+
     this.renderCalculatorPaymentValue(minimumDownPayment, downPayment, inputHandler);
 
     const downPaymentRange = stepTwoWrapper.querySelector(`#downPaymentRange`);
-    const downPaymentLegend = stepTwoWrapper.querySelector(`#downPaymentLegend`);
 
     downPaymentRange.addEventListener(`input`, (evt) => {
-      downPaymentLegend.textContent = `${parseInt(evt.currentTarget.value, 10)}%`;
       rangeHandler(parseInt(evt.currentTarget.value, 10));
     });
+  }
+
+  renderCalculatorPaymentLegend(downPaymentPersentage) {
+    this.removeCalculatorPaymentLegend();
+
+    const downPaymentSection = document.querySelector(`#downPaymentSection`);
+
+    this.renderElement(downPaymentSection, this.createCalculatorPeymentLegendTemplate(downPaymentPersentage));
+  }
+
+  removeCalculatorPaymentLegend() {
+    const downPaymentSection = document.querySelector(`#downPaymentSection`);
+    const downPaymentLegend = downPaymentSection.querySelector(`#downPaymentLegend`);
+
+    if (downPaymentLegend) {
+      downPaymentSection.removeChild(downPaymentLegend);
+    }
   }
 
   renderCalculatorPaymentValue(minimumDownPayment, downPayment, inputHandler) {
@@ -353,6 +372,7 @@ export const mortgageCalculatorView = new MortgageCalculatorView(
     createMortgageCalculatorCreditSummTemplate,
     createMortgageCalculatorDownPaymentTemplate,
     createMortgageCalculatorPaymentValueTemplate,
+    createCalculatorPeymentLegendTemplate,
     createCalculatorPeriodTemplate,
     createCalculatorPeriodValueTemplate,
     createMortgageCalculatorSpecialsTemplate,
