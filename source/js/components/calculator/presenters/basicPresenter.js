@@ -35,6 +35,7 @@ export class BasicPresenter {
     if (this.calculator.minimumDownPaymentPersentage) {
       this.view.renderCalculatorDownPayment(
         this.calculator.minimumDownPaymentPersentage,
+        this.calculator.downPaymentPersentage,
         this.calculator.minimumDownPayment,
         this.calculator.downPayment,
         this.downPaymentInputHandler,
@@ -95,6 +96,8 @@ export class BasicPresenter {
     this.calculator.calculateDownPaymentPersentage();
 
     this.view.renderCalculatorPaymentLegend(this.calculator.downPaymentPersentage);
+
+    this.view.renderCalculatorPaymentRange(this.calculator.minimumDownPaymentPersentage, this.calculator.downPaymentPersentage, this.downPaymentRangeHandler);
 
     this.calculator.calculateCreditPersentage();
     this.calculator.calculateTotalCreditSumm();

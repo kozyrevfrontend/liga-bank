@@ -8,6 +8,7 @@ import { createMortgageCalculatorSpecialsTemplate } from './markups/mortgage/cal
 import { createMortgageCalculatorUserMessageTemplate } from './markups/mortgage/calculatorMortgageUserMessageTemplate';
 import { createMortgageCalculatorOrderTemplate } from './markups/mortgage/calculatorMortgageOrderTemplate';
 import { createCalculatorPeymentLegendTemplate } from './markups/creditCalculatorPeymentLegendTemplate';
+import { createMortgageCalculatorPaymentRangeTemplate } from './markups/mortgage/calculatorMortgagePaymentRangeTemplate';
 import { popup } from '../../popup/popup';
 import { renderElement } from './utils';
 import { deleteChildrenElements } from './utils';
@@ -25,6 +26,7 @@ class MortgageCalculatorView {
     this.createMortgageCalculatorSpecialsTemplate = markups.createMortgageCalculatorSpecialsTemplate;
     this.createMortgageCalculatorUserMessageTemplate = markups.createMortgageCalculatorUserMessageTemplate;
     this.createMortgageCalculatorOrderTemplate = markups.createMortgageCalculatorOrderTemplate;
+    this.createMortgageCalculatorPaymentRangeTemplate = markups.createMortgageCalculatorPaymentRangeTemplate;
     this.createPopupTemplate = markups.createPopupTemplate;
     this.popup = basicPopup;
 
@@ -107,7 +109,7 @@ class MortgageCalculatorView {
     });
   }
 
-  renderCalculatorDownPayment(minimumDownPaymentPersentage, minimumDownPayment, downPayment, inputHandler, rangeHandler) {
+  renderCalculatorDownPayment(minimumDownPaymentPersentage, downPaymentPersentage, minimumDownPayment, downPayment, inputHandler, rangeHandler) {
     const stepTwoWrapper = document.querySelector(`#stepTwoWrapper`);
     const downPaymentSection = stepTwoWrapper.querySelector(`#downPaymentSection`);
 
@@ -115,17 +117,38 @@ class MortgageCalculatorView {
       stepTwoWrapper.removeChild(downPaymentSection);
     }
 
-    this.renderElement(stepTwoWrapper, this.createMortgageCalculatorDownPaymentTemplate(minimumDownPaymentPersentage));
+    this.renderElement(stepTwoWrapper, this.createMortgageCalculatorDownPaymentTemplate());
 
     this.renderCalculatorPaymentLegend(minimumDownPaymentPersentage);
 
     this.renderCalculatorPaymentValue(minimumDownPayment, downPayment, inputHandler);
 
-    const downPaymentRange = stepTwoWrapper.querySelector(`#downPaymentRange`);
+    this.renderCalculatorPaymentRange(minimumDownPaymentPersentage, downPaymentPersentage, rangeHandler);
+  }
+
+  renderCalculatorPaymentRange(minimumDownPaymentPersentage, downPaymentPersentage, rangeHandler) {
+    this.removeCalculatorPaymentRange();
+
+    const downPaymentSection = document.querySelector(`#downPaymentSection`);
+    const paymentRangeContainer = downPaymentSection.querySelector(`.calculator__section-inner`);
+
+    this.renderElement(paymentRangeContainer, this.createMortgageCalculatorPaymentRangeTemplate(minimumDownPaymentPersentage, downPaymentPersentage));
+
+    const downPaymentRange = paymentRangeContainer.querySelector(`#downPaymentRange`);
 
     downPaymentRange.addEventListener(`input`, (evt) => {
       rangeHandler(parseInt(evt.currentTarget.value, 10));
     });
+  }
+
+  removeCalculatorPaymentRange() {
+    const downPaymentSection = document.querySelector(`#downPaymentSection`);
+    const paymentRangeContainer = downPaymentSection.querySelector(`.calculator__section-inner`);
+    const paymentRange = paymentRangeContainer.querySelector(`#downPaymentRange`);
+
+    if (paymentRange) {
+      paymentRangeContainer.removeChild(paymentRange);
+    }
   }
 
   renderCalculatorPaymentLegend(downPaymentPersentage) {
@@ -377,7 +400,8 @@ export const mortgageCalculatorView = new MortgageCalculatorView(
     createCalculatorPeriodValueTemplate,
     createMortgageCalculatorSpecialsTemplate,
     createMortgageCalculatorUserMessageTemplate,
-    createMortgageCalculatorOrderTemplate
+    createMortgageCalculatorOrderTemplate,
+    createMortgageCalculatorPaymentRangeTemplate
   },
   {
     renderElement,
